@@ -19,5 +19,6 @@ Whenever someone is assigned to an issue or assigns himself to it, he becomes re
 * *help needed:* Help is needed (assign people you need help from to the task)
 * *in progress:* Task in progress
 * *to do:* Task that needs to be done
+* *question:* Not sure of what to do yet (assign everybody to these, someone may have a response)
 
-***To make this work and have sense, eveyone needs to check the issues regularly!***
+***To make this work and have sense, everyone needs to check the issues regularly!***
