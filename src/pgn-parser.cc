@@ -6,6 +6,8 @@
 #include "pgn-exception.hh"
 #include "piece-type.hh"
 
+#include <iostream>
+
 namespace pgn_parser
 {
     board::File to_file(char symbol)
