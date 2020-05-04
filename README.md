@@ -12,6 +12,8 @@ The main tool of our project will be the **GitHub Issues**. Everything that need
 I (DatUser) will be in charge of releasing these issues.
 Whenever someone is assigned to an issue or assigns himself to it, he becomes responsible of it. He will be in charge of updating the state of this issue using the labels. More information can be provided to issues by commenting them.
 
+***!!!DO NOT FORGET TO CHANGE LABEL TO DONE AND TO CLOSE THE ISSUE YOU DEALT WITH ONCE YOU FINISHED!!!***
+
 ***Label Code***
 
 * *bug:* Something isn't working
