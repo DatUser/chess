@@ -43,6 +43,11 @@ namespace board {
         }
     }
 
+    Bitboard::Bitboard()
+    {
+        board_ = 0;
+    }
+
     bool Bitboard::move(Position start_pos, Position end_pos)
     {
         /* Int coordinates of the starting position */

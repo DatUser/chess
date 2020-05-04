@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <optional>
 #include "../all.hh"
 
 namespace board {
@@ -8,6 +9,7 @@ namespace board {
     class Bitboard {
     public:
         Bitboard(PieceType type, Color color);
+        Bitboard();
 
         void print();
 
@@ -17,6 +19,6 @@ namespace board {
 
     private:
         long long int board_;
-        const PieceType type_;
+        const std::optional<PieceType> type_;
     };
 }
