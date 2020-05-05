@@ -7,14 +7,20 @@
 namespace board {
 
     class Board {
+
+    public:
         Board();
 
         /* Refreshes the occupied_board */
         void refresh_occupied();
 
         /* Compute white danger */
+        void compute_danger();
         void compute_white_danger();
         void compute_black_danger();
+
+        /* Get the state of a case at coordinate given in input */
+        void is_occupied(Position position);
 
     private:
         // Bitboards needed for the white side
@@ -39,5 +45,5 @@ namespace board {
         // Danger cases Bitboard
         Bitboard white_danger;
         Bitboard black_danger;
-    }
+    };
 }
