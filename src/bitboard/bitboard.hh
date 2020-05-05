@@ -3,6 +3,7 @@
 #include <iostream>
 #include <optional>
 #include "../all.hh"
+#include "../utils/all.hh"
 
 namespace board {
 

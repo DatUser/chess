@@ -2,6 +2,7 @@
 
 #include "../bitboard/all.hh"
 #include "../all.hh"
+#include "../utils/all.hh"
 
 namespace board {
 

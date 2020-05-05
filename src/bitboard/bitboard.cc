@@ -2,13 +2,6 @@
 
 namespace board {
 
-    long long int two_pow(int power) {
-        long long int res = 1;
-        for (int i = 0; i < power; i++) {
-            res *= 2;
-        } return res;
-    }
-
     Bitboard::Bitboard(PieceType type, Color color)
     : type_(type)
     {
@@ -16,26 +9,26 @@ namespace board {
         switch (type)
         {
             case PieceType::KING:
-                board_ = two_pow(color == Color::BLACK ? 59 : 3);
+                board_ = utils::two_pow(color == Color::BLACK ? 59 : 3);
                 break;
             case PieceType::QUEEN:
-                board_ = two_pow(color == Color::BLACK ? 60 : 4);
+                board_ = utils::two_pow(color == Color::BLACK ? 60 : 4);
                 break;
             case PieceType::BISHOP:
-                board_ = two_pow(color == Color::BLACK ? 61 : 5);
-                board_ |= two_pow(color == Color::BLACK ? 58 : 2);
+                board_ = utils::two_pow(color == Color::BLACK ? 61 : 5);
+                board_ |= utils::two_pow(color == Color::BLACK ? 58 : 2);
                 break;
             case PieceType::KNIGHT:
-                board_ = two_pow(color == Color::BLACK ? 62 : 6);
-                board_ |= two_pow(color == Color::BLACK ? 57 : 1);
+                board_ = utils::two_pow(color == Color::BLACK ? 62 : 6);
+                board_ |= utils::two_pow(color == Color::BLACK ? 57 : 1);
                 break;
             case PieceType::ROOK:
-                board_ = two_pow(color == Color::BLACK ? 63 : 7);
-                board_ |= two_pow(color == Color::BLACK ? 56 : 0);
+                board_ = utils::two_pow(color == Color::BLACK ? 63 : 7);
+                board_ |= utils::two_pow(color == Color::BLACK ? 56 : 0);
                 break;
             case PieceType::PAWN:
                 for (int i = 0; i < 8; i++) {
-                    board_ |= two_pow(color == Color::BLACK ? 48 + i : 8 + i);
+                    board_ |= utils::two_pow(color == Color::BLACK ? 48 + i : 8 + i);
                 }
                 break;
             default:
@@ -59,8 +52,8 @@ namespace board {
         int e_rank = utils::utype(end_pos.rank_get());
 
         /* Corresponding bits */
-        long long int s_bit = two_pow(s_file + (s_rank * 8));
-        long long int e_bit = two_pow(e_file + (e_rank * 8));
+        long long int s_bit = utils::two_pow(s_file + (s_rank * 8));
+        long long int e_bit = utils::two_pow(e_file + (e_rank * 8));
 
 
         if ((board_ & s_bit) && !(board_ & e_bit)) {
@@ -77,7 +70,7 @@ namespace board {
             std::cout << i + 1 << "|";
             for (long long int j = 7; j >= 0; j--)
             {
-                std::cout << ((temp & two_pow(i * 8 + j)) ? "X" : " ")
+                std::cout << ((temp & utils::two_pow(i * 8 + j)) ? "X" : " ")
                           << "|";
             }
             std::cout << "\n";

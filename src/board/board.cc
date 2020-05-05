@@ -40,4 +40,8 @@ namespace board {
         occupied_board |= rook_bb;
         occupied_board |= pawn_bb;
     }
+
+    void compute_white_danger() {
+        
+    }
 }
