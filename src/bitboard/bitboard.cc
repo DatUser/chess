@@ -36,9 +36,32 @@ namespace board {
         }
     }
 
+    Bitboard::Bitboard(unsigned long long int board) {
+        board_ = board;
+    }
+
+    Bitboard::Bitboard(Bitboard& other) {
+        this->board_ = other.board_get();
+    }
+
     Bitboard::Bitboard()
     {
         board_ = 0;
+    }
+
+    void Bitboard::print() {
+        long long int temp = board_;
+        for (int i = 7; i >= 0; i--)
+        {
+            std::cout << i + 1 << "|";
+            for (int j = 7; j >= 0; j--)
+            {
+                std::cout << ((temp & utils::two_pow(i * 8 + j)) ? "X" : " ")
+                          << "|";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "  A B C D E F G H\n";
     }
 
     bool Bitboard::move(Position start_pos, Position end_pos)
@@ -52,8 +75,8 @@ namespace board {
         int e_rank = utils::utype(end_pos.rank_get());
 
         /* Corresponding bits */
-        long long int s_bit = utils::two_pow(s_file + (s_rank * 8));
-        long long int e_bit = utils::two_pow(e_file + (e_rank * 8));
+        unsigned long long int s_bit = utils::two_pow(s_file + (s_rank * 8));
+        unsigned long long int e_bit = utils::two_pow(e_file + (e_rank * 8));
 
 
         if ((board_ & s_bit) && !(board_ & e_bit)) {
@@ -63,18 +86,17 @@ namespace board {
         } return false;
     }
 
-    void Bitboard::print() {
-        long long int temp = board_;
-        for (int i = 7; i >= 0; i--)
-        {
-            std::cout << i + 1 << "|";
-            for (long long int j = 7; j >= 0; j--)
-            {
-                std::cout << ((temp & utils::two_pow(i * 8 + j)) ? "X" : " ")
-                          << "|";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "  A B C D E F G H\n";
+    void Bitboard::case_set(Position position) {
+        position = position;
+    }
+
+    Bitboard Bitboard::operator|=(Bitboard other) {
+        board_ |= other.board_get();
+        return *this;
+    }
+
+    Bitboard Bitboard::operator=(Bitboard other) {
+        this->board_ = other.board_get();
+        return *this;
     }
 }
