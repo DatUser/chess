@@ -20,7 +20,8 @@ namespace board {
         void compute_black_danger();
 
         /* Get the state of a case at coordinate given in input */
-        void is_occupied(Position position);
+        bool is_occupied(Bitboard board, Position position);
+        bool is_occupied(Position position);
 
     private:
         // Bitboards needed for the white side
@@ -40,10 +41,22 @@ namespace board {
         Bitboard pawn_bb;
 
         // Occupied Bitboard
+        Bitboard white_occupied_board;
+        Bitboard black_occupied_board;
         Bitboard occupied_board;
 
         // Danger cases Bitboard
         Bitboard white_danger;
         Bitboard black_danger;
+
+        // Methods needed to compute the danger grids
+        void compute_king_danger(Bitboard* board, Bitboard occ, int power);
+        void compute_queen_danger(Bitboard* board, Bitboard ally,
+                                  Bitboard enemy, int power);
+
+        void compute_lines(Bitboard* board, Bitboard ally,
+                                  Bitboard enemy, int power);
+        void compute_diagonals(Bitboard* board, Bitboard ally,
+                                  Bitboard enemy, int power);
     };
 }
