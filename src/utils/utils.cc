@@ -1,4 +1,5 @@
 #include "utils.hh"
+#include <iostream>
 
 namespace utils {
     unsigned long long int two_pow(int power) {
@@ -9,6 +10,9 @@ namespace utils {
     }
 
     int pow_two(unsigned long long int number) {
+        if (number == 0) {
+            return -1;
+        }
         int res = 0;
         while (number > 1) {
             number /= 2;
@@ -16,32 +20,37 @@ namespace utils {
         } return res;
     }
 
+    board::Position to_position(int power) {
+        std::cout << "Power: " << power << "\n";
+        //std::cout << "x: " << power % 8 << " y: " << power / 8 << "\n"; // Debug purpose
+        return to_position(power % 8, power / 8);
+    }
 
     board::Position to_position(int x, int y) {
         board::File file;
         board::Rank rank;
-
+        // std::cout << "x: " << x << " y: " << y << "\n"; // Debug purpose
         switch (x) {
             case 0:
-                file = board::File::A;
+                file = board::File::H;
                 break;
             case 1:
-                file = board::File::A;
+                file = board::File::G;
                 break;
             case 2:
-                file = board::File::A;
+                file = board::File::F;
                 break;
             case 3:
-                file = board::File::A;
+                file = board::File::E;
                 break;
             case 4:
-                file = board::File::A;
+                file = board::File::D;
                 break;
             case 5:
-                file = board::File::A;
+                file = board::File::C;
                 break;
             case 6:
-                file = board::File::A;
+                file = board::File::B;
                 break;
             case 7:
                 file = board::File::A;
@@ -72,5 +81,11 @@ namespace utils {
                 rank = board::Rank::EIGHT;
                 break;
         } return board::Position(file, rank);
+    }
+
+    unsigned long long int to_int(board::Position position) {
+        int file = 7 - utils::utype(position.file_get());
+        int rank = utils::utype(position.rank_get());
+        return file + (rank * 8);
     }
 }
