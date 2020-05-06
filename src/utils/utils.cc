@@ -4,9 +4,7 @@
 namespace utils {
     unsigned long long int two_pow(int power) {
         unsigned long long int res = 1;
-        for (int i = 0; i < power; i++) {
-            res *= 2;
-        } return res;
+        return res << power;
     }
 
     int pow_two(unsigned long long int number) {
@@ -87,5 +85,12 @@ namespace utils {
         int file = 7 - utils::utype(position.file_get());
         int rank = utils::utype(position.rank_get());
         return file + (rank * 8);
+    }
+
+    unsigned long long int floor_two(unsigned long long int number) {
+        unsigned long long int power = 1;
+        while (number >>= 1)
+            power <<= 1;
+        return power;
     }
 }
