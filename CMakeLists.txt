@@ -12,9 +12,11 @@ set(SRC_ENGINE
     src/uci.cc
     src/pgn-move.cc
     src/pgn-exception.cc
+    src/main.cc
+    src/parser/option-parser.cc
     )
 
-include_directories(src)
+include_directories(src src/parser)
 
 
 # END SOURCES

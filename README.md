@@ -24,4 +24,8 @@ Whenever someone is assigned to an issue or assigns himself to it, he becomes re
 * *question:* Not sure of what to do yet (assign everybody to these, someone may have a response)
 * *optimization:* Thing that need further optimization, more a bonus than anything
 
-***To make this work and have sense, everyone needs to check the issues regularly!***
+***Debug flags***
+
+-DCMAKE_BUILD_TYPE=RelWithDebInfo 
+
+***To make this work and have sense, eveyone needs to check the issues regularly!***
