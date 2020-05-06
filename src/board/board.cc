@@ -53,13 +53,17 @@ namespace board {
         // Then computes the white danger bitboard
         compute_white_danger();
         // DEBUG PURPOSES
-        white_danger.print();
+        /* white_danger.print();
         black_occupied_board = Bitboard();
         compute_white_danger();
-        white_danger.print();
+        white_danger.print();*/
         // END OF DEBUG PURPOSES
         // And do the same with the black danger bitboard
         compute_black_danger();
+        //black_danger.print();
+        //white_occupied_board = Bitboard();
+        //compute_black_danger();
+        //black_danger.print();
     }
 
     void Board::compute_white_danger() {
@@ -87,12 +91,27 @@ namespace board {
     }
 
     void Board::compute_black_danger() {
-        /*int king_power = utils::pow_two(king_wb.board_get());
+        black_danger = Bitboard();
+
+        int king_power = utils::pow_two(king_wb.board_get());
+        compute_king_danger(&black_danger, king_power);
+
         int queen_power = utils::pow_two(queen_wb.board_get());
-        int bishop_power = utils::pow_two(bishop_wb.board_get());
-        int knight_power = utils::pow_two(knight_wb.board_get());
-        int rook_power = utils::pow_two(rook_wb.board_get());
-        int pawn_power = utils::pow_two(pawn_wb.board_get());*/
+        if (queen_power != -1)
+            compute_queen_danger(&black_danger, white_occupied_board,
+                                black_occupied_board, queen_power);
+
+        compute_bishop_danger(&black_danger, white_occupied_board,
+                              black_occupied_board, bishop_wb);
+
+        compute_rook_danger(&black_danger, white_occupied_board,
+                            black_occupied_board, rook_wb);
+
+        compute_pawn_danger(&black_danger, white_occupied_board,
+                            pawn_wb, true);
+
+        compute_knight_danger(&black_danger, white_occupied_board,
+                              knight_wb);
     }
 
     bool Board::is_occupied(Position position) {
@@ -106,19 +125,19 @@ namespace board {
     }
 
     void Board::compute_king_danger(Bitboard* board, int power) {
-        if (power - 9 < 63)
+        if (power - 9 < 63 && power - 9 >= 0)
         {
             board->board_set(board->board_get() | utils::two_pow(power - 9));
         }
-        if (power - 8 < 63)
+        if (power - 8 < 63 && power - 8 >= 0)
         {
             board->board_set(board->board_get() | utils::two_pow(power - 8));
         }
-        if (power - 7 < 63)
+        if (power - 7 < 63 && power - 7 >= 0)
         {
             board->board_set(board->board_get() | utils::two_pow(power - 7));
         }
-        if (power - 1 < 63)
+        if (power - 1 < 63 && power - 1 >= 0)
         {
             board->board_set(board->board_get() | utils::two_pow(power - 1));
         }
