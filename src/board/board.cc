@@ -124,6 +124,148 @@ namespace board {
         return board.board_get() & utils::two_pow(power);
     }
 
+    std::vector<Position> Board::get_white_king() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = king_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+    std::vector<Position> Board::get_white_queen() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = queen_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_white_knight() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = knight_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_white_bishop() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = bishop_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_white_rook() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = rook_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_white_pawn() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = pawn_wb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_black_king() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = king_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+    std::vector<Position> Board::get_black_queen() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = queen_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_black_knight() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = knight_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_black_bishop() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = bishop_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_black_rook() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = rook_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
+    std::vector<Position> Board::get_black_pawn() {
+        std::vector<Position> res = std::vector<Position>();
+        unsigned long long int tmp = pawn_bb.board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            int floor_pow = utils::pow_two(floor);
+            res.emplace_back(utils::to_position(floor_pow));
+        } return res;
+    }
+
+
     void Board::compute_king_danger(Bitboard* board, int power) {
         if (power - 9 < 63 && power - 9 >= 0)
         {

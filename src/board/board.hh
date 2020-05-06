@@ -23,6 +23,21 @@ namespace board {
         bool is_occupied(Bitboard board, Position position);
         bool is_occupied(Position position);
 
+        /* Get a list of position */
+        std::vector<Position> get_white_king();
+        std::vector<Position> get_white_queen();
+        std::vector<Position> get_white_knight();
+        std::vector<Position> get_white_bishop();
+        std::vector<Position> get_white_rook();
+        std::vector<Position> get_white_pawn();
+
+        std::vector<Position> get_black_king();
+        std::vector<Position> get_black_queen();
+        std::vector<Position> get_black_knight();
+        std::vector<Position> get_black_bishop();
+        std::vector<Position> get_black_rook();
+        std::vector<Position> get_black_pawn();
+
     private:
         // Bitboards needed for the white side
         Bitboard king_wb;
