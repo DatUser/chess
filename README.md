@@ -35,8 +35,13 @@ Whenever someone is assigned to an issue or assigns himself to it, he becomes re
 We use rebase and do it that way:
 
 git checkout *yourbranch*
+
 git rebase master
+
 git checkout master
+
 git rebase *yourbranch*
+
 git push origin master
+
 git push origin -d *yourbranch* (this will delete your branch)
