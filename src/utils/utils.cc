@@ -19,7 +19,7 @@ namespace utils {
     }
 
     board::Position to_position(int power) {
-        std::cout << "Power: " << power << "\n";
+        //std::cout << "Power: " << power << "\n";
         //std::cout << "x: " << power % 8 << " y: " << power / 8 << "\n"; // Debug purpose
         return to_position(power % 8, power / 8);
     }

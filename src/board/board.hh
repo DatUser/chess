@@ -50,9 +50,17 @@ namespace board {
         Bitboard black_danger;
 
         // Methods needed to compute the danger grids
-        void compute_king_danger(Bitboard* board, Bitboard occ, int power);
+        void compute_king_danger(Bitboard* board, int power);
         void compute_queen_danger(Bitboard* board, Bitboard ally,
                                   Bitboard enemy, int power);
+        void compute_bishop_danger(Bitboard *board, Bitboard ally,
+                                   Bitboard enemy, Bitboard bishops);
+        void compute_rook_danger(Bitboard *board, Bitboard ally,
+                                 Bitboard enemy, Bitboard rooks);
+        void compute_knight_danger(Bitboard *board, Bitboard ally,
+                                   Bitboard knights);
+        void compute_pawn_danger(Bitboard *board, Bitboard ally,
+                                 Bitboard pawns, bool white);
 
         void compute_lines(Bitboard* board, Bitboard ally,
                                   Bitboard enemy, int power);
