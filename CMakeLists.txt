@@ -14,6 +14,10 @@ set(SRC_ENGINE
     src/pgn-exception.cc
     src/main.cc
     src/parser/option-parser.cc
+    src/bitboard/bitboard.cc
+    src/board/board.cc
+    src/chessboard/chessboard.cc
+    src/utils/utils.cc
     )
 
 include_directories(src src/parser)

@@ -53,6 +53,9 @@ namespace utils {
             case 7:
                 file = board::File::A;
                 break;
+            default:
+                file = board::File::A;
+                break;
         } switch (y) {
             case 0:
                 rank = board::Rank::ONE;
@@ -76,6 +79,9 @@ namespace utils {
                 rank = board::Rank::SEVEN;
                 break;
             case 7:
+                rank = board::Rank::EIGHT;
+                break;
+            default:
                 rank = board::Rank::EIGHT;
                 break;
         } return board::Position(file, rank);

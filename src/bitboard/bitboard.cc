@@ -95,7 +95,7 @@ namespace board {
         return *this;
     }
 
-    Bitboard Bitboard::operator=(Bitboard other) {
+    Bitboard Bitboard::operator=(Bitboard& other) {
         this->board_ = other.board_get();
         return *this;
     }

@@ -10,7 +10,7 @@ namespace board {
     public:
         Chessboard();
 
-    private
+    private:
         Board board_;
-    }
+    };
 }

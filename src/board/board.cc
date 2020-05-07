@@ -4,44 +4,44 @@ namespace board {
 
     Board::Board()
     {
-        king_wb = Bitboard(PieceType::KING, Color::WHITE);
-        queen_wb = Bitboard(PieceType::QUEEN, Color::WHITE);
-        knight_wb = Bitboard(PieceType::KNIGHT, Color::WHITE);
-        bishop_wb = Bitboard(PieceType::BISHOP, Color::WHITE);
-        rook_wb = Bitboard(PieceType::ROOK, Color::WHITE);
-        pawn_wb = Bitboard(PieceType::PAWN, Color::WHITE);
+        king_wb = new Bitboard(PieceType::KING, Color::WHITE);
+        queen_wb = new Bitboard(PieceType::QUEEN, Color::WHITE);
+        knight_wb = new Bitboard(PieceType::KNIGHT, Color::WHITE);
+        bishop_wb = new Bitboard(PieceType::BISHOP, Color::WHITE);
+        rook_wb = new Bitboard(PieceType::ROOK, Color::WHITE);
+        pawn_wb = new Bitboard(PieceType::PAWN, Color::WHITE);
 
-        king_bb = Bitboard(PieceType::KING, Color::BLACK);
-        queen_bb = Bitboard(PieceType::QUEEN, Color::BLACK);
-        knight_bb = Bitboard(PieceType::KNIGHT, Color::BLACK);
-        bishop_bb = Bitboard(PieceType::BISHOP, Color::BLACK);
-        rook_bb = Bitboard(PieceType::ROOK, Color::BLACK);
-        pawn_bb = Bitboard(PieceType::PAWN, Color::BLACK);
+        king_bb = new Bitboard(PieceType::KING, Color::BLACK);
+        queen_bb = new Bitboard(PieceType::QUEEN, Color::BLACK);
+        knight_bb = new Bitboard(PieceType::KNIGHT, Color::BLACK);
+        bishop_bb = new Bitboard(PieceType::BISHOP, Color::BLACK);
+        rook_bb = new Bitboard(PieceType::ROOK, Color::BLACK);
+        pawn_bb = new Bitboard(PieceType::PAWN, Color::BLACK);
 
-        occupied_board = Bitboard();
+        occupied_board = new Bitboard();
 
-        //white_danger = Bitboard();
-        //black_danger = Bitboard();
+        white_danger = new Bitboard();
+        black_danger = new Bitboard();
     }
 
     void Board::refresh_occupied()
     {
-        white_occupied_board |= king_wb;
-        white_occupied_board |= queen_wb;
-        white_occupied_board |= knight_wb;
-        white_occupied_board |= bishop_wb;
-        white_occupied_board |= rook_wb;
-        white_occupied_board |= pawn_wb;
+        *white_occupied_board |= *king_wb;
+        *white_occupied_board |= *queen_wb;
+        *white_occupied_board |= *knight_wb;
+        *white_occupied_board |= *bishop_wb;
+        *white_occupied_board |= *rook_wb;
+        *white_occupied_board |= *pawn_wb;
 
-        black_occupied_board |= king_bb;
-        black_occupied_board |= queen_bb;
-        black_occupied_board |= knight_bb;
-        black_occupied_board |= bishop_bb;
-        black_occupied_board |= rook_bb;
-        black_occupied_board |= pawn_bb;
+        *black_occupied_board |= *king_bb;
+        *black_occupied_board |= *queen_bb;
+        *black_occupied_board |= *knight_bb;
+        *black_occupied_board |= *bishop_bb;
+        *black_occupied_board |= *rook_bb;
+        *black_occupied_board |= *pawn_bb;
 
-        occupied_board |= white_occupied_board;
-        occupied_board |= black_occupied_board;
+        *occupied_board |= *white_occupied_board;
+        *occupied_board |= *black_occupied_board;
         /* white_occupied_board.print();
         black_occupied_board.print();
         occupied_board.print(); */// Debug purpose
@@ -67,66 +67,66 @@ namespace board {
     }
 
     void Board::compute_white_danger() {
-        white_danger = Bitboard();
+        white_danger = new Bitboard();
 
-        int king_power = utils::pow_two(king_bb.board_get());
-        compute_king_danger(&white_danger, king_power);
+        int king_power = utils::pow_two(king_bb->board_get());
+        compute_king_danger(white_danger, king_power);
 
-        int queen_power = utils::pow_two(queen_bb.board_get());
+        int queen_power = utils::pow_two(queen_bb->board_get());
         if (queen_power != -1)
-            compute_queen_danger(&white_danger, black_occupied_board,
+            compute_queen_danger(white_danger, black_occupied_board,
                                 white_occupied_board, queen_power);
 
-        compute_bishop_danger(&white_danger, black_occupied_board,
+        compute_bishop_danger(white_danger, black_occupied_board,
                               white_occupied_board, bishop_bb);
 
-        compute_rook_danger(&white_danger, black_occupied_board,
+        compute_rook_danger(white_danger, black_occupied_board,
                             white_occupied_board, rook_bb);
 
-        compute_pawn_danger(&white_danger, black_occupied_board,
+        compute_pawn_danger(white_danger, black_occupied_board,
                             pawn_bb, false);
 
-        compute_knight_danger(&white_danger, black_occupied_board,
+        compute_knight_danger(white_danger, black_occupied_board,
                               knight_bb);
     }
 
     void Board::compute_black_danger() {
-        black_danger = Bitboard();
+        black_danger = new Bitboard();
 
-        int king_power = utils::pow_two(king_wb.board_get());
-        compute_king_danger(&black_danger, king_power);
+        int king_power = utils::pow_two(king_wb->board_get());
+        compute_king_danger(black_danger, king_power);
 
-        int queen_power = utils::pow_two(queen_wb.board_get());
+        int queen_power = utils::pow_two(queen_wb->board_get());
         if (queen_power != -1)
-            compute_queen_danger(&black_danger, white_occupied_board,
+            compute_queen_danger(black_danger, white_occupied_board,
                                 black_occupied_board, queen_power);
 
-        compute_bishop_danger(&black_danger, white_occupied_board,
+        compute_bishop_danger(black_danger, white_occupied_board,
                               black_occupied_board, bishop_wb);
 
-        compute_rook_danger(&black_danger, white_occupied_board,
+        compute_rook_danger(black_danger, white_occupied_board,
                             black_occupied_board, rook_wb);
 
-        compute_pawn_danger(&black_danger, white_occupied_board,
+        compute_pawn_danger(black_danger, white_occupied_board,
                             pawn_wb, true);
 
-        compute_knight_danger(&black_danger, white_occupied_board,
+        compute_knight_danger(black_danger, white_occupied_board,
                               knight_wb);
     }
 
     bool Board::is_occupied(Position position) {
         auto power = utils::to_int(position);
-        return occupied_board.board_get() & utils::two_pow(power);
+        return occupied_board->board_get() & utils::two_pow(power);
     }
 
-    bool Board::is_occupied(Bitboard board, Position position) {
+    bool Board::is_occupied(Bitboard* board, Position position) {
         auto power = utils::to_int(position);
-        return board.board_get() & utils::two_pow(power);
+        return board->board_get() & utils::two_pow(power);
     }
 
     std::vector<Position> Board::get_white_king() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = king_wb.board_get();
+        unsigned long long int tmp = king_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -137,7 +137,7 @@ namespace board {
 
     std::vector<Position> Board::get_white_queen() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = queen_wb.board_get();
+        unsigned long long int tmp = queen_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -149,7 +149,7 @@ namespace board {
 
     std::vector<Position> Board::get_white_knight() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = knight_wb.board_get();
+        unsigned long long int tmp = knight_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -161,7 +161,7 @@ namespace board {
 
     std::vector<Position> Board::get_white_bishop() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = bishop_wb.board_get();
+        unsigned long long int tmp = bishop_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -173,7 +173,7 @@ namespace board {
 
     std::vector<Position> Board::get_white_rook() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = rook_wb.board_get();
+        unsigned long long int tmp = rook_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -185,7 +185,7 @@ namespace board {
 
     std::vector<Position> Board::get_white_pawn() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = pawn_wb.board_get();
+        unsigned long long int tmp = pawn_wb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -197,7 +197,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_king() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = king_bb.board_get();
+        unsigned long long int tmp = king_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -208,7 +208,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_queen() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = queen_bb.board_get();
+        unsigned long long int tmp = queen_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -220,7 +220,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_knight() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = knight_bb.board_get();
+        unsigned long long int tmp = knight_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -232,7 +232,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_bishop() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = bishop_bb.board_get();
+        unsigned long long int tmp = bishop_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -244,7 +244,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_rook() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = rook_bb.board_get();
+        unsigned long long int tmp = rook_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -256,7 +256,7 @@ namespace board {
 
     std::vector<Position> Board::get_black_pawn() {
         std::vector<Position> res = std::vector<Position>();
-        unsigned long long int tmp = pawn_bb.board_get();
+        unsigned long long int tmp = pawn_bb->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -301,15 +301,15 @@ namespace board {
         }
     }
 
-    void Board::compute_queen_danger(Bitboard* board, Bitboard ally,
-                                     Bitboard enemy, int power) {
+    void Board::compute_queen_danger(Bitboard* board, Bitboard* ally,
+                                     Bitboard* enemy, int power) {
         compute_lines(board, ally, enemy, power);
         compute_diagonals(board, ally, enemy, power);
     }
 
-    void Board::compute_bishop_danger(Bitboard* board, Bitboard ally,
-                                      Bitboard enemy, Bitboard bishops) {
-        unsigned long long int tmp = bishops.board_get();
+    void Board::compute_bishop_danger(Bitboard* board, Bitboard* ally,
+                                      Bitboard* enemy, Bitboard* bishops) {
+        unsigned long long int tmp = bishops->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -317,9 +317,9 @@ namespace board {
         }
     }
 
-    void Board::compute_rook_danger(Bitboard* board, Bitboard ally,
-                                    Bitboard enemy, Bitboard rooks) {
-        unsigned long long int tmp = rooks.board_get();
+    void Board::compute_rook_danger(Bitboard* board, Bitboard* ally,
+                                    Bitboard* enemy, Bitboard* rooks) {
+        unsigned long long int tmp = rooks->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -327,9 +327,9 @@ namespace board {
         }
     }
 
-    void Board::compute_pawn_danger(Bitboard *board, Bitboard ally,
-                                    Bitboard pawns, bool white) {
-        unsigned long long int tmp = pawns.board_get();
+    void Board::compute_pawn_danger(Bitboard* board, Bitboard* ally,
+                                    Bitboard* pawns, bool white) {
+        unsigned long long int tmp = pawns->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -356,9 +356,9 @@ namespace board {
         }
     }
 
-    void Board::compute_knight_danger(Bitboard *board, Bitboard ally,
-                                      Bitboard knights) {
-        unsigned long long int tmp = knights.board_get();
+    void Board::compute_knight_danger(Bitboard* board, Bitboard* ally,
+                                      Bitboard* knights) {
+        unsigned long long int tmp = knights->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
             tmp -= floor;
@@ -392,8 +392,8 @@ namespace board {
         }
     }
 
-    void Board::compute_lines(Bitboard* board, Bitboard ally,
-                       Bitboard enemy, int power) {
+    void Board::compute_lines(Bitboard* board, Bitboard* ally,
+                       Bitboard* enemy, int power) {
         int temp = power;
         while (temp < 56) {
             temp += 8;
@@ -425,8 +425,8 @@ namespace board {
         } temp = power;
     }
 
-    void Board::compute_diagonals(Bitboard *board, Bitboard ally,
-                          Bitboard enemy, int power) {
+    void Board::compute_diagonals(Bitboard* board, Bitboard* ally,
+                          Bitboard* enemy, int power) {
         int temp = power;
         while (temp / 8 < 7 && temp % 8 < 7) {
             temp += 9;
