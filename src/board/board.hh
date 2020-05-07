@@ -20,8 +20,9 @@ namespace board {
         void compute_black_danger();
 
         /* Get the state of a case at coordinate given in input */
+        opt_piecetype_t is_occupied(Position position, Color color);
         bool is_occupied(Bitboard* board, Position position);
-        bool is_occupied(Position position);
+        //bool is_occupied(Position position);
 
         /* Get a list of position */
         std::vector<Position> get_white_king();

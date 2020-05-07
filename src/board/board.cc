@@ -114,10 +114,42 @@ namespace board {
                               knight_wb);
     }
 
-    bool Board::is_occupied(Position position) {
+    opt_piecetype_t Board::is_occupied(Position position, Color color) {
+        auto power = utils::to_int(position);
+        if (color == Color::WHITE) {
+            if (pawn_wb->board_get() & power)
+                return PieceType::PAWN;
+            if (bishop_wb->board_get() & power)
+                return PieceType::BISHOP;
+            if (knight_wb->board_get() & power)
+                return PieceType::KNIGHT;
+            if (rook_wb->board_get() & power)
+                return PieceType::ROOK;
+            if (queen_wb->board_get() & power)
+                return PieceType::QUEEN;
+            if (king_wb->board_get() & power)
+                return PieceType::KING;
+        } else if (color == Color::BLACK) {
+            if (pawn_bb->board_get() & power)
+                return PieceType::PAWN;
+            if (bishop_bb->board_get() & power)
+                return PieceType::BISHOP;
+            if (knight_bb->board_get() & power)
+                return PieceType::KNIGHT;
+            if (rook_bb->board_get() & power)
+                return PieceType::ROOK;
+            if (queen_bb->board_get() & power)
+                return PieceType::QUEEN;
+            if (king_bb->board_get() & power)
+                return PieceType::KING;
+        }
+        return std::optional<PieceType>();
+    }
+
+    /*bool Board::is_occupied(Position position) {
         auto power = utils::to_int(position);
         return occupied_board->board_get() & utils::two_pow(power);
-    }
+    }*/
 
     bool Board::is_occupied(Bitboard* board, Position position) {
         auto power = utils::to_int(position);
