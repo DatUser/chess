@@ -156,6 +156,10 @@ namespace board {
         return board->board_get() & utils::two_pow(power);
     }
 
+    /*void Board::do_move(Move move) {
+        if 
+    }*/
+
     std::vector<Position> Board::get_white_king() {
         std::vector<Position> res = std::vector<Position>();
         unsigned long long int tmp = king_wb->board_get();
