@@ -1,18 +1,54 @@
+#pragma once
 #include "all.hh"
 
-class Move {
-    public:
-        Move(board::Position start, board::Position end);
+namespace board
+{
+    class Move {
+        public:
+            Move(Position start, Position end);
 
-        ~Move() = default;
+            ~Move() = default;
 
-    private:
-        const std::pair<board::Position, board::Position> move_;
-        board::PieceType piece_;
-        board::PieceType promotion_;
-        board::PieceType capture_;
-        bool double_pawn_push_;
-        bool king_castling_;
-        bool queen_castling_;
-        bool en_passant_;
-};
+            std::pair<Position, Position> move_get() const;
+        
+            void piece_set(PieceType piece);
+
+            PieceType piece_get();
+
+            void promotion_set(PieceType promotion);
+
+            PieceType promotion_get();
+
+            void capture_set(PieceType capture);
+
+            PieceType capture_get();
+
+            void double_pawn_push_set(bool double_pawn_push);
+
+            bool double_pawn_push_get();
+
+            void king_castling_set(bool king_castling);
+
+            bool king_castling_get();
+
+            void queen_castling_set(bool queen_castling);
+
+            bool queen_castling_get();
+
+            void en_passant_set(bool en_passant);
+
+            bool en_passant_get();
+
+        private:
+            const std::pair<Position, Position> move_;
+            PieceType piece_;
+            PieceType promotion_;
+            PieceType capture_;
+            bool double_pawn_push_;
+            bool king_castling_;
+            bool queen_castling_;
+            bool en_passant_;
+    };
+}
+
+#include "move.hxx"
