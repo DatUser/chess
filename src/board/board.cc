@@ -24,6 +24,69 @@ namespace board {
         black_danger = new Bitboard();
     }
 
+    Board::Board(string ranks)
+    {
+        int rank = 7;
+        int file = 7;
+        for (long unsigned int i = 0; i < ranks.size(); i++)
+        {
+            if (ranks[i] >= 'a' && ranks[i] <= 'z')
+            {
+                PieceType piece = char_to_piece(ranks[i]);
+                Rank r = (Rank) rank;
+                File f = (File) file;
+                Position pos = Position(f, r);
+                put_piece(Color::BLACK, piece, pos);
+                file--;
+            }
+            else if (ranks[i] >= 'A' && ranks[i] <= 'Z')
+            {
+                PieceType piece = char_to_piece(ranks[i]);
+                Rank r = (Rank) rank;
+                File f = (File) file;
+                Position pos = Position(f, r);
+                put_piece(Color::BLACK, piece, pos);
+                file--;
+            }
+            else if (ranks[i] >= '1' && ranks[i] <= '8')
+            {
+                int number = ranks[i] - '0';
+                file -= number - 1;
+            }
+            else if (ranks[i] == '/')
+            {
+                rank--;
+                file = 7;
+            }
+        }
+
+    }
+
+    void Board::put_piece(Color color, PieceType piece, Position pos)
+    {
+        switch (piece)
+        {
+            case PieceType::QUEEN:
+                (color == Color::WHITE ? queen_wb : queen_bb)->case_set(pos);
+                break;
+            case PieceType::KING:
+                (color == Color::WHITE ? king_wb : king_bb)->case_set(pos);
+                break;
+            case PieceType::KNIGHT:
+                (color == Color::WHITE ? knight_wb : knight_bb)->case_set(pos);
+                break;
+            case PieceType::BISHOP:
+                (color == Color::WHITE ? bishop_wb : bishop_bb)->case_set(pos);
+                break;
+            case PieceType::ROOK:
+                (color == Color::WHITE ? rook_wb : rook_bb)->case_set(pos);
+                break;
+            default:
+                (color == Color::WHITE ? pawn_wb : pawn_bb)->case_set(pos);
+        }
+
+    }
+
     void Board::refresh_occupied()
     {
         *white_occupied_board |= *king_wb;

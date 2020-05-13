@@ -4,12 +4,15 @@
 #include "../all.hh"
 #include "../utils/all.hh"
 
+using namespace std;
+
 namespace board {
 
     class Board {
 
     public:
         Board();
+        Board(string ranks);
 
         /* Refreshes the occupied_board */
         void refresh_occupied();
@@ -29,19 +32,19 @@ namespace board {
         bool is_check(bool white_turn_);
 
         /* Get a list of position */
-        std::vector<Position> get_white_king();
-        std::vector<Position> get_white_queen();
-        std::vector<Position> get_white_knight();
-        std::vector<Position> get_white_bishop();
-        std::vector<Position> get_white_rook();
-        std::vector<Position> get_white_pawn();
+        vector<Position> get_white_king();
+        vector<Position> get_white_queen();
+        vector<Position> get_white_knight();
+        vector<Position> get_white_bishop();
+        vector<Position> get_white_rook();
+        vector<Position> get_white_pawn();
 
-        std::vector<Position> get_black_king();
-        std::vector<Position> get_black_queen();
-        std::vector<Position> get_black_knight();
-        std::vector<Position> get_black_bishop();
-        std::vector<Position> get_black_rook();
-        std::vector<Position> get_black_pawn();
+        vector<Position> get_black_king();
+        vector<Position> get_black_queen();
+        vector<Position> get_black_knight();
+        vector<Position> get_black_bishop();
+        vector<Position> get_black_rook();
+        vector<Position> get_black_pawn();
 
     private:
         // Bitboards needed for the white side
@@ -86,5 +89,7 @@ namespace board {
                                   Bitboard* enemy, int power);
         void compute_diagonals(Bitboard* board, Bitboard* ally,
                                   Bitboard* enemy, int power);
+
+        void put_piece(Color color, PieceType piece, Position pos);
     };
 }
