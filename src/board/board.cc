@@ -159,15 +159,15 @@ namespace board {
     void Board::do_move(Move move, Color color) {
         if (move.king_castling_get())
         {
-            auto board = (color == Color:WHITE ? king_wb : king_bb);
-            board->move(move.move_get()->first, move.move_get()->second);
+            auto board = (color == Color::WHITE ? king_wb : king_bb);
+            board->move(move.move_get().first, move.move_get().second);
             Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
             board->move(Position(File::H, rank), Position(File::F, rank));
         }
         else if (move.queen_castling_get())
         {
-            auto board = (color == Color:WHITE ? king_wb : king_bb);
-            board->move(move.move_get()->first, move.move_get()->second);
+            auto board = (color == Color::WHITE ? king_wb : king_bb);
+            board->move(move.move_get().first, move.move_get().second);
             Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
             board->move(Position(File::A, rank), Position(File::D, rank));
         }
@@ -195,10 +195,9 @@ namespace board {
                     board = (color == Color::WHITE ? king_wb : king_wb);
                     break;
                 default:
-                    break;
+                    board = new Bitboard();
             }
-            board->move(move->move_get()->first,
-                        move->move_get(, move->move_get()->second));
+            board->move(move.move_get().first, move.move_get().second);
         }
     }
 
