@@ -51,4 +51,9 @@ namespace board {
 
         return all_moves;
     }
+
+    bool Chessboard::is_check()
+    {
+        return board_.is_check(white_turn_);
+    }
 }

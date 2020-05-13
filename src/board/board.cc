@@ -201,6 +201,14 @@ namespace board {
         }
     }
 
+    bool Board::is_check(bool white_turn_)
+    {
+        compute_danger();
+        if (white_turn_)
+            return white_danger->board_get() & king_wb->board_get();
+        return black_danger->board_get() & king_bb->board_get();
+    }
+
     std::vector<Position> Board::get_white_king() {
         std::vector<Position> res = std::vector<Position>();
         unsigned long long int tmp = king_wb->board_get();

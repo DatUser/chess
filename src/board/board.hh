@@ -26,6 +26,7 @@ namespace board {
 
         /* Fait le move fait le move */
         void do_move(Move move, Color color);
+        bool is_check(bool white_turn_);
 
         /* Get a list of position */
         std::vector<Position> get_white_king();
