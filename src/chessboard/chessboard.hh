@@ -18,6 +18,16 @@ namespace board {
         bool is_draw();
         std::pair<PieceType, Color> operator[](Position position);
 
+        Board getBoard();
+        bool isWhiteTurn();
+        bool getWhiteKingCastling();
+        bool getWhiteQueenCastling();
+        bool getBlackKingCastling();
+        bool getBlackQueenCastling();
+        Position getEnPassant();
+        unsigned int getTurn();
+        unsigned int getLastFiftyTurn();
+
     private:
         Board board_;
         bool white_turn_;
@@ -29,4 +39,5 @@ namespace board {
         unsigned int turn_;
         unsigned int last_fifty_turn;
     };
+    #include "chessboard.hxx"
 }
