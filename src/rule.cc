@@ -270,7 +270,12 @@ namespace board
         }
     }
 
-    void pawn_eat(std::vector<Move>& moves, Position pos, Board board,
+    bool pos_equal(Position posA, Position posB) {
+        return posA.rank_get() == posB.rank_get() and
+                posA.file_get() == posB.file_get();
+    }
+
+    void pawn_eat(std::vector<Move>& moves, Position pos, Chessboard chessboard,
                     bool white_turn) {
         int x_r = static_cast<int>(pos.file_get()) + 1;
         int x_l = static_cast<int>(pos.file_get()) - 1;
@@ -279,11 +284,16 @@ namespace board
         Position right(static_cast<File>(x_r), static_cast<Rank>(y));
         Position left(static_cast<File>(x_l), static_cast<Rank>(y));
 
+        Position en_passant_right(static_cast<File>(x_r), pos.rank_get());
+        Position en_passant_left(static_cast<File>(x_l), pos.rank_get());
 
-
-        if (in_board(pos, 1, 1)) {
-            opt_piecetype_t opt_l = board.is_occupied(left,
+        auto en_passant_ = chessboard.en_passant_get();
+        opt_piecetype_t opt_r = board.is_occupied(right,
                             (white_turn) ? Color::BLACK : Color::WHITE);
+        opt_piecetype_t opt_l = board.is_occupied(left,
+                            (white_turn) ? Color::BLACK : Color::WHITE);
+
+        if (in_board(pos, -1, 1)) {
             if (opt_l.has_value()) {
                 Move mv(pos, left);
                 mv.piece_set(PieceType::PAWN);
@@ -292,14 +302,33 @@ namespace board
             }
         }
 
-        if (in_board(right, -1, 1)) {
-            opt_piecetype_t opt_r = board.is_occupied(right,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
+        if (in_board(pos, 1, 1)) {
             if (opt_r.has_value()) {
                 Move mv(pos, right);
                 mv.piece_set(PieceType::PAWN);
                 mv.capture_set(opt_r.value());
                 moves.push_back(mv);
+            }
+        }
+
+        if (en_passant_.has_value()) {
+            if (in_board(pos, -1, 0)
+                and pos_equal(en_passant_.value(), en_passant_left)) {
+                Move mv(pos, left);
+                mv.piece_set(PieceType::PAWN);
+                mv.capture_set(en_passant_.value());
+                mv.en_passant_set(true);
+                moves.push_back(mv);
+            }
+
+            else if (in_board(pos, 1, 0)
+                and pos_equal(en_passant_.value(), en_passant_right)) {
+                Move mv(pos, right);
+                mv.piece_set(PieceType::PAWN);
+                mv.capture_set(en_passant_.value());
+                mv.en_passant_set(true);
+                moves.push_back(mv);
+
             }
         }
     }
@@ -331,6 +360,7 @@ namespace board
 
             default:
                 pawn_step(m, pawns[i], board);
+                pawn_eat(m, pawns[i], board, white_turn);
                 break;
             }
         }

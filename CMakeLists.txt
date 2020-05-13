@@ -1,6 +1,7 @@
 # OPTIMISATION FLAGS : FIXME
 
-set(OPT_FLAGS)
+set(OPT_FLAGS
+    -Ofast)
 
 # END OPTIMIZATION FLAGS
 # SOURCES :
@@ -18,6 +19,7 @@ set(SRC_ENGINE
     src/board/board.cc
     src/chessboard/chessboard.cc
     src/utils/utils.cc
+    src/rule.cc
     )
 
 include_directories(src src/parser)
