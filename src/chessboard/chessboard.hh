@@ -1,4 +1,4 @@
-#pragma once
+pragma once
 
 #include "../all.hh"
 #include "../utils/all.hh"
@@ -25,7 +25,7 @@ namespace board {
         bool white_queen_castling_;
         bool black_king_castling_;
         bool black_queen_castling_;
-        // en_passant_: TODO
+        Position en_passant_;
         unsigned int turn_;
         unsigned int last_fifty_turn;
     };
