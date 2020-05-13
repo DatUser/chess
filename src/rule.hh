@@ -3,7 +3,6 @@
 #include "all.hh"
 #include "move.hh"
 #include <chessboard/chessboard.hh>
-
 #include <vector>
 
 namespace board

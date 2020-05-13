@@ -1,5 +1,5 @@
 #include "rule.hh"
-#include <chessboard/chessboard.hh>
+//#include <chessboard/chessboard.hh>
 #include "all.hh"
 
 namespace board
@@ -287,7 +287,9 @@ namespace board
         Position en_passant_right(static_cast<File>(x_r), pos.rank_get());
         Position en_passant_left(static_cast<File>(x_l), pos.rank_get());
 
-        auto en_passant_ = chessboard.en_passant_get();
+        Board board = chessboard.getBoard();
+
+        auto en_passant_ = chessboard.getEnPassant();
         opt_piecetype_t opt_r = board.is_occupied(right,
                             (white_turn) ? Color::BLACK : Color::WHITE);
         opt_piecetype_t opt_l = board.is_occupied(left,
@@ -316,7 +318,7 @@ namespace board
                 and pos_equal(en_passant_.value(), en_passant_left)) {
                 Move mv(pos, left);
                 mv.piece_set(PieceType::PAWN);
-                mv.capture_set(en_passant_.value());
+                //mv.capture_set(en_passant_.value());
                 mv.en_passant_set(true);
                 moves.push_back(mv);
             }
@@ -325,7 +327,7 @@ namespace board
                 and pos_equal(en_passant_.value(), en_passant_right)) {
                 Move mv(pos, right);
                 mv.piece_set(PieceType::PAWN);
-                mv.capture_set(en_passant_.value());
+                //mv.capture_set(en_passant_.value());
                 mv.en_passant_set(true);
                 moves.push_back(mv);
 
@@ -349,18 +351,18 @@ namespace board
             case Rank::TWO:
                 pawn_step(m, pawns[i], board);
                 pawn_double_step_promotion(m, pawns[i], board, white_turn);
-                pawn_eat(m, pawns[i], board, white_turn);
+                pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
             case Rank::SEVEN:
                 pawn_step(m, pawns[i], board);
                 pawn_double_step_promotion(m, pawns[i], board, not white_turn);
-                pawn_eat(m, pawns[i], board, white_turn);
+                pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
             default:
                 pawn_step(m, pawns[i], board);
-                pawn_eat(m, pawns[i], board, white_turn);
+                pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
             }
         }
