@@ -12,4 +12,9 @@ namespace board {
         else
             board_.do_move(move, Color::BLACK);
     }
+
+    bool is_check()
+    {
+        board_.is_check(white_turn_);
+    }
 }
