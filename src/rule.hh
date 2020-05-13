@@ -2,7 +2,9 @@
 
 #include "all.hh"
 #include "move.hh"
-#include <chessboard/chessboard.hh>
+#include "chessboard/chessboard.hh"
+#include "board/board.hh"
+
 #include <vector>
 
 namespace board

@@ -1,6 +1,4 @@
 #include "rule.hh"
-//#include <chessboard/chessboard.hh>
-#include "all.hh"
 
 namespace board
 {

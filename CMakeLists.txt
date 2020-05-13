@@ -17,9 +17,10 @@ set(SRC_ENGINE
     src/parser/option-parser.cc
     src/bitboard/bitboard.cc
     src/board/board.cc
+    src/move.cc
+    src/rule.cc
     src/chessboard/chessboard.cc
     src/utils/utils.cc
-    src/rule.cc
     )
 
 include_directories(src src/parser)
