@@ -1,19 +1,13 @@
 #pragma once
 
-#include <vector>
-
-#include "../piece-type.hh"
+#include "perft_object.hh"
+#include "fen_object.hh"
 
 using namespace board;
 using namespace std;
 
 namespace perft_parser {
 
-    class FenRank {
-    public:
-        pair<PieceType, Color> operator[](size_t index);
-
-    private:
-        vector<pair<PieceType, Color>> pieces_;
-    }
+    PerftObject parse_perft(string input);
+    FenObject parse_fen(vector<string> splited_input);
 }

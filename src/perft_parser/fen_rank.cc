@@ -1,3 +1,4 @@
+c
 #include "fen_rank.hh"
 
 namespace perft_parser {

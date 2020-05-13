@@ -5,10 +5,13 @@
 #include "../board/all.hh"
 #include "../bitboard/all.hh"
 
+using namespace std;
+
 namespace board {
     class Chessboard {
     public:
         Chessboard();
+        Chessboard(vector<string> splited_input);
 
         std::vector<Move> generate_legal_moves();
         void do_move(Move move);
@@ -35,7 +38,7 @@ namespace board {
         bool white_queen_castling_;
         bool black_king_castling_;
         bool black_queen_castling_;
-        std::optional<Position> en_passant_;
+        optional<Position> en_passant_;
         unsigned int turn_;
         unsigned int last_fifty_turn;
     };

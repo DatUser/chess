@@ -31,16 +31,22 @@ namespace board
         switch (c)
         {
         case 'P':
+        case 'p':
             return PieceType::PAWN;
         case 'N':
+        case 'n':
             return PieceType::KNIGHT;
         case 'B':
+        case 'b':
             return PieceType::BISHOP;
         case 'R':
+        case 'r':
             return PieceType::ROOK;
         case 'Q':
+        case 'q':
             return PieceType::QUEEN;
         case 'K':
+        case 'k':
             return PieceType::KING;
         default:
             throw std::invalid_argument("Unknown piece");
