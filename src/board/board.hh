@@ -42,6 +42,11 @@ namespace board {
         std::vector<Position> get_black_rook();
         std::vector<Position> get_black_pawn();
 
+
+        Bitboard& white_occupied_board_get();
+        Bitboard& black_occupied_board_get();
+        Bitboard* occupied_board_get();
+
     private:
         // Bitboards needed for the white side
         Bitboard* king_wb;
@@ -86,4 +91,5 @@ namespace board {
         void compute_diagonals(Bitboard* board, Bitboard* ally,
                                   Bitboard* enemy, int power);
     };
+    #include "board.hxx"
 }
