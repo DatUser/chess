@@ -438,6 +438,7 @@ namespace board
 
         for (Position p : positions)
         {
+            //comment
             File file = p.file_get();
             Rank rank = p.rank_get();
             int f = static_cast<int>(p.file_get());
