@@ -156,9 +156,51 @@ namespace board {
         return board->board_get() & utils::two_pow(power);
     }
 
-    /*void Board::do_move(Move move) {
-        if 
-    }*/
+    void Board::do_move(Move move, Color color) {
+        if (move.king_castling_get())
+        {
+            auto board = (color == Color:WHITE ? king_wb : king_bb);
+            board->move(move.move_get()->first, move.move_get()->second);
+            Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
+            board->move(Position(File::H, rank), Position(File::F, rank));
+        }
+        else if (move.queen_castling_get())
+        {
+            auto board = (color == Color:WHITE ? king_wb : king_bb);
+            board->move(move.move_get()->first, move.move_get()->second);
+            Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
+            board->move(Position(File::A, rank), Position(File::D, rank));
+        }
+        else
+        {
+            Bitboard* board;
+            switch (move.piece_get())
+            {
+                case PieceType::QUEEN:
+                    board = (color == Color::WHITE ? queen_wb : queen_bb);
+                    break;
+                case PieceType::ROOK:
+                    board = (color == Color::WHITE ? rook_wb : rook_wb);
+                    break;
+                case PieceType::BISHOP:
+                    board =  (color == Color::WHITE ? bishop_wb : bishop_bb);
+                    break;
+                case PieceType::KNIGHT:
+                    board = (color == Color::WHITE ? knight_wb : knight_wb);
+                    break;
+                case PieceType::PAWN:
+                    board = (color == Color::WHITE ? pawn_wb : pawn_wb);
+                    break;
+                case PieceType::KING:
+                    board = (color == Color::WHITE ? king_wb : king_wb);
+                    break;
+                default:
+                    break;
+            }
+            board->move(move->move_get()->first,
+                        move->move_get(, move->move_get()->second));
+        }
+    }
 
     std::vector<Position> Board::get_white_king() {
         std::vector<Position> res = std::vector<Position>();

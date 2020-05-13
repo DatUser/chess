@@ -25,7 +25,7 @@ namespace board {
         //bool is_occupied(Position position);
 
         /* Fait le move fait le move */
-        void do_move(Move move);
+        void do_move(Move move, Color color);
 
         /* Get a list of position */
         std::vector<Position> get_white_king();

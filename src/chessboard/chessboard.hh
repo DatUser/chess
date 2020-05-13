@@ -1,4 +1,4 @@
-pragma once
+#pragma once
 
 #include "../all.hh"
 #include "../utils/all.hh"
