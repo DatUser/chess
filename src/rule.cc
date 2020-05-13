@@ -638,12 +638,12 @@ namespace board
         bool white_turn = chessboard.isWhiteTurn();
         std::vector<Position> queen = (white_turn) ? board.get_white_queen()
                             : board.get_black_queen();
-        if (queen.size()) {
-            add_diags(queen[0], m, board, white_turn, PieceType::QUEEN);
-            add_forward(queen[0], m, board, white_turn, PieceType::QUEEN);
-            add_backward(queen[0], m, board, white_turn, PieceType::QUEEN);
-            add_leftward(queen[0], m, board, white_turn, PieceType::QUEEN);
-            add_rightward(queen[0], m, board, white_turn, PieceType::QUEEN);
+        for (unsigned int i = 0; i < queen.size(); i++) {
+            add_diags(queen[i], m, board, white_turn, PieceType::QUEEN);
+            add_forward(queen[i], m, board, white_turn, PieceType::QUEEN);
+            add_backward(queen[i], m, board, white_turn, PieceType::QUEEN);
+            add_leftward(queen[i], m, board, white_turn, PieceType::QUEEN);
+            add_rightward(queen[i], m, board, white_turn, PieceType::QUEEN);
         }
         return m;
     }
