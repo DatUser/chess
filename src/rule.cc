@@ -438,7 +438,15 @@ namespace board
 
         for (Position p : positions)
         {
-            //comment
+            if (chessboard.getWhiteKingCastling() or chessboard.getBlackKingCastling())
+            {
+                check_king_castling(m, p, chessboard.isWhiteTurn(), board);
+            }
+            if (chessboard.getWhiteQueenCastling() or chessboard.getBlackQueenCastling())
+            {
+                check_queen_castling(m, p, chessboard.isWhiteTurn(), board);
+            }
+
             File file = p.file_get();
             Rank rank = p.rank_get();
             int f = static_cast<int>(p.file_get());
