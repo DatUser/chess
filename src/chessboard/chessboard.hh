@@ -24,7 +24,7 @@ namespace board {
         bool getWhiteQueenCastling();
         bool getBlackKingCastling();
         bool getBlackQueenCastling();
-        Position getEnPassant();
+        std::optional<Position> getEnPassant();
         unsigned int getTurn();
         unsigned int getLastFiftyTurn();
 

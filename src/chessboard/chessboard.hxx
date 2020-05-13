@@ -31,9 +31,9 @@ bool Chessboard::getBlackQueenCastling()
     return black_queen_castling_;
 }
 
-Position Chessboard::getEnPassant()
+std::optional<Position> Chessboard::getEnPassant()
 {
-    return en_passant_.value();
+    return en_passant_;
 }
 
 unsigned int Chessboard::getTurn()
