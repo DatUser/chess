@@ -17,6 +17,10 @@ set(SRC_ENGINE
     src/bitboard/bitboard.cc
     src/board/board.cc
     src/chessboard/chessboard.cc
+    src/perft_parser/fen_object.cc
+    src/perft_parser/fen_rank.cc
+    src/perft_parser/perft_parser.cc
+    src/perft_parser/perft_object.cc
     src/utils/utils.cc
     )
 
@@ -40,7 +44,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OPT_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g -fsanitize=address -fno-inline")
 
 # LIBRARIES
 set(Boost_USE_STATIC_LIBS ON)
@@ -50,4 +54,4 @@ set(LIBRARIES Boost::system Boost::program_options ${CMAKE_DL_LIBS})
 # CHESSENGINE
 add_executable(chessengine)
 target_sources(chessengine PRIVATE ${SRC_ENGINE})
-target_link_libraries(chessengine PRIVATE ${LIBRARIES} -static)
+target_link_libraries(chessengine PRIVATE ${LIBRARIES})

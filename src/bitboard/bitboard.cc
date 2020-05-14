@@ -87,7 +87,8 @@ namespace board {
     }
 
     void Bitboard::case_set(Position position) {
-        position = position;
+        board_ |= utils::two_pow(utils::utype(position.rank_get()) * 8
+                               + utils::utype(position.file_get()));
     }
 
     Bitboard Bitboard::operator|=(Bitboard other) {

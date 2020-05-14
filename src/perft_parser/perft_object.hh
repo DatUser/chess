@@ -2,15 +2,19 @@
 
 #include "fen_object.hh"
 
+#include "../chessboard/chessboard.hh"
+
 namespace perft_parser {
 
     class PerftObject {
     public:
-        FenObject fen_get();
+        PerftObject(Chessboard chessboard, int depth);
+
+        Chessboard& chessboard_get();
         int depth_get();
 
     private:
-        FenObject fen_;
+        Chessboard chessboard_;
         int depth_;
     };
 }

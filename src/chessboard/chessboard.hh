@@ -21,6 +21,9 @@ namespace board {
         bool is_draw();
         std::pair<PieceType, Color> operator[](Position position);
 
+        // DEBUG TIER
+        void print();
+
     private:
         Board board_;
         bool white_turn_;

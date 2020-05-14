@@ -42,7 +42,11 @@ namespace board {
         }
 
         // Fourth line
-        
+        /*if (splited_input[3][0] != '-')
+        {
+            auto file = splited_input[3][0] - 'a';
+            auto rank = splited_input[3][1] - '0';
+        }*/
     }
 
     void Chessboard::do_move(Move move)
@@ -56,5 +60,10 @@ namespace board {
     bool Chessboard::is_check()
     {
         return board_.is_check(white_turn_);
+    }
+
+    void Chessboard::print()
+    {
+        board_.print();
     }
 }

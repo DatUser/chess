@@ -2,6 +2,6 @@
 
 namespace perft_parser {
 
-    inline PerftObject::fen_get() { return fen_; }
+    inline Chessboard& PerftObject::chessboard_get() { return chessboard_; }
     inline int depth_get() { return depth_; }
 }
