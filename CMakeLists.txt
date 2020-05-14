@@ -25,6 +25,7 @@ set(SRC_ENGINE
     src/perft_parser/perft_parser.cc
     src/perft_parser/perft_object.cc
     src/utils/utils.cc
+    src/generate-chessboard.cc
     )
 
 include_directories(src src/parser)
