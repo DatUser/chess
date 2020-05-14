@@ -1,35 +1,51 @@
 # OPTIMISATION FLAGS : FIXME
+# In cmake, we define variables with set(VAR Value [Value]*)
+# set(MYVAR "val1") assigns value val1 to MYVAR
+# set(MYVAR "val1" "val2") creates a list
 
 set(OPT_FLAGS
-    -Ofast)
+    "-Ofast"
+)
 
 # END OPTIMIZATION FLAGS
-# SOURCES :
-
-project(chessengine)
-
+# SOURCES : FIXME
+# Put all your sources here EXCEPT YOUR MAIN.CC
 set(SRC_ENGINE
-    src/pgn-parser.cc
-    src/uci.cc
-    src/pgn-move.cc
-    src/pgn-exception.cc
-    src/main.cc
-    src/parser/option-parser.cc
-    src/bitboard/bitboard.cc
-    src/board/board.cc
-    src/move.cc
-    src/rule.cc
-    src/chessboard/chessboard.cc
-    src/perft_parser/fen_object.cc
-    src/perft_parser/fen_rank.cc
-    src/perft_parser/perft_parser.cc
-    src/perft_parser/perft_object.cc
-    src/utils/utils.cc
-    src/generate-chessboard.cc
-    )
+    "src/pgn-parser.cc"
+    "src/uci.cc"
+    "src/pgn-move.cc"
+    "src/pgn-exception.cc"
+    "src/main.cc"
+    "src/parser/option-parser.cc"
+    "src/bitboard/bitboard.cc"
+    "src/board/board.cc"
+    "src/move.cc"
+    "src/rule.cc"
+    "src/chessboard/chessboard.cc"
+    "src/perft_parser/fen_object.cc"
+    "src/perft_parser/fen_rank.cc"
+    "src/perft_parser/perft_parser.cc"
+    "src/perft_parser/perft_object.cc"
+    "src/utils/utils.cc"
+    "src/generate-chessboard.cc"
+    #"src/listener/listener-manager.cc"
+)
 
-include_directories(src src/parser)
+# Directories containing headers must be specified in the include_directories()
+include_directories(
+    "src"
+    "src/chessboard"
+    "src/parser"
+    "src/board"
+    "src/bitboard"
+    "src/utils"
+    "src/listener"
+)
 
+# Put your test files here
+set(SRC_GTEST
+    ""
+)
 
 # END SOURCES
 
@@ -48,14 +64,41 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OPT_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g -fsanitize=address -fno-inline")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -fsanitize=address")
 
 # LIBRARIES
-set(Boost_USE_STATIC_LIBS ON)
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(Boost_USE_STATIC_LIBS ON)
+endif()
 find_package(Boost REQUIRED COMPONENTS system program_options)
 set(LIBRARIES Boost::system Boost::program_options ${CMAKE_DL_LIBS})
 
 # CHESSENGINE
 add_executable(chessengine)
-target_sources(chessengine PRIVATE ${SRC_ENGINE})
+target_sources(chessengine PRIVATE "src/main.cc" ${SRC_ENGINE})
 target_link_libraries(chessengine PRIVATE ${LIBRARIES})
+
+
+# TESTS
+# Check if GTest is installed
+find_package(GTest)
+
+# If it is, create a dedicated target "tests"
+if(GTest_FOUND)
+  include(GoogleTest)
+
+  add_executable(tests)
+  target_sources(tests PRIVATE
+    ${SRC_GTEST}
+    ${SRC_ENGINE}
+  )
+  target_compile_options(tests PRIVATE -Wall -Werror -Wextra)
+  target_link_libraries(tests PRIVATE GTest::GTest ${LIBRARIES})
+endif()
+
+# STATIC TARGET
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_executable(chessengine-static)
+    target_sources(chessengine-static PRIVATE "src/main.cc" ${SRC_ENGINE})
+    target_link_libraries(chessengine-static PRIVATE ${LIBRARIES} -static)
+endif()
