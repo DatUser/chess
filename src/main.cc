@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
             auto efile = utils::utype(move.move_get().second.file_get());
             std::cout << brank << "/" << bfile << " " << erank << "/" << efile << "\n";
         }
+        pobject.chessboard_get().print();
         std::cout << moves.size() << std::endl;
     }
 

@@ -71,6 +71,8 @@ namespace board {
 
     std::vector<Move> Chessboard::generate_legal_moves()
     {
+        board_.refresh_occupied();
+
         Rule rules = Rule();
         std::vector<Move> all_moves;
 

@@ -394,7 +394,7 @@ namespace board
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.value() == PieceType::ROOK)
+                if (opt.has_value() && opt.value() == PieceType::ROOK)
                 {
                     mv.king_castling_set(true);
                     moves.push_back(mv);
@@ -431,7 +431,7 @@ namespace board
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.value() == PieceType::ROOK)
+                if (opt.has_value() && opt.value() == PieceType::ROOK)
                 {
                     mv.queen_castling_set(true);
                     moves.push_back(mv);
