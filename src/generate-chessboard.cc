@@ -13,4 +13,15 @@ namespace board
 
         return result;
     }
+
+    Chessboard generate_chessboard(std::vector<Move> moves)
+    {
+        Chessboard chessboard = Chessboard();
+        for (Move m : moves)
+        {
+            m.piece_set(PieceType::ROOK);
+        }
+
+        return chessboard;
+    }
 }
