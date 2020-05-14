@@ -9,8 +9,44 @@
 //#define _GNU_SOURCE
 #include <dlfcn.h>
 #include <listener.hh>
+#include <listener/listener-manager.hh>
+
 
 //CHECK RETURN VALUES
+
+void open_listeners(OptionParser& parser) {
+
+    auto paths = parser.listeners_get();
+    std::vector<listener::Listener*> listeners;
+
+
+    for (auto path : paths) {
+        void* out = dlopen(path.c_str(), RTLD_LAZY);
+
+        if (not out) {
+            std::string err = dlerror();
+            std::cout << err << std::endl;
+        } else {
+            const char* constr_list = "listener_create";
+            void* symbol = dlsym(out, constr_list);
+            listener::Listener* listener = reinterpret_cast<listener::Listener*(*)()>(symbol)();
+            if (not listener) {
+                std::string err = dlerror();
+                std::cout << err << std::endl;
+            } else {
+                listeners.push_back(listener);
+            }
+        }
+    }
+
+    listener::ListenerManager::instance().listeners_set(listeners);
+}
+
+void close_listeners() {
+    auto listens = listener::ListenerManager::instance().listeners_get();
+    for (auto listen : listens)
+        dlclose(listen);
+}
 
 int main(int argc, char** argv) {
 
@@ -24,12 +60,18 @@ int main(int argc, char** argv) {
     }
     else if (parser.pgn_get() != "")
     {
+        open_listeners(parser);
+
+
         std::vector<board::Move> moves = board::get_moves_from_pgn(parser.pgn_get());
         board::Chessboard chessboard = board::generate_chessboard(moves);
     }
 
     if (parser.perft_get().compare(""))
     {
+        open_listeners(parser);
+
+
         ifstream file;
         file.open(parser.perft_get());
         if (!file.is_open())
@@ -49,6 +91,9 @@ int main(int argc, char** argv) {
         pobject.chessboard_get().print();
         std::cout << moves.size() << std::endl;
     }
+
+
+    close_listeners();
 
     return 0;
 }

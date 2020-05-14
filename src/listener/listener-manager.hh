@@ -6,7 +6,7 @@ namespace listener {
 class ListenerManager {
 
     public:
-        ListenerManager& instance();
+        static ListenerManager& instance();
 
         void listeners_set(std::vector<Listener*>& listeners);
         const std::vector<Listener*>& listeners_get() const;
