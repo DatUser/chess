@@ -218,7 +218,7 @@ namespace board
                 }
                 else
                 {
-                    mv.capture_set(opt.value());
+                    mv.piece_set(piece);
                     moves.push_back(mv);
                 }
             }
