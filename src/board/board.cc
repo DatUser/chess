@@ -4,28 +4,48 @@ namespace board {
 
     Board::Board()
     {
-        king_wb = new Bitboard(PieceType::KING, Color::WHITE);
-        queen_wb = new Bitboard(PieceType::QUEEN, Color::WHITE);
-        knight_wb = new Bitboard(PieceType::KNIGHT, Color::WHITE);
-        bishop_wb = new Bitboard(PieceType::BISHOP, Color::WHITE);
-        rook_wb = new Bitboard(PieceType::ROOK, Color::WHITE);
-        pawn_wb = new Bitboard(PieceType::PAWN, Color::WHITE);
+        king_wb = shared_bit(new Bitboard(PieceType::KING, Color::WHITE));
+        queen_wb = shared_bit(new Bitboard(PieceType::QUEEN, Color::WHITE));
+        knight_wb = shared_bit(new Bitboard(PieceType::KNIGHT, Color::WHITE));
+        bishop_wb = shared_bit(new Bitboard(PieceType::BISHOP, Color::WHITE));
+        rook_wb = shared_bit(new Bitboard(PieceType::ROOK, Color::WHITE));
+        pawn_wb = shared_bit(new Bitboard(PieceType::PAWN, Color::WHITE));
 
-        king_bb = new Bitboard(PieceType::KING, Color::BLACK);
-        queen_bb = new Bitboard(PieceType::QUEEN, Color::BLACK);
-        knight_bb = new Bitboard(PieceType::KNIGHT, Color::BLACK);
-        bishop_bb = new Bitboard(PieceType::BISHOP, Color::BLACK);
-        rook_bb = new Bitboard(PieceType::ROOK, Color::BLACK);
-        pawn_bb = new Bitboard(PieceType::PAWN, Color::BLACK);
+        king_bb = shared_bit(new Bitboard(PieceType::KING, Color::BLACK));
+        queen_bb = shared_bit(new Bitboard(PieceType::QUEEN, Color::BLACK));
+        knight_bb = shared_bit(new Bitboard(PieceType::KNIGHT, Color::BLACK));
+        bishop_bb = shared_bit(new Bitboard(PieceType::BISHOP, Color::BLACK));
+        rook_bb = shared_bit(new Bitboard(PieceType::ROOK, Color::BLACK));
+        pawn_bb = shared_bit(new Bitboard(PieceType::PAWN, Color::BLACK));
 
-        occupied_board = new Bitboard();
+        occupied_board = shared_bit(new Bitboard());
 
-        white_danger = new Bitboard();
-        black_danger = new Bitboard();
+        white_danger = shared_bit(new Bitboard());
+        black_danger = shared_bit(new Bitboard());
     }
 
     Board::Board(string ranks)
     {
+        king_wb = shared_bit(new Bitboard());
+        queen_wb = shared_bit(new Bitboard());
+        knight_wb = shared_bit(new Bitboard());
+        bishop_wb = shared_bit(new Bitboard());
+        rook_wb = shared_bit(new Bitboard());
+        pawn_wb = shared_bit(new Bitboard());
+
+        king_bb = shared_bit(new Bitboard());
+        queen_bb = shared_bit(new Bitboard());
+        knight_bb = shared_bit(new Bitboard());
+        bishop_bb = shared_bit(new Bitboard());
+        rook_bb = shared_bit(new Bitboard());
+        pawn_bb = shared_bit(new Bitboard());
+
+        occupied_board = shared_bit(new Bitboard());
+
+        white_danger = shared_bit(new Bitboard());
+        black_danger = shared_bit(new Bitboard());
+
+
         int rank = 7;
         int file = 7;
         for (long unsigned int i = 0; i < ranks.size(); i++)
@@ -45,13 +65,13 @@ namespace board {
                 Rank r = (Rank) rank;
                 File f = (File) file;
                 Position pos = Position(f, r);
-                put_piece(Color::BLACK, piece, pos);
+                put_piece(Color::WHITE, piece, pos);
                 file--;
             }
             else if (ranks[i] >= '1' && ranks[i] <= '8')
             {
                 int number = ranks[i] - '0';
-                file -= number - 1;
+                file -= number;
             }
             else if (ranks[i] == '/')
             {
@@ -130,7 +150,7 @@ namespace board {
     }
 
     void Board::compute_white_danger() {
-        white_danger = new Bitboard();
+        white_danger = shared_bit(new Bitboard());
 
         int king_power = utils::pow_two(king_bb->board_get());
         compute_king_danger(white_danger, king_power);
@@ -154,7 +174,7 @@ namespace board {
     }
 
     void Board::compute_black_danger() {
-        black_danger = new Bitboard();
+        black_danger = shared_bit(new Bitboard());
 
         int king_power = utils::pow_two(king_wb->board_get());
         compute_king_danger(black_danger, king_power);
@@ -214,7 +234,7 @@ namespace board {
         return occupied_board->board_get() & utils::two_pow(power);
     }*/
 
-    bool Board::is_occupied(Bitboard* board, Position position) {
+    bool Board::is_occupied(shared_bit board, Position position) {
         auto power = utils::to_int(position);
         return board->board_get() & utils::two_pow(power);
     }
@@ -236,29 +256,30 @@ namespace board {
         }
         else
         {
-            Bitboard* board;
+            shared_bit board;
             switch (move.piece_get())
             {
                 case PieceType::QUEEN:
                     board = (color == Color::WHITE ? queen_wb : queen_bb);
                     break;
                 case PieceType::ROOK:
-                    board = (color == Color::WHITE ? rook_wb : rook_wb);
+                    board = (color == Color::WHITE ? rook_wb : rook_bb);
                     break;
                 case PieceType::BISHOP:
                     board =  (color == Color::WHITE ? bishop_wb : bishop_bb);
                     break;
                 case PieceType::KNIGHT:
-                    board = (color == Color::WHITE ? knight_wb : knight_wb);
+                    board = (color == Color::WHITE ? knight_wb : knight_bb);
                     break;
                 case PieceType::PAWN:
-                    board = (color == Color::WHITE ? pawn_wb : pawn_wb);
+                    board = (color == Color::WHITE ? pawn_wb : pawn_bb);
                     break;
                 case PieceType::KING:
-                    board = (color == Color::WHITE ? king_wb : king_wb);
+                    board = (color == Color::WHITE ? king_wb : king_bb);
                     break;
                 default:
-                    board = new Bitboard();
+                    break;
+                    //board = new Bitboard();
             }
             board->move(move.move_get().first, move.move_get().second);
         }
@@ -414,7 +435,7 @@ namespace board {
     }
 
 
-    void Board::compute_king_danger(Bitboard* board, int power) {
+    void Board::compute_king_danger(shared_bit board, int power) {
         if (power - 9 < 63 && power - 9 >= 0)
         {
             board->board_set(board->board_get() | utils::two_pow(power - 9));
@@ -449,14 +470,14 @@ namespace board {
         }
     }
 
-    void Board::compute_queen_danger(Bitboard* board, Bitboard* ally,
-                                     Bitboard* enemy, int power) {
+    void Board::compute_queen_danger(shared_bit board, shared_bit ally,
+                                     shared_bit enemy, int power) {
         compute_lines(board, ally, enemy, power);
         compute_diagonals(board, ally, enemy, power);
     }
 
-    void Board::compute_bishop_danger(Bitboard* board, Bitboard* ally,
-                                      Bitboard* enemy, Bitboard* bishops) {
+    void Board::compute_bishop_danger(shared_bit board, shared_bit ally,
+                                      shared_bit enemy, shared_bit bishops) {
         unsigned long long int tmp = bishops->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
@@ -465,8 +486,8 @@ namespace board {
         }
     }
 
-    void Board::compute_rook_danger(Bitboard* board, Bitboard* ally,
-                                    Bitboard* enemy, Bitboard* rooks) {
+    void Board::compute_rook_danger(shared_bit board, shared_bit ally,
+                                    shared_bit enemy, shared_bit rooks) {
         unsigned long long int tmp = rooks->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
@@ -475,8 +496,8 @@ namespace board {
         }
     }
 
-    void Board::compute_pawn_danger(Bitboard* board, Bitboard* ally,
-                                    Bitboard* pawns, bool white) {
+    void Board::compute_pawn_danger(shared_bit board, shared_bit ally,
+                                    shared_bit pawns, bool white) {
         unsigned long long int tmp = pawns->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
@@ -504,8 +525,8 @@ namespace board {
         }
     }
 
-    void Board::compute_knight_danger(Bitboard* board, Bitboard* ally,
-                                      Bitboard* knights) {
+    void Board::compute_knight_danger(shared_bit board, shared_bit ally,
+                                      shared_bit knights) {
         unsigned long long int tmp = knights->board_get();
         while (tmp) {
             unsigned long long int floor = utils::floor_two(tmp);
@@ -540,8 +561,8 @@ namespace board {
         }
     }
 
-    void Board::compute_lines(Bitboard* board, Bitboard* ally,
-                       Bitboard* enemy, int power) {
+    void Board::compute_lines(shared_bit board, shared_bit ally,
+                       shared_bit enemy, int power) {
         int temp = power;
         while (temp < 56) {
             temp += 8;
@@ -573,8 +594,8 @@ namespace board {
         } temp = power;
     }
 
-    void Board::compute_diagonals(Bitboard* board, Bitboard* ally,
-                          Bitboard* enemy, int power) {
+    void Board::compute_diagonals(shared_bit board, shared_bit ally,
+                          shared_bit enemy, int power) {
         int temp = power;
         while (temp / 8 < 7 && temp % 8 < 7) {
             temp += 9;
@@ -604,5 +625,46 @@ namespace board {
                 is_occupied(ally, utils::to_position(temp)))
                 break;
         }
+    }
+
+    void Board::print()
+    {
+        for (int i = 7; i >= 0; i--)
+        {
+            std::cout << i + 1 << "|";
+            for (int j = 7; j >= 0; j--)
+            {
+                long long int temp = utils::two_pow(i * 8 + j);
+                if (king_wb->board_get() & temp)
+                    std::cout << "K";
+                else if (queen_wb->board_get() & temp)
+                    std::cout << "Q";
+                else if (knight_wb->board_get() & temp)
+                    std::cout << "N";
+                else if (bishop_wb->board_get() & temp)
+                    std::cout << "B";
+                else if (rook_wb->board_get() & temp)
+                    std::cout << "R";
+                else if (pawn_wb->board_get() & temp)
+                    std::cout << "P";
+                else if (king_bb->board_get() & temp)
+                    std::cout << "k";
+                else if (queen_bb->board_get() & temp)
+                    std::cout << "q";
+                else if (knight_bb->board_get() & temp)
+                    std::cout << "n";
+                else if (bishop_bb->board_get() & temp)
+                    std::cout << "b";
+                else if (rook_bb->board_get() & temp)
+                    std::cout << "r";
+                else if (pawn_bb->board_get() & temp)
+                    std::cout << "p";
+                else
+                    std::cout << " ";
+                std::cout << "|";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "  A B C D E F G H\n";
     }
 }

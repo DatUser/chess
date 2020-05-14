@@ -30,6 +30,8 @@ namespace board {
         std::optional<Position> getEnPassant();
         unsigned int getTurn();
         unsigned int getLastFiftyTurn();
+        // DEBUG TIER
+        void print();
 
     private:
         Board board_;

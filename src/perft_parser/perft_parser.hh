@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <sstream>
+#include <vector>
+
 #include "perft_object.hh"
 #include "fen_object.hh"
 
@@ -9,5 +13,5 @@ using namespace std;
 namespace perft_parser {
 
     PerftObject parse_perft(string input);
-    FenObject parse_fen(vector<string> splited_input);
+    Chessboard parse_fen(vector<string> splited_input);
 }

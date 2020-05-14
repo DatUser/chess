@@ -2,9 +2,13 @@
 
 #include <vector>
 
+#include "../color.hh"
 #include "../piece-type.hh"
 
-namespace parsing {
+using namespace std;
+using namespace board;
+
+namespace perft_parser {
 
     class FenRank {
     public:
@@ -12,5 +16,5 @@ namespace parsing {
 
     private:
         vector<pair<PieceType, Color>> pieces_;
-    }
+    };
 }

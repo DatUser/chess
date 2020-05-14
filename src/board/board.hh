@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "../bitboard/all.hh"
 #include "../all.hh"
 #include "../utils/all.hh"
@@ -7,8 +9,10 @@
 using namespace std;
 
 namespace board {
+    using shared_bit = std::shared_ptr<Bitboard>;
 
     class Board {
+
 
     public:
         Board();
@@ -24,7 +28,7 @@ namespace board {
 
         /* Get the state of a case at coordinate given in input */
         opt_piecetype_t is_occupied(Position position, Color color);
-        bool is_occupied(Bitboard* board, Position position);
+        bool is_occupied(shared_bit board, Position position);
         //bool is_occupied(Position position);
 
         /* Fait le move fait le move */
@@ -46,54 +50,55 @@ namespace board {
         vector<Position> get_black_rook();
         vector<Position> get_black_pawn();
 
-
-        Bitboard& white_occupied_board_get();
-        Bitboard& black_occupied_board_get();
-        Bitboard* occupied_board_get();
+        shared_bit white_occupied_board_get();
+        shared_bit black_occupied_board_get();
+        shared_bit occupied_board_get();
+        // DEBUG TIER
+        void print();
 
     private:
         // Bitboards needed for the white side
-        Bitboard* king_wb;
-        Bitboard* queen_wb;
-        Bitboard* knight_wb;
-        Bitboard* bishop_wb;
-        Bitboard* rook_wb;
-        Bitboard* pawn_wb;
+        shared_bit king_wb;
+        shared_bit queen_wb;
+        shared_bit knight_wb;
+        shared_bit bishop_wb;
+        shared_bit rook_wb;
+        shared_bit pawn_wb;
 
         // Bitboards needed for the black side
-        Bitboard* king_bb;
-        Bitboard* queen_bb;
-        Bitboard* knight_bb;
-        Bitboard* bishop_bb;
-        Bitboard* rook_bb;
-        Bitboard* pawn_bb;
+        shared_bit king_bb;
+        shared_bit queen_bb;
+        shared_bit knight_bb;
+        shared_bit bishop_bb;
+        shared_bit rook_bb;
+        shared_bit pawn_bb;
 
         // Occupied Bitboard
-        Bitboard* white_occupied_board;
-        Bitboard* black_occupied_board;
-        Bitboard* occupied_board;
+        shared_bit white_occupied_board;
+        shared_bit black_occupied_board;
+        shared_bit occupied_board;
 
         // Danger cases Bitboard
-        Bitboard* white_danger;
-        Bitboard* black_danger;
+        shared_bit white_danger;
+        shared_bit black_danger;
 
         // Methods needed to compute the danger grids
-        void compute_king_danger(Bitboard* board, int power);
-        void compute_queen_danger(Bitboard* board, Bitboard* ally,
-                                  Bitboard* enemy, int power);
-        void compute_bishop_danger(Bitboard* board, Bitboard* ally,
-                                   Bitboard* enemy, Bitboard* bishops);
-        void compute_rook_danger(Bitboard* board, Bitboard* ally,
-                                 Bitboard* enemy, Bitboard* rooks);
-        void compute_knight_danger(Bitboard* board, Bitboard* ally,
-                                   Bitboard* knights);
-        void compute_pawn_danger(Bitboard* board, Bitboard* ally,
-                                 Bitboard* pawns, bool white);
+        void compute_king_danger(shared_bit board, int power);
+        void compute_queen_danger(shared_bit board, shared_bit ally,
+                                  shared_bit enemy, int power);
+        void compute_bishop_danger(shared_bit board, shared_bit ally,
+                                   shared_bit enemy, shared_bit bishops);
+        void compute_rook_danger(shared_bit board, shared_bit ally,
+                                 shared_bit enemy, shared_bit rooks);
+        void compute_knight_danger(shared_bit board, shared_bit ally,
+                                   shared_bit knights);
+        void compute_pawn_danger(shared_bit board, shared_bit ally,
+                                 shared_bit pawns, bool white);
 
-        void compute_lines(Bitboard* board, Bitboard* ally,
-                                  Bitboard* enemy, int power);
-        void compute_diagonals(Bitboard* board, Bitboard* ally,
-                                  Bitboard* enemy, int power);
+        void compute_lines(shared_bit board, shared_bit ally,
+                                  shared_bit enemy, int power);
+        void compute_diagonals(shared_bit board, shared_bit ally,
+                                  shared_bit enemy, int power);
 
         void put_piece(Color color, PieceType piece, Position pos);
     };

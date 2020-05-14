@@ -2,11 +2,11 @@
 
 namespace perft_parser {
 
-    FenObject::operator[](Position position)
+    pair<PieceType, Color> FenObject::operator[](Position position)
     {
-        int rank = utype(position.rank_get());
-        int file = utype(position.file_get());
+        int rank = utils::utype(position.rank_get());
+        int file = utils::utype(position.file_get());
 
-        return ranks[rank][file];
+        return ranks_[rank][file];
     }
 }

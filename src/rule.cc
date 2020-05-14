@@ -20,7 +20,7 @@ namespace board
                                     Board& board, bool white_turn,
                                     std::pair<int, int>& direction,
                                     PieceType piece) {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        shared_bit ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         int abs_factor = direction.first;
         int ord_factor = direction.second;
@@ -31,7 +31,7 @@ namespace board
         Position newPos(posX, posY);
         for (int i = 1;
                 in_board_coord(posX, posY, abs_factor * i, ord_factor * i) and
-                not board.is_occupied(&ally,
+                not board.is_occupied(ally,
                 (newPos = Position(static_cast<File>(x - i),
                 static_cast<Rank>(y - i)))); i++) {
 
@@ -75,7 +75,7 @@ namespace board
     void add_forward(Position pos, std::vector<Move>& moves,
                         Board board, bool white_turn, PieceType piece)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         File file = pos.file_get();
         int f = static_cast<int>(pos.file_get());
@@ -88,7 +88,7 @@ namespace board
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
                 Move mv = Move(pos, new_pos);
-                if (board.is_occupied(&ally, new_pos))
+                if (board.is_occupied(ally, new_pos))
                 {
                     return;
                 }
@@ -114,7 +114,7 @@ namespace board
     void add_backward(Position pos, std::vector<Move>& moves,
                         Board board, bool white_turn, PieceType piece)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         File file = pos.file_get();
         int f = static_cast<int>(pos.file_get());
@@ -128,7 +128,7 @@ namespace board
                             (white_turn) ? Color::BLACK : Color::WHITE);
 
                 Move mv = Move(pos, new_pos);
-                if (board.is_occupied(&ally, new_pos))
+                if (board.is_occupied(ally, new_pos))
                 {
                     return;
                 }
@@ -154,7 +154,7 @@ namespace board
     void add_rightward(Position pos, std::vector<Move>& moves,
                             Board board, bool white_turn, PieceType piece)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         Rank rank = pos.rank_get();
         int f = static_cast<int>(pos.file_get());
@@ -167,7 +167,7 @@ namespace board
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
                 Move mv = Move(pos, new_pos);
-                if (board.is_occupied(&ally, new_pos))
+                if (board.is_occupied(ally, new_pos))
                 {
                     return;
                 }
@@ -193,7 +193,7 @@ namespace board
     void add_leftward(Position pos, std::vector<Move>& moves,
                         Board board, bool white_turn, PieceType piece)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         Rank rank = pos.rank_get();
         int f = static_cast<int>(pos.file_get());
@@ -206,7 +206,7 @@ namespace board
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
                 Move mv = Move(pos, new_pos);
-                if (board.is_occupied(&ally, new_pos))
+                if (board.is_occupied(ally, new_pos))
                 {
                     return;
                 }
@@ -371,10 +371,10 @@ namespace board
     void check_king_castling(std::vector<Move>& moves,
                         Position pos, bool white_turn, Board board)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
 
-        Bitboard enemy = (white_turn) ? board.black_occupied_board_get()
+        auto enemy = (white_turn) ? board.black_occupied_board_get()
                             : board.white_occupied_board_get();
 
 
@@ -385,12 +385,12 @@ namespace board
         {
             Position new_pos = Position(static_cast<File>(i), rank);
             Move mv = Move(pos, new_pos);
-            if (board.is_occupied(&enemy, new_pos))
+            if (board.is_occupied(enemy, new_pos))
             {
                 return;
             }
 
-            if (board.is_occupied(&ally, new_pos))
+            if (board.is_occupied(ally, new_pos))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
@@ -408,10 +408,10 @@ namespace board
     void check_queen_castling(std::vector<Move>& moves,
                         Position pos, bool white_turn, Board board)
     {
-        Bitboard ally = (white_turn) ? board.white_occupied_board_get()
+        auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
 
-        Bitboard enemy = (white_turn) ? board.black_occupied_board_get()
+        auto enemy = (white_turn) ? board.black_occupied_board_get()
                             : board.white_occupied_board_get();
 
 
@@ -422,12 +422,12 @@ namespace board
         {
             Position new_pos = Position(static_cast<File>(i), rank);
             Move mv = Move(pos, new_pos);
-            if (board.is_occupied(&enemy, new_pos))
+            if (board.is_occupied(enemy, new_pos))
             {
                 return;
             }
 
-            if (board.is_occupied(&ally, new_pos))
+            if (board.is_occupied(ally, new_pos))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
@@ -449,11 +449,11 @@ namespace board
                                           board.get_white_king()
                                           : board.get_black_king();
 
-        Bitboard allies = (chessboard.isWhiteTurn()) ?
+        auto allies = (chessboard.isWhiteTurn()) ?
                            board.white_occupied_board_get()
                            : board.black_occupied_board_get();
 
-        Bitboard enemies = (chessboard.isWhiteTurn()) ?
+        auto enemies = (chessboard.isWhiteTurn()) ?
                            board.black_occupied_board_get()
                            : board.white_occupied_board_get();
 
@@ -493,10 +493,10 @@ namespace board
 
             PieceType piece = PieceType::KING;
 
-            if (in_board(f - 1, r + 1) and not board.is_occupied(&allies, pos1))
+            if (in_board(f - 1, r + 1) and not board.is_occupied(allies, pos1))
             {
                 Move mv = Move(p, pos1);
-                if (board.is_occupied(&enemies, pos1))
+                if (board.is_occupied(enemies, pos1))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -506,10 +506,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f, r + 1) and not board.is_occupied(&allies, pos2))
+            if (in_board(f, r + 1) and not board.is_occupied(allies, pos2))
             {
                 Move mv = Move(p, pos2);
-                if (board.is_occupied(&enemies, pos2))
+                if (board.is_occupied(enemies, pos2))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -519,10 +519,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f + 1, r + 1) and not board.is_occupied(&allies, pos3))
+            if (in_board(f + 1, r + 1) and not board.is_occupied(allies, pos3))
             {
                 Move mv = Move(p, pos3);
-                if (board.is_occupied(&enemies, pos3))
+                if (board.is_occupied(enemies, pos3))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -532,10 +532,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f - 1, r) and not board.is_occupied(&allies, pos4))
+            if (in_board(f - 1, r) and not board.is_occupied(allies, pos4))
             {
                 Move mv = Move(p, pos4);
-                if (board.is_occupied(&enemies, pos4))
+                if (board.is_occupied(enemies, pos4))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -545,10 +545,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f + 1, r) and not board.is_occupied(&allies, pos5))
+            if (in_board(f + 1, r) and not board.is_occupied(allies, pos5))
             {
                 Move mv = Move(p, pos5);
-                if (board.is_occupied(&enemies, pos5))
+                if (board.is_occupied(enemies, pos5))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -558,10 +558,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f - 1, r - 1) and not board.is_occupied(&allies, pos6))
+            if (in_board(f - 1, r - 1) and not board.is_occupied(allies, pos6))
             {
                 Move mv = Move(p, pos6);
-                if (board.is_occupied(&enemies, pos6))
+                if (board.is_occupied(enemies, pos6))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -571,10 +571,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f, r - 1) and not board.is_occupied(&allies, pos7))
+            if (in_board(f, r - 1) and not board.is_occupied(allies, pos7))
             {
                 Move mv = Move(p, pos7);
-                if (board.is_occupied(&enemies, pos7))
+                if (board.is_occupied(enemies, pos7))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -584,10 +584,10 @@ namespace board
                     m.push_back(mv);
                 }
             }
-            if (in_board(f + 1, r - 1) and not board.is_occupied(&allies, pos8))
+            if (in_board(f + 1, r - 1) and not board.is_occupied(allies, pos8))
             {
                 Move mv = Move(p, pos8);
-                if (board.is_occupied(&enemies, pos8))
+                if (board.is_occupied(enemies, pos8))
                 {
                     mv.piece_set(piece);
                     m.push_back(mv);
@@ -667,7 +667,7 @@ namespace board
         Board board = chessboard.getBoard();
         std::vector<Position> knights = (white_turn) ? board.get_white_knight()
                             : board.get_black_knight();
-        Bitboard allies = (white_turn) ? board.white_occupied_board_get()
+        auto allies = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
 
         int x;
@@ -682,7 +682,7 @@ namespace board
                 for (int j = -2; j <= 2; j++) {
                     j = (j == 0) ? j + 1 : j;
                     if (i != j and in_board(pos, i, j) and not
-                        board.is_occupied(&allies,
+                        board.is_occupied(allies,
                         (newPos = Position(static_cast<File>(x + i),
                                             static_cast<Rank>(y + j))))) {
                         Move mv = Move(pos, newPos);
