@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "parser/option-parser.hh"
 #include "perft_parser/perft_parser.hh"
@@ -15,7 +16,13 @@ int main(int argc, char** argv) {
 
     if (parser.perft_get().compare(""))
     {
-        auto pobject = perft_parser::parse_perft(parser.perft_get());
+        ifstream file;
+        file.open(parser.perft_get());
+        if (!file.is_open())
+            return 1;
+        string line;
+        getline(file, line);
+        auto pobject = perft_parser::parse_perft(line);
         std::cout << pobject.chessboard_get().generate_legal_moves().size();
     }
 

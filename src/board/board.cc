@@ -20,6 +20,9 @@ namespace board {
 
         occupied_board = shared_bit(new Bitboard());
 
+        white_occupied_board = shared_bit(new Bitboard());
+        black_occupied_board = shared_bit(new Bitboard());
+
         white_danger = shared_bit(new Bitboard());
         black_danger = shared_bit(new Bitboard());
     }
@@ -42,9 +45,11 @@ namespace board {
 
         occupied_board = shared_bit(new Bitboard());
 
+        white_occupied_board = shared_bit(new Bitboard());
+        black_occupied_board = shared_bit(new Bitboard());
+
         white_danger = shared_bit(new Bitboard());
         black_danger = shared_bit(new Bitboard());
-
 
         int rank = 7;
         int file = 7;

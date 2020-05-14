@@ -18,3 +18,5 @@ namespace perft_parser {
         int depth_;
     };
 }
+
+#include "perft_object.hxx"
