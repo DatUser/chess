@@ -24,12 +24,13 @@ int main(int argc, char** argv) {
         getline(file, line);
         auto pobject = perft_parser::parse_perft(line);
         auto moves = pobject.chessboard_get().generate_legal_moves();
-        for (auto move : moves) {
-            char brank = utils::utype(move.move_get().first.rank_get()) + 'a';
-            auto bfile = utils::utype(move.move_get().first.file_get()) + 1;
-            char erank = utils::utype(move.move_get().second.rank_get()) + 'a';
-            auto efile = utils::utype(move.move_get().second.file_get()) + 1;
-            std::cout << brank << bfile << " " << erank << efile << "\n";
+        for (long unsigned int i = 0; i < moves.size(); i++) {
+            auto move = moves[i];
+            auto brank = utils::utype(move.move_get().first.rank_get());
+            auto bfile = utils::utype(move.move_get().first.file_get());
+            auto erank = utils::utype(move.move_get().second.rank_get());
+            auto efile = utils::utype(move.move_get().second.file_get());
+            std::cout << brank << "/" << bfile << " " << erank << "/" << efile << "\n";
         }
         std::cout << moves.size() << std::endl;
     }
