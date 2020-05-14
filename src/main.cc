@@ -23,7 +23,15 @@ int main(int argc, char** argv) {
         string line;
         getline(file, line);
         auto pobject = perft_parser::parse_perft(line);
-        std::cout << pobject.chessboard_get().generate_legal_moves().size();
+        auto moves = pobject.chessboard_get().generate_legal_moves();
+        for (auto move : moves) {
+            char brank = utils::utype(move.move_get().first.rank_get()) + 'a';
+            auto bfile = utils::utype(move.move_get().first.file_get()) + 1;
+            char erank = utils::utype(move.move_get().second.rank_get()) + 'a';
+            auto efile = utils::utype(move.move_get().second.file_get()) + 1;
+            std::cout << brank << bfile << " " << erank << efile << "\n";
+        }
+        std::cout << moves.size() << std::endl;
     }
 
     return 0;
