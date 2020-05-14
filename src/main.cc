@@ -5,8 +5,15 @@
 #include "perft_parser/perft_parser.hh"
 
 #include "generate-chessboard.hh"
+#include <parser/option-parser.hh>
+//#define _GNU_SOURCE
+#include <dlfcn.h>
+#include <listener.hh>
+
+//CHECK RETURN VALUES
 
 int main(int argc, char** argv) {
+
     OptionParser parser(argc, argv);
 
     if (parser.help_get()) {
