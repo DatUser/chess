@@ -28,7 +28,7 @@ set(SRC_ENGINE
     "src/perft_parser/perft_object.cc"
     "src/utils/utils.cc"
     "src/generate-chessboard.cc"
-    #"src/listener/listener-manager.cc"
+    "src/listener/listener-manager.cc"
 )
 
 # Directories containing headers must be specified in the include_directories()
