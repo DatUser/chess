@@ -10,7 +10,7 @@ namespace board
             ~Move() = default;
 
             std::pair<Position, Position> move_get() const;
-        
+
             void piece_set(PieceType piece);
 
             PieceType piece_get();

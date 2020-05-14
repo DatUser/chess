@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include <parser/option-parser.hh>
+#include "parser/option-parser.hh"
+#include "perft_parser/perft_parser.hh"
 
 int main(int argc, char** argv) {
     OptionParser parser(argc, argv);
@@ -10,6 +11,12 @@ int main(int argc, char** argv) {
                   << "--pgn                     arg path to the PGN game file" << std::endl
                   << "-l [ --listeners ] args   list of paths to listener plugins" << std::endl
                   << "--perft arg               path to a perft file" << std::endl;
+    }
+
+    if (parser.perft_get().compare(""))
+    {
+        auto pobject = perft_parser::parse_perft(parser.perft_get());
+        std::cout << pobject.chessboard_get().generate_legal_moves().size();
     }
 
     return 0;

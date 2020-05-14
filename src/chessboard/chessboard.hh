@@ -46,3 +46,5 @@ namespace board {
     };
     #include "chessboard.hxx"
 }
+
+#include "chessboard.hxx"
