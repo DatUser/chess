@@ -684,30 +684,109 @@ namespace board
         int x;
         int y;
         Position newPos(File::A, Rank::ONE);
-
         for (Position pos : knights) {
             x = static_cast<int>(pos.file_get());
             y = static_cast<int>(pos.rank_get());
-            for (int i = -2; i <= 2; i++) {
-                i = (i == 0) ? i + 1 : i;
-                for (int j = -2; j <= 2; j++) {
-                    j = (j == 0) ? j + 1 : j;
-                    if (i != j and in_board(pos, i, j) and not
-                        board.is_occupied(allies,
-                        (newPos = Position(static_cast<File>(x + i),
-                                            static_cast<Rank>(y + j))))) {
-                        Move mv = Move(pos, newPos);
-                        opt_piecetype_t opt = board.is_occupied(newPos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-                        if (opt.has_value())
-                            mv.capture_set(opt.value());
-                        mv.piece_set(PieceType::KNIGHT);
-                        m.push_back(mv);
-                    }
-                }
+            if (in_board(pos, -2, -1) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x - 2),
+                    static_cast<Rank>(y - 1)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+            }
+            if (in_board(pos, -2, 1) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x - 2),
+                    static_cast<Rank>(y + 1)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+            }
+            if (in_board(pos, 2, -1) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x + 2),
+                    static_cast<Rank>(y - 1)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+            }
+            if (in_board(pos, 2, 1) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x + 2),
+                    static_cast<Rank>(y + 1)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+            }
+            if (in_board(pos, -1, -2) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x - 1),
+                    static_cast<Rank>(y - 2)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+
+            }
+            if (in_board(pos, -1, 2) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x - 1),
+                    static_cast<Rank>(y + 2)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+
+            }
+            if (in_board(pos, 1, -2) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x + 1),
+                    static_cast<Rank>(y - 2)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
+
+            }
+            if (in_board(pos, 1, 2) and not board.is_occupied(allies,
+                    (newPos = Position(static_cast<File>(x + 1),
+                    static_cast<Rank>(y + 2)))))
+            {
+                Move mv = Move(pos, newPos);
+                opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+                if (opt.has_value())
+                    mv.capture_set(opt.value());
+                mv.piece_set(PieceType::KNIGHT);
+                m.push_back(mv);
             }
         }
-
         return m;
     }
 }
