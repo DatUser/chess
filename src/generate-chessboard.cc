@@ -1,7 +1,4 @@
-#include "all.hh"
-#include "pgn-parser.hh"
-#include "chessboard/chessboard.hh"
-#include "move.hh"
+#include "generate-chessboard.hh"
 
 namespace board
 {
