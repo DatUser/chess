@@ -11,6 +11,11 @@ inline bool Chessboard::isWhiteTurn()
     return white_turn_;
 }
 
+inline void Chessboard::setWhiteTurn(bool wt)
+{
+    white_turn_ = wt;
+}
+
 inline bool Chessboard::getWhiteKingCastling()
 {
     return white_king_castling_;
