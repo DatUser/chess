@@ -1,6 +1,10 @@
 #include "perft_parser.hh"
+#include <listener/listener-manager.hh>
+#include "listener.hh"
 
 namespace perft_parser {
+
+    using ListenerManager = listener::ListenerManager;
 
     PerftObject parse_perft(string input)
     {
@@ -14,12 +18,22 @@ namespace perft_parser {
         items.pop_back();
 
         auto c = Chessboard(items);
+        ListenerManager::instance().chessboard_set(c);
+        auto listeners = ListenerManager::instance().listeners_get();
+        for (auto listener : listeners)
+            listener->register_board(c);
         return PerftObject(c, depth);
     }
 
     // ASK YAKA ABOUT CHESSBOARD CONSTRUCTOR
     Chessboard parse_fen(vector<string> splited_input)
     {
-        return Chessboard(splited_input);
+        auto c = Chessboard(splited_input);
+        ListenerManager::instance().chessboard_set(c);
+        auto listeners = ListenerManager::instance().listeners_get();
+        for (auto listener : listeners)
+            listener->register_board(c);
+
+        return c;
     }
 }
