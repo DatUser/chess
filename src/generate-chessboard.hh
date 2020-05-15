@@ -5,6 +5,6 @@
 
 namespace board
 {
-    std::vector<Move> get_moves_from_pgn(std::string& file);
+    std::vector<Move> get_moves_from_pgn(const std::string& file);
     Chessboard generate_chessboard(std::vector<Move> moves);
 }
