@@ -15,7 +15,6 @@ set(SRC_ENGINE
     "src/uci.cc"
     "src/pgn-move.cc"
     "src/pgn-exception.cc"
-    "src/main.cc"
     "src/parser/option-parser.cc"
     "src/bitboard/bitboard.cc"
     "src/board/board.cc"
