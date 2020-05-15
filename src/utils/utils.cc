@@ -28,6 +28,7 @@ namespace utils {
         board::File file;
         board::Rank rank;
         // std::cout << "x: " << x << " y: " << y << "\n"; // Debug purpose
+        bool fail = false;
         switch (x) {
             case 0:
                 file = board::File::H;
@@ -55,7 +56,7 @@ namespace utils {
                 break;
             default:
                 file = board::File::A;
-                break;
+                fail = true;
         } switch (y) {
             case 0:
                 rank = board::Rank::ONE;
@@ -82,9 +83,12 @@ namespace utils {
                 rank = board::Rank::EIGHT;
                 break;
             default:
-                rank = board::Rank::EIGHT;
-                break;
-        } return board::Position(file, rank);
+                rank = board::Rank::ONE;
+                fail = true;
+        }
+        if (fail)
+            throw std::invalid_argument("File or rank is negative");
+        return board::Position(file, rank);
     }
 
     unsigned long long int to_int(board::Position position) {
