@@ -32,8 +32,8 @@ namespace board
         for (int i = 1;
                 in_board_coord(posX, posY, abs_factor * i, ord_factor * i) and
                 not board.is_occupied(ally,
-                (newPos = Position(static_cast<File>(x - i),
-                static_cast<Rank>(y - i)))); i++) {
+                (newPos = Position(static_cast<File>(x + i * abs_factor),
+                static_cast<Rank>(y + i * ord_factor)))); i++) {
 
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
@@ -59,7 +59,7 @@ namespace board
                             (direction = std::pair<int, int>(1, -1)), piece);
         add_diag(pos, moves, board, white_turn,
                             (direction = std::pair<int, int>(-1, 1)), piece);
-       add_diag(pos, moves, board, white_turn,
+        add_diag(pos, moves, board, white_turn,
                             (direction = std::pair<int, int>(1, 1)), piece);
     }
 
