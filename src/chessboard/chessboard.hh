@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../all.hh"
+#include "../chessboard-interface.hh"
+#include "../listener/listener-manager.hh"
 #include "../utils/all.hh"
 #include "../board/all.hh"
 #include "../bitboard/all.hh"
@@ -8,8 +10,11 @@
 using namespace std;
 
 namespace board {
-    class Chessboard {
+    class Chessboard : public ChessboardInterface {
     public:
+        using side_piece_t = pair<PieceType, Color>;
+        using opt_piece_t = optional<side_piece_t>;
+
         Chessboard();
         Chessboard(vector<string> splited_input);
 
@@ -31,6 +36,9 @@ namespace board {
         std::optional<Position> getEnPassant();
         unsigned int getTurn();
         unsigned int getLastFiftyTurn();
+
+        opt_piece_t operator[](const Position& position) const override;
+
         // DEBUG TIER
         void print();
 

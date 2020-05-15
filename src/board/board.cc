@@ -202,7 +202,7 @@ namespace board {
                               knight_wb);
     }
 
-    opt_piecetype_t Board::is_occupied(Position position, Color color) {
+    opt_piecetype_t Board::is_occupied(const Position& position, Color color) const {
         auto power = utils::two_pow(utils::to_int(position));
         if (color == Color::WHITE) {
             if (pawn_wb->board_get() & power)
@@ -239,7 +239,7 @@ namespace board {
         return occupied_board->board_get() & utils::two_pow(power);
     }*/
 
-    bool Board::is_occupied(shared_bit board, Position position) {
+    bool Board::is_occupied(shared_bit board, const Position& position) const {
         auto power = utils::to_int(position);
         return board->board_get() & utils::two_pow(power);
     }

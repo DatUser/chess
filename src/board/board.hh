@@ -27,8 +27,8 @@ namespace board {
         void compute_black_danger();
 
         /* Get the state of a case at coordinate given in input */
-        opt_piecetype_t is_occupied(Position position, Color color);
-        bool is_occupied(shared_bit board, Position position);
+        opt_piecetype_t is_occupied(const Position& position, Color color) const;
+        bool is_occupied(shared_bit board, const Position& position) const;
         //bool is_occupied(Position position);
 
         /* Fait le move fait le move */

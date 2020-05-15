@@ -18,7 +18,7 @@ namespace perft_parser {
         items.pop_back();
 
         auto c = Chessboard(items);
-        ListenerManager::instance().chessboard_set(c);
+        ListenerManager::instance().chessboard_set(&c);
         auto listeners = ListenerManager::instance().listeners_get();
         for (auto listener : listeners)
             listener->register_board(c);
@@ -29,7 +29,7 @@ namespace perft_parser {
     Chessboard parse_fen(vector<string> splited_input)
     {
         auto c = Chessboard(splited_input);
-        ListenerManager::instance().chessboard_set(c);
+        ListenerManager::instance().chessboard_set(&c);
         auto listeners = ListenerManager::instance().listeners_get();
         for (auto listener : listeners)
             listener->register_board(c);

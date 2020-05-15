@@ -50,8 +50,20 @@ namespace board {
         }*/
     }
 
+    ChessboardInterface::opt_piece_t Chessboard::operator[](const Position& position) const
+    {
+        auto piece = board_.is_occupied(position, Color::WHITE);
+        if (piece.has_value())
+            return pair<PieceType, Color>(piece.value(), Color::WHITE);
+        return pair<PieceType, Color>(board_.is_occupied(position, Color::BLACK).value(), Color::BLACK);
+    }
+
     void Chessboard::do_move(Move move)
     {
+        auto listeners = listener::ListenerManager::instance().listeners_get();
+        for (auto listener : listeners)
+            listener->on_piece_moved(move.piece_get(), move.move_get().first, 
+                                                       move.move_get().second);
         if (white_turn_)
             board_.do_move(move, Color::WHITE);
         else
