@@ -55,4 +55,5 @@ namespace board
         // type of report given by the pgn file
         ReportType report_;
     };
+    #include "pgn-move.hxx"
 } // namespace board
