@@ -23,6 +23,7 @@ namespace board {
 
         Board getBoard();
         bool isWhiteTurn();
+        void setWhiteTurn(bool wt);
         bool getWhiteKingCastling();
         bool getWhiteQueenCastling();
         bool getBlackKingCastling();
