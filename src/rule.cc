@@ -229,11 +229,12 @@ namespace board
         }
     }
 
-    void pawn_step(std::vector<Move>& moves, Position pos, Board board) {
-        int y = static_cast<int>(pos.rank_get()) + 1;
+    void pawn_step(std::vector<Move>& moves, Position pos, Board board, bool white_turn) {
+        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
         Position newpos(pos.file_get(), static_cast<Rank>(y));
 
-        if (not board.is_occupied(board.occupied_board_get(), newpos)) {
+        if (in_board(newpos, 0, 0) and
+            not board.is_occupied(board.occupied_board_get(), newpos)) {
             Move mv(pos, newpos);
             mv.piece_set(PieceType::PAWN);
             moves.push_back(mv);
@@ -252,10 +253,13 @@ namespace board
 
     //Since it is at the sames place we deal with it in the same funcs
     void pawn_double_step_promotion(std::vector<Move>& moves, Position pos,
-            Board board, bool doubl) {
-        int y = static_cast<int>(pos.rank_get()) + (doubl) ? 2 : 1;
+            Board board, bool doubl, bool white_turn) {
+        int y = static_cast<int>(pos.rank_get()) +
+                ((doubl) ? 2  * ((white_turn) ? 1 : -1)
+                : 1 * ((white_turn) ? 1 : -1));
         Position newpos(pos.file_get(), static_cast<Rank>(y));
-        if (not board.is_occupied(board.occupied_board_get(), newpos)) {
+        if (in_board(newpos, 0, 0) and
+            not board.is_occupied(board.occupied_board_get(), newpos)) {
             Move mv(pos, newpos);
             mv.piece_set(PieceType::PAWN);
             //GERER LE EN PASSANT
@@ -277,7 +281,7 @@ namespace board
                     bool white_turn) {
         int x_r = static_cast<int>(pos.file_get()) + 1;
         int x_l = static_cast<int>(pos.file_get()) - 1;
-        int y = static_cast<int>(pos.rank_get()) + 1;
+        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
 
         Position right(static_cast<File>(x_r), static_cast<Rank>(y));
         Position left(static_cast<File>(x_l), static_cast<Rank>(y));
@@ -293,7 +297,7 @@ namespace board
         opt_piecetype_t opt_l = board.is_occupied(left,
                             (white_turn) ? Color::BLACK : Color::WHITE);
 
-        if (in_board(pos, -1, 1)) {
+        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1))) {
             if (opt_l.has_value()) {
                 Move mv(pos, left);
                 mv.piece_set(PieceType::PAWN);
@@ -302,7 +306,7 @@ namespace board
             }
         }
 
-        if (in_board(pos, 1, 1)) {
+        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1))) {
             if (opt_r.has_value()) {
                 Move mv(pos, right);
                 mv.piece_set(PieceType::PAWN);
@@ -347,19 +351,19 @@ namespace board
                 break;
 
             case Rank::TWO:
-                pawn_step(m, pawns[i], board);
-                pawn_double_step_promotion(m, pawns[i], board, white_turn);
+                pawn_step(m, pawns[i], board, white_turn);
+                pawn_double_step_promotion(m, pawns[i], board, white_turn, white_turn);
                 pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
             case Rank::SEVEN:
-                pawn_step(m, pawns[i], board);
-                pawn_double_step_promotion(m, pawns[i], board, not white_turn);
+                pawn_step(m, pawns[i], board, white_turn);
+                pawn_double_step_promotion(m, pawns[i], board, not white_turn, white_turn);
                 pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
             default:
-                pawn_step(m, pawns[i], board);
+                pawn_step(m, pawns[i], board, white_turn);
                 pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
             }
