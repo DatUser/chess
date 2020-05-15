@@ -17,6 +17,7 @@ namespace board
         KNIGHT,
         PAWN,
         KING, // Last position allows better optimization (order-move)
+        NONE
     };
 
     using opt_piecetype_t = std::optional<PieceType>;

@@ -41,9 +41,9 @@ namespace board
 
         private:
             const std::pair<Position, Position> move_;
-            PieceType piece_;
-            PieceType promotion_;
-            PieceType capture_;
+            PieceType piece_ = PieceType::NONE;
+            PieceType promotion_ = PieceType::NONE;
+            PieceType capture_ = PieceType::NONE;
             bool double_pawn_push_ = false;
             bool king_castling_ = false;
             bool queen_castling_ = false;
