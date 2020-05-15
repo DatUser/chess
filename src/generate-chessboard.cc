@@ -33,9 +33,12 @@ namespace board
     Chessboard generate_chessboard(std::vector<Move> moves)
     {
         Chessboard chessboard = Chessboard();
+        int i = 0;
         for (Move m : moves)
         {
-            m.piece_set(PieceType::ROOK);
+            chessboard.setWhiteTurn((i % 2 == 0) ? true : false);
+            chessboard.do_move(m);
+            i++;
         }
 
         return chessboard;
