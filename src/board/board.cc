@@ -203,7 +203,7 @@ namespace board {
     }
 
     opt_piecetype_t Board::is_occupied(Position position, Color color) {
-        auto power = utils::to_int(position);
+        auto power = utils::two_pow(utils::to_int(position));
         if (color == Color::WHITE) {
             if (pawn_wb->board_get() & power)
                 return PieceType::PAWN;
