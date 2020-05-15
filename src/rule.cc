@@ -83,7 +83,7 @@ namespace board
         for (int i = 1; i < 8 - r; i++)
         {
             Position new_pos = Position(file, static_cast<Rank>(r + i));
-            if (in_board(f, r))
+            if (in_board(f, r + i))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
@@ -122,7 +122,7 @@ namespace board
         for (int i = 1; i < 8 - r; i++)
         {
             Position new_pos = Position(file, static_cast<Rank>(r - i));
-            if (in_board(f, r))
+            if (in_board(f, r - i))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
@@ -162,7 +162,7 @@ namespace board
         for (int i = 1; i < 8; i++)
         {
             Position new_pos = Position(static_cast<File>(f + i), rank);
-            if (in_board(f, r))
+            if (in_board(f + i, r))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
@@ -201,7 +201,7 @@ namespace board
         for (int i = 1; i < 8; i++)
         {
             Position new_pos = Position(static_cast<File>(f - i), rank);
-            if (in_board(f, r))
+            if (in_board(f - i, r))
             {
                 opt_piecetype_t opt = board.is_occupied(new_pos,
                             (white_turn) ? Color::BLACK : Color::WHITE);
