@@ -241,12 +241,15 @@ namespace board
         }
     }
 
-    void add_promotion(std::vector<Move>& moves, Position pos, Position newpos) {
+    void add_promotion(std::vector<Move>& moves, Position pos, Position newpos,
+                int capture) {
 
         for (int i = 0; i < 4; i++) {
             Move mv(pos, newpos);
             mv.piece_set(PieceType::PAWN);
             mv.promotion_set(piecetype_array[i]);
+            if (capture >= 0)
+                mv.capture_set(static_cast<PieceType>(capture));
             moves.push_back(mv);
         }
     }
@@ -268,7 +271,7 @@ namespace board
                 moves.push_back(mv);
             }
              else
-                add_promotion(moves, pos, newpos);
+                add_promotion(moves, pos, newpos, -1);
         }
     }
 
@@ -297,21 +300,25 @@ namespace board
         opt_piecetype_t opt_l = board.is_occupied(left,
                             (white_turn) ? Color::BLACK : Color::WHITE);
 
-        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1))) {
-            if (opt_l.has_value()) {
+        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1)) and opt_l.has_value()) {
+            if (left.rank_get() == Rank::EIGHT or left.rank_get() == Rank::ONE) {
                 Move mv(pos, left);
                 mv.piece_set(PieceType::PAWN);
                 mv.capture_set(opt_l.value());
                 moves.push_back(mv);
+            } else {
+                add_promotion(moves, pos, left, static_cast<int>(opt_l.value()));
             }
         }
 
-        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1))) {
-            if (opt_r.has_value()) {
+        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1)) and opt_r.has_value()) {
+            if (right.rank_get() == Rank::EIGHT or right.rank_get() == Rank::ONE) {
                 Move mv(pos, right);
                 mv.piece_set(PieceType::PAWN);
                 mv.capture_set(opt_r.value());
                 moves.push_back(mv);
+            } else {
+                add_promotion(moves, pos, right, static_cast<int>(opt_r.value()));
             }
         }
 
