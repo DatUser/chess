@@ -44,10 +44,10 @@ namespace board
             PieceType piece_;
             PieceType promotion_;
             PieceType capture_;
-            bool double_pawn_push_;
-            bool king_castling_;
-            bool queen_castling_;
-            bool en_passant_;
+            bool double_pawn_push_ = false;
+            bool king_castling_ = false;
+            bool queen_castling_ = false;
+            bool en_passant_ = false;
     };
 }
 

@@ -301,7 +301,8 @@ namespace board
                             (white_turn) ? Color::BLACK : Color::WHITE);
 
         if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1)) and opt_l.has_value()) {
-            if (left.rank_get() == Rank::EIGHT or left.rank_get() == Rank::ONE) {
+            if (left.rank_get() != Rank::EIGHT
+                and left.rank_get() != Rank::ONE) {
                 Move mv(pos, left);
                 mv.piece_set(PieceType::PAWN);
                 mv.capture_set(opt_l.value());
@@ -312,7 +313,8 @@ namespace board
         }
 
         if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1)) and opt_r.has_value()) {
-            if (right.rank_get() == Rank::EIGHT or right.rank_get() == Rank::ONE) {
+            if (right.rank_get() != Rank::EIGHT
+                and right.rank_get() != Rank::ONE) {
                 Move mv(pos, right);
                 mv.piece_set(PieceType::PAWN);
                 mv.capture_set(opt_r.value());
