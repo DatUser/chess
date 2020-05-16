@@ -441,36 +441,28 @@ namespace board
     void check_queen_castling(std::vector<Move>& moves,
                         Position pos, bool white_turn, Board board)
     {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
 
-        auto enemy = (white_turn) ? board.black_occupied_board_get()
-                            : board.white_occupied_board_get();
-
-
+        auto occupied = board.occupied_board_get();
         int f = static_cast<int>(pos.file_get());
         int r = static_cast<int>(pos.rank_get());
         Rank rank = pos.rank_get();
-        for (int i = f - 1; in_board(i, r); i--)
-        {
-            Position new_pos = Position(static_cast<File>(i), rank);
-            Move mv = Move(pos, new_pos);
-            if (board.is_occupied(enemy, new_pos))
-            {
-                return;
-            }
 
-            if (board.is_occupied(ally, new_pos))
-            {
-                opt_piecetype_t opt = board.is_occupied(new_pos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value() && opt.value() == PieceType::ROOK)
+        if (in_board(f - 3, r))
+        {
+            Position pos1 = Position(static_cast<File>(f - 1), rank);
+            Position pos2 = Position(static_cast<File>(f - 2), rank);
+            Position posTower = Position(static_cast<File>(f - 3), rank);
+            opt_piecetype_t opt = board.is_occupied(posTower,
+                            (white_turn) ? Color::WHITE : Color::BLACK);
+
+            if (in_board(f - 1, r) and not board.is_occupied(occupied, pos1)
+                and in_board(f - 2, r) and not board.is_occupied(occupied, pos2)
+                and opt.has_value() and opt.value() == PieceType::ROOK)
                 {
-                    mv.queen_castling_set(true);
+                    Move mv = Move(pos, pos2);
+                    mv.king_castling_set(true);
                     moves.push_back(mv);
-                    return;
                 }
-            }
         }
     }
 
