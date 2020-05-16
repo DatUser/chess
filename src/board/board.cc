@@ -202,7 +202,8 @@ namespace board {
                               knight_wb);
     }
 
-    opt_piecetype_t Board::is_occupied(const Position& position, Color color) const {
+    opt_piecetype_t Board::is_occupied(const Position& position, Color color)
+        const {
         auto power = utils::two_pow(utils::to_int(position));
         if (color == Color::WHITE) {
             if (pawn_wb->board_get() & power)
@@ -540,28 +541,36 @@ namespace board {
             int floor_pow = utils::pow_two(floor);
             if (floor_pow  / 8 < 6 && floor_pow % 8 < 7
                 && !is_occupied(ally, utils::to_position(floor_pow + 17))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow + 17));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow + 17));
             } if (floor_pow / 8 < 6 && floor_pow % 8 > 0
                   && !is_occupied(ally, utils::to_position(floor_pow + 15))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow + 15));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow + 15));
             } if (floor_pow / 8 < 7 && floor_pow % 8 < 6
                   && !is_occupied(ally, utils::to_position(floor_pow + 10))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow + 10));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow + 10));
             } if (floor_pow / 8 < 7 && floor_pow % 8 > 1
                   && !is_occupied(ally, utils::to_position(floor_pow + 6))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow + 6));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow + 6));
             } if (floor_pow / 8 > 0 && floor_pow % 8 < 6
                   && !is_occupied(ally, utils::to_position(floor_pow - 6))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow - 6));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow - 6));
             } if (floor_pow / 8 > 0 && floor_pow % 8 > 1
                   && !is_occupied(ally, utils::to_position(floor_pow - 10))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow - 10));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow - 10));
             } if (floor_pow / 8 > 1 && floor_pow % 8 < 7
                   && !is_occupied(ally, utils::to_position(floor_pow - 15))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow - 15));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow - 15));
             } if (floor_pow / 8 > 1 && floor_pow % 8 > 0
                   && !is_occupied(ally, utils::to_position(floor_pow - 17))) {
-                board->board_set(board->board_get() | utils::two_pow(floor_pow - 17));
+                board->board_set(board->board_get()
+                | utils::two_pow(floor_pow - 17));
             }
         }
     }

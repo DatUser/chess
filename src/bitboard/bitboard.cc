@@ -28,11 +28,13 @@ namespace board {
                 break;
             case PieceType::PAWN:
                 for (int i = 0; i < 8; i++) {
-                    board_ |= utils::two_pow(color == Color::BLACK ? 48 + i : 8 + i);
+                    board_ |= utils::two_pow(color == Color::BLACK ?
+                                                48 + i : 8 + i);
                 }
                 break;
             default:
-                throw new std::invalid_argument("Invalid piece for bitboard initialisation");
+                throw new std::invalid_argument("Invalid piece for bitboard" +
+                                                    + " initialisation");
         }
     }
 

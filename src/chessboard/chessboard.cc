@@ -50,7 +50,8 @@ namespace board {
         }*/
     }
 
-    ChessboardInterface::opt_piece_t Chessboard::operator[](const Position& position) const
+    ChessboardInterface::opt_piece_t
+            Chessboard::operator[](const Position& position) const
     {
         auto piece = board_.is_occupied(position, Color::WHITE);
         if (piece.has_value())

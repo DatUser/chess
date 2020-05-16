@@ -10,10 +10,14 @@ namespace board
     }
 
     bool in_board(Position pos, int x, int y) {
-        return static_cast<int>(pos.file_get()) + x >= static_cast<int>(File::A) and
-                static_cast<int>(pos.file_get()) + x <= static_cast<int>(File::H) and
-                static_cast<int>(pos.rank_get()) + y >= static_cast<int>(Rank::ONE) and
-                static_cast<int>(pos.rank_get()) + y <= static_cast<int>(Rank::EIGHT);
+        return static_cast<int>(pos.file_get()) + x
+            >= static_cast<int>(File::A)
+            and static_cast<int>(pos.file_get()) + x
+            <= static_cast<int>(File::H)
+            and static_cast<int>(pos.rank_get()) + y
+            >= static_cast<int>(Rank::ONE)
+            and static_cast<int>(pos.rank_get()) + y
+            <= static_cast<int>(Rank::EIGHT);
     }
 
     void add_diag(Position pos, std::vector<Move>& moves,
@@ -229,7 +233,8 @@ namespace board
         }
     }
 
-    void pawn_step(std::vector<Move>& moves, Position pos, Board board, bool white_turn) {
+    void pawn_step(std::vector<Move>& moves, Position pos, Board board,
+            bool white_turn) {
         int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
         Position newpos(pos.file_get(), static_cast<Rank>(y));
 
@@ -280,8 +285,8 @@ namespace board
                 posA.file_get() == posB.file_get();
     }
 
-    void pawn_eat(std::vector<Move>& moves, Position pos, Chessboard chessboard,
-                    bool white_turn) {
+    void pawn_eat(std::vector<Move>& moves, Position pos,
+            Chessboard chessboard, bool white_turn) {
         int x_r = static_cast<int>(pos.file_get()) + 1;
         int x_l = static_cast<int>(pos.file_get()) - 1;
         int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
@@ -300,7 +305,8 @@ namespace board
         opt_piecetype_t opt_l = board.is_occupied(left,
                             (white_turn) ? Color::BLACK : Color::WHITE);
 
-        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1)) and opt_l.has_value()) {
+        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1))
+                and opt_l.has_value()) {
             if (left.rank_get() != Rank::EIGHT
                 and left.rank_get() != Rank::ONE) {
                 Move mv(pos, left);
@@ -308,11 +314,13 @@ namespace board
                 mv.capture_set(opt_l.value());
                 moves.push_back(mv);
             } else {
-                add_promotion(moves, pos, left, static_cast<int>(opt_l.value()));
+                add_promotion(moves, pos, left,
+                            static_cast<int>(opt_l.value()));
             }
         }
 
-        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1)) and opt_r.has_value()) {
+        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1))
+                        and opt_r.has_value()) {
             if (right.rank_get() != Rank::EIGHT
                 and right.rank_get() != Rank::ONE) {
                 Move mv(pos, right);
@@ -320,7 +328,8 @@ namespace board
                 mv.capture_set(opt_r.value());
                 moves.push_back(mv);
             } else {
-                add_promotion(moves, pos, right, static_cast<int>(opt_r.value()));
+                add_promotion(moves, pos, right,
+                        static_cast<int>(opt_r.value()));
             }
         }
 
@@ -361,13 +370,15 @@ namespace board
 
             case Rank::TWO:
                 pawn_step(m, pawns[i], board, white_turn);
-                pawn_double_step_promotion(m, pawns[i], board, white_turn, white_turn);
+                pawn_double_step_promotion(m, pawns[i], board,
+                                            white_turn, white_turn);
                 pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
             case Rank::SEVEN:
                 pawn_step(m, pawns[i], board, white_turn);
-                pawn_double_step_promotion(m, pawns[i], board, not white_turn, white_turn);
+                pawn_double_step_promotion(m, pawns[i], board,
+                                            not white_turn, white_turn);
                 pawn_eat(m, pawns[i], chessboard, white_turn);
                 break;
 
@@ -402,9 +413,9 @@ namespace board
             opt_piecetype_t opt = board.is_occupied(posTower,
                             (white_turn) ? Color::WHITE : Color::BLACK);
 
-            if (/*king_castling
-                and*/ in_board(f + 1, r) and not board.is_occupied(occupied, pos1)
-                and in_board(f + 2, r) and not board.is_occupied(occupied, pos2)
+            if (in_board(f + 1, r) and not board.is_occupied(occupied, pos1)
+                and in_board(f + 2, r) and
+                not board.is_occupied(occupied, pos2)
                 and opt.has_value() and opt.value() == PieceType::ROOK) {
                     //indeed it is the pos just before the tower
                     Move mv = Move(pos, pos2);
@@ -412,29 +423,6 @@ namespace board
                     moves.push_back(mv);
                 }
         }
-
-
-        /*for (int i = f + 1; in_board(i, r); i++)
-        {
-            Position new_pos = Position(static_cast<File>(i), rank);
-            Move mv = Move(pos, new_pos);
-            if (board.is_occupied(enemy, new_pos))
-            {
-                return;
-            }
-
-            if (board.is_occupied(ally, new_pos))
-            {
-                opt_piecetype_t opt = board.is_occupied(new_pos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value() && opt.value() == PieceType::ROOK)
-                {
-                    mv.king_castling_set(true);
-                    moves.push_back(mv);
-                    return;
-                }
-            }
-        }*/
     }
 
 
@@ -512,14 +500,18 @@ namespace board
             int f = static_cast<int>(p.file_get());
             int r = static_cast<int>(p.rank_get());
 
-            Position pos1 = Position(static_cast<File>(f - 1), static_cast<Rank>(r + 1));
+            Position pos1 = Position(static_cast<File>(f - 1),
+                                        static_cast<Rank>(r + 1));
             Position pos2 = Position(file, static_cast<Rank>(r + 1));
-            Position pos3 = Position(static_cast<File>(f + 1), static_cast<Rank>(r + 1));
+            Position pos3 = Position(static_cast<File>(f + 1),
+                                        static_cast<Rank>(r + 1));
             Position pos4 = Position(static_cast<File>(f - 1), rank);
             Position pos5 = Position(static_cast<File>(f + 1), rank);
-            Position pos6 = Position(static_cast<File>(f - 1), static_cast<Rank>(r - 1));
+            Position pos6 = Position(static_cast<File>(f - 1),
+                                        static_cast<Rank>(r - 1));
             Position pos7 = Position(file, static_cast<Rank>(r - 1));
-            Position pos8 = Position(static_cast<File>(f + 1), static_cast<Rank>(r - 1));
+            Position pos8 = Position(static_cast<File>(f + 1),
+                                        static_cast<Rank>(r - 1));
 
             PieceType piece = PieceType::KING;
 
