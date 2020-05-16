@@ -55,19 +55,75 @@ namespace board {
         auto piece = board_.is_occupied(position, Color::WHITE);
         if (piece.has_value())
             return pair<PieceType, Color>(piece.value(), Color::WHITE);
-        return pair<PieceType, Color>(board_.is_occupied(position, Color::BLACK).value(), Color::BLACK);
+        return pair<PieceType, Color>(board_.is_occupied(position,
+                                      Color::BLACK).value(), Color::BLACK);
     }
 
     void Chessboard::do_move(Move move)
     {
         auto listeners = listener::ListenerManager::instance().listeners_get();
         for (auto listener : listeners)
-            listener->on_piece_moved(move.piece_get(), move.move_get().first, 
+            listener->on_piece_moved(move.piece_get(), move.move_get().first,
                                                        move.move_get().second);
-        if (white_turn_)
-            board_.do_move(move, Color::WHITE);
+        board_.do_move(move, white_turn_ ? Color::WHITE : Color::BLACK);
+        if (move.capture_get() != PieceType::NONE)
+        {
+            for (auto listener : listeners)
+                listener->on_piece_taken(move.capture_get(),
+                                         move.move_get().second);
+        }
+        if (move.promotion_get() != PieceType::NONE)
+        {
+            for (auto listener : listeners)
+                listener->on_piece_promoted(move.promotion_get(),
+                            move.move_get().second);
+        }
+        else if (move.king_castling_get())
+        {
+            for (auto listener : listeners)
+                listener->on_kingside_castling(white_turn_ ? Color::WHITE
+                                            : Color::BLACK);
+        }
+        else if (move.queen_castling_get())
+        {
+            for (auto listener : listeners)
+                listener->on_queenside_castling(white_turn_ ? Color::WHITE
+                                            : Color::BLACK);
+
+        }
+        if (board_.is_check(!white_turn_))
+        {
+            white_turn_ = !white_turn_;
+            auto moves = generate_legal_moves();
+            if (moves.size() == 0)
+            {
+                for (auto listener : listeners)
+                    listener->on_player_mat(white_turn_ ? Color::WHITE
+                                            : Color::BLACK);
+            }
+            else
+            {
+                for (auto listener : listeners)
+                    listener->on_player_check(white_turn_ ? Color::WHITE
+                                            : Color::BLACK);
+            }
+            white_turn_ = !white_turn_;
+        }
         else
-            board_.do_move(move, Color::BLACK);
+        {
+            white_turn_ = !white_turn_;
+            auto moves = generate_legal_moves();
+            if (moves.size() == 0)
+            {
+                for (auto listener : listeners)
+                {
+                    listener->on_player_pat(white_turn_ ? Color::WHITE
+                                            : Color::BLACK);
+                    listener->on_draw();
+                }
+            }
+            white_turn_ = !white_turn_;
+        }
     }
 
     std::vector<Move> add_in_vector(std::vector<Move> v1, std::vector<Move> v2)
@@ -111,7 +167,8 @@ namespace board {
 
     bool Chessboard::is_check()
     {
-        return board_.is_check(white_turn_);
+        bool check = board_.is_check(white_turn_);
+        return check;
     }
 
     void Chessboard::print()
