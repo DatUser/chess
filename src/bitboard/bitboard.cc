@@ -33,8 +33,8 @@ namespace board {
                 }
                 break;
             default:
-                throw new std::invalid_argument("Invalid piece for bitboard" +
-                                                    + " initialisation");
+                throw new std::invalid_argument("Invalid piece for bitboard"
+                                                    " initialisation");
         }
     }
 
