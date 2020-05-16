@@ -381,20 +381,40 @@ namespace board
         return m;
     }
 
+    bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
+        Position pos(static_cast<File>(x), static_cast<Rank>(y));
+        return in_board(x, y) and board.is_occupied(bitboard, pos);
+    }
+
     void check_king_castling(std::vector<Move>& moves,
                         Position pos, bool white_turn, Board board)
     {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
-
-        auto enemy = (white_turn) ? board.black_occupied_board_get()
-                            : board.white_occupied_board_get();
-
-
+        //auto board = chessboard.getBoard();
+        auto occupied = board.occupied_board_get();
         int f = static_cast<int>(pos.file_get());
         int r = static_cast<int>(pos.rank_get());
         Rank rank = pos.rank_get();
-        for (int i = f + 1; in_board(i, r); i++)
+
+        if (in_board(f + 3, r)) {
+            Position pos1 = Position(static_cast<File>(f + 1), rank);
+            Position pos2 = Position(static_cast<File>(f + 2), rank);
+            Position posTower = Position(static_cast<File>(f + 3), rank);
+            opt_piecetype_t opt = board.is_occupied(posTower,
+                            (white_turn) ? Color::WHITE : Color::BLACK);
+
+            if (/*king_castling
+                and*/ in_board(f + 1, r) and not board.is_occupied(occupied, pos1)
+                and in_board(f + 2, r) and not board.is_occupied(occupied, pos2)
+                and opt.has_value() and opt.value() == PieceType::ROOK) {
+                    //indeed it is the pos just before the tower
+                    Move mv = Move(pos, pos2);
+                    mv.king_castling_set(true);
+                    moves.push_back(mv);
+                }
+        }
+
+
+        /*for (int i = f + 1; in_board(i, r); i++)
         {
             Position new_pos = Position(static_cast<File>(i), rank);
             Move mv = Move(pos, new_pos);
@@ -414,7 +434,7 @@ namespace board
                     return;
                 }
             }
-        }
+        }*/
     }
 
 
@@ -478,14 +498,19 @@ namespace board
         {
             positions = board.get_black_king();
         }
+        bool white_turn = chessboard.isWhiteTurn();
+        bool king_castling = (white_turn) ? chessboard.getWhiteKingCastling()
+                                    : chessboard.getBlackKingCastling();
+        bool queen_castling = (white_turn) ? chessboard.getWhiteQueenCastling()
+                                    : chessboard.getBlackQueenCastling();
 
         for (Position p : positions)
         {
-            if (chessboard.getWhiteKingCastling() or chessboard.getBlackKingCastling())
+            if (king_castling)
             {
                 check_king_castling(m, p, chessboard.isWhiteTurn(), board);
             }
-            if (chessboard.getWhiteQueenCastling() or chessboard.getBlackQueenCastling())
+            if (queen_castling)
             {
                 check_queen_castling(m, p, chessboard.isWhiteTurn(), board);
             }
