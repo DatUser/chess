@@ -163,6 +163,21 @@ namespace board {
         std::vector<Move> knights = rules.generate_knight_moves(*this);
         all_moves = add_in_vector(all_moves, knights);
 
+        std::vector<Move> res;
+        // Put yourself in check part
+        /*for (long unsigned int i = 0; i < all_moves.size(); i++)
+        {
+            auto pair_r = all_moves[i].move_get();
+            Move virgin_move = Move(pair_r.first, pair_r.second);
+            Move revert = Move(pair_r.second, pair_r.first);
+            board_.do_move(virgin_move, white_turn_ ? Color::WHITE : Color::BLACK);
+            if (!board_.is_check(white_turn_))
+            {
+                res.push_back(all_moves[i]);
+            }
+            board_.do_move(revert, white_turn_ ? Color::WHITE : Color::BLACK);
+        }*/
+
         return all_moves;
     }
 
