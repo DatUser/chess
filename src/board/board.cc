@@ -512,21 +512,27 @@ namespace board {
             int floor_pow = utils::pow_two(floor);
             int offset = white ? 9 : -7;
             unsigned long long int res = utils::two_pow(floor_pow + offset);
-            Position position = utils::to_position(floor_pow + offset);
-            if (floor_pow % 8 < 7 && !is_occupied(ally, position)) {
-                board->board_set(board->board_get() | res);
+            if (offset + floor_pow <= 63 and offset + floor_pow >= 0) {
+                Position position = utils::to_position(floor_pow + offset);
+                if (floor_pow % 8 < 7 && !is_occupied(ally, position)) {
+                    board->board_set(board->board_get() | res);
+                }
             }
             offset = white ? 8 : -8;
             res = utils::two_pow(floor_pow + offset);
-            position = utils::to_position(floor_pow + offset);
-            if (!is_occupied(ally, position)) {
-                board->board_set(board->board_get() | res);
+            if (offset + floor_pow <= 63 and offset + floor_pow >= 0) {
+                Position position = utils::to_position(floor_pow + offset);
+                if (!is_occupied(ally, position)) {
+                    board->board_set(board->board_get() | res);
+                }
             }
             offset = white ? 7 : -9;
             res = utils::two_pow(floor_pow + offset);
-            position = utils::to_position(floor_pow + offset);
-            if (floor_pow % 8 > 0 && !is_occupied(ally, position)) {
-                board->board_set(board->board_get() | res);
+            if (offset + floor_pow <= 63 and offset + floor_pow >= 0) {
+                Position position = utils::to_position(floor_pow + offset);
+                if (floor_pow % 8 > 0 && !is_occupied(ally, position)) {
+                    board->board_set(board->board_get() | res);
+                }
             }
         }
     }
