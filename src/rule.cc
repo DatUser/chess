@@ -509,9 +509,9 @@ namespace board
             if (in_board(f - 1, r + 1) and not board.is_occupied(allies, pos1))
             {
                 Move mv = Move(p, pos1);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos1))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -522,9 +522,9 @@ namespace board
             if (in_board(f, r + 1) and not board.is_occupied(allies, pos2))
             {
                 Move mv = Move(p, pos2);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos2))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -535,9 +535,9 @@ namespace board
             if (in_board(f + 1, r + 1) and not board.is_occupied(allies, pos3))
             {
                 Move mv = Move(p, pos3);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos3))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -548,9 +548,9 @@ namespace board
             if (in_board(f - 1, r) and not board.is_occupied(allies, pos4))
             {
                 Move mv = Move(p, pos4);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos4))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -561,9 +561,9 @@ namespace board
             if (in_board(f + 1, r) and not board.is_occupied(allies, pos5))
             {
                 Move mv = Move(p, pos5);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos5))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -574,9 +574,9 @@ namespace board
             if (in_board(f - 1, r - 1) and not board.is_occupied(allies, pos6))
             {
                 Move mv = Move(p, pos6);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos6))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -587,9 +587,9 @@ namespace board
             if (in_board(f, r - 1) and not board.is_occupied(allies, pos7))
             {
                 Move mv = Move(p, pos7);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos7))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
@@ -600,9 +600,9 @@ namespace board
             if (in_board(f + 1, r - 1) and not board.is_occupied(allies, pos8))
             {
                 Move mv = Move(p, pos8);
+                mv.piece_set(piece);
                 if (board.is_occupied(enemies, pos8))
                 {
-                    mv.piece_set(piece);
                     m.push_back(mv);
                 }
                 else
