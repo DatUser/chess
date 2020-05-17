@@ -6,7 +6,6 @@ namespace board
     class Move {
         public:
             Move(Position start, Position end);
-
             ~Move() = default;
 
             std::pair<Position, Position> move_get() const;

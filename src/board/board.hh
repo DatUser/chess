@@ -10,7 +10,7 @@ using namespace std;
 
 namespace board {
     using shared_bit = std::shared_ptr<Bitboard>;
-
+    class Chessboard;
     class Board {
 
 

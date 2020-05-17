@@ -20,6 +20,8 @@ namespace board {
 
         void case_set(Position position);
 
+        void clear();
+
         Bitboard operator|=(Bitboard other);
         Bitboard operator=(Bitboard& other);
 

@@ -4,7 +4,7 @@ namespace board {
 inline std::pair<Position, Position> Move::move_get() const {
     return move_;
 }
-    
+
 inline void Move::piece_set(PieceType piece) {
     piece_ = piece;
 }

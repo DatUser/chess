@@ -51,6 +51,8 @@ namespace board {
         board_ = 0;
     }
 
+    void Bitboard::clear() { board_ &= 0; }
+
     void Bitboard::print() {
         long long int temp = board_;
         for (int i = 7; i >= 0; i--)
