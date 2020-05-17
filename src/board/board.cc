@@ -114,6 +114,9 @@ namespace board {
 
     void Board::refresh_occupied()
     {
+        white_occupied_board = shared_bit(new Bitboard());
+        black_occupied_board = shared_bit(new Bitboard());
+
         *white_occupied_board |= *king_wb;
         *white_occupied_board |= *queen_wb;
         *white_occupied_board |= *knight_wb;

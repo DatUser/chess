@@ -419,6 +419,7 @@ namespace board
                 and opt.has_value() and opt.value() == PieceType::ROOK) {
                     //indeed it is the pos just before the tower
                     Move mv = Move(pos, pos2);
+                    mv.piece_set(PieceType::KING);
                     mv.king_castling_set(true);
                     moves.push_back(mv);
                 }

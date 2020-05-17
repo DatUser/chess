@@ -180,7 +180,7 @@ namespace board {
             board_.do_move(revert, white_turn_ ? Color::WHITE : Color::BLACK);
         }
 
-        return all_moves;
+        return res;
     }
 
     bool Chessboard::is_check()
