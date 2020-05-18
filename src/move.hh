@@ -39,7 +39,7 @@ namespace board
 
             bool en_passant_get();
 
-            bool operator==(const Move& move);
+            bool operator==(Move& move);
 
         private:
             const std::pair<Position, Position> move_;
