@@ -291,6 +291,57 @@ namespace board {
                     //board = new Bitboard();
             }
             board->move(move.move_get().first, move.move_get().second);
+            if (move.capture_get() != PieceType::NONE)
+            {
+                switch (move.capture_get())
+                {
+                    case PieceType::QUEEN:
+                        board = (color == Color::WHITE ? queen_bb : queen_wb);
+                        break;
+                    case PieceType::ROOK:
+                        board = (color == Color::WHITE ? rook_bb : rook_wb);
+                        break;
+                    case PieceType::BISHOP:
+                        board =  (color == Color::WHITE ? bishop_bb : bishop_wb);
+                        break;
+                    case PieceType::KNIGHT:
+                        board = (color == Color::WHITE ? knight_bb : knight_wb);
+                        break;
+                    case PieceType::PAWN:
+                        board = (color == Color::WHITE ? pawn_bb : pawn_wb);
+                        break;
+                    case PieceType::KING:
+                        board = (color == Color::WHITE ? king_bb : king_wb);
+                        break;
+                    default:
+                        break;
+
+                }
+                board->remove(move.move_get().second);
+            }
+            if (move.promotion_get() != PieceType::NONE)
+            {
+                board = (color == Color::WHITE ? pawn_wb : pawn_bb);
+                board->remove(move.move_get().second);
+                switch (move.promotion_get())
+                {
+                    case PieceType::QUEEN:
+                        board = (color == Color::WHITE ? queen_bb : queen_wb);
+                        break;
+                    case PieceType::ROOK:
+                        board = (color == Color::WHITE ? rook_bb : rook_wb);
+                        break;
+                    case PieceType::BISHOP:
+                        board =  (color == Color::WHITE ? bishop_bb : bishop_wb);
+                        break;
+                    case PieceType::KNIGHT:
+                        board = (color == Color::WHITE ? knight_bb : knight_wb);
+                        break;
+                    default:
+                        break;
+                }
+                board->case_set(move.move_get().second);
+            }
         }
     }
 

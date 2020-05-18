@@ -58,14 +58,16 @@ namespace chess_engine {
         auto moves = board.generate_legal_moves();
         int index = 0;
         int act = rec_search(board, depth - 1, moves[0], false);
+        std::cout << "act: " << act << "\n";
         board.setWhiteTurn(!board.isWhiteTurn());
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
             auto temp = rec_search(board, depth - 1, moves[i], false);
-            if (temp < act)
+            if (temp > act)
             {
                 index = i;
                 act = temp;
+                std::cout << "act: " << act << "\n";
             }
         }
         board.setWhiteTurn(!board.isWhiteTurn());

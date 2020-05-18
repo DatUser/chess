@@ -19,7 +19,7 @@ namespace board {
         bool move(Position start_pos, Position end_pos);
 
         void case_set(Position position);
-
+        void remove(Position position);
         void clear();
 
         Bitboard operator|=(Bitboard other);
