@@ -20,6 +20,7 @@ set(SRC_ENGINE
     "src/board/board.cc"
     "src/move.cc"
     "src/rule.cc"
+    "src/AI/ai.cc"
     "src/chessboard/chessboard.cc"
     "src/perft_parser/fen_object.cc"
     "src/perft_parser/fen_rank.cc"
@@ -33,6 +34,7 @@ set(SRC_ENGINE
 # Directories containing headers must be specified in the include_directories()
 include_directories(
     "src"
+    "src/AI"
     "src/chessboard"
     "src/parser"
     "src/board"

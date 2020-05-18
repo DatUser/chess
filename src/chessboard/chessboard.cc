@@ -94,36 +94,30 @@ namespace board {
         }
         if (board_.is_check(!white_turn_))
         {
-            white_turn_ = !white_turn_;
-            auto moves = generate_legal_moves();
-            if (moves.size() == 0)
-            {
-                for (auto listener : listeners)
-                    listener->on_player_mat(white_turn_ ? Color::WHITE
-                                            : Color::BLACK);
-            }
-            else
-            {
-                for (auto listener : listeners)
-                    listener->on_player_check(white_turn_ ? Color::WHITE
-                                            : Color::BLACK);
-            }
-            white_turn_ = !white_turn_;
+            for (auto listener : listeners)
+                listener->on_player_check(!white_turn_ ? Color::WHITE
+                                                       : Color::BLACK);
+
+        }
+        else if (board_.is_check(!white_turn_))
+        {
+            // Need update, not accurate at all
+            for (auto listener : listeners)
+                listener->on_player_check(!white_turn_ ? Color::WHITE
+                                                       : Color::BLACK);
         }
         else
         {
-            white_turn_ = !white_turn_;
             auto moves = generate_legal_moves();
             if (moves.size() == 0)
             {
                 for (auto listener : listeners)
                 {
-                    listener->on_player_pat(white_turn_ ? Color::WHITE
+                    listener->on_player_pat(!white_turn_ ? Color::WHITE
                                             : Color::BLACK);
                     listener->on_draw();
                 }
             }
-            white_turn_ = !white_turn_;
         }
     }
 
@@ -133,7 +127,6 @@ namespace board {
         {
             v1.push_back(mv);
         }
-
         return v1;
     }
 
@@ -147,21 +140,27 @@ namespace board {
 
         std::vector<Move> pawns = rules.generate_pawn_moves(*this);
         all_moves = add_in_vector(all_moves, pawns);
+        //std::cout << "pawns moves: " << all_moves.size() << "\n";
 
         std::vector<Move> king = rules.generate_king_moves(*this);
         all_moves = add_in_vector(all_moves, king);
+        //std::cout << "king moves: " << all_moves.size() << "\n";
 
         std::vector<Move> bishops = rules.generate_bishop_moves(*this);
         all_moves = add_in_vector(all_moves, bishops);
+        //std::cout << "bishops moves: " << all_moves.size() << "\n";
 
         std::vector<Move> rooks = rules.generate_rook_moves(*this);
         all_moves = add_in_vector(all_moves, rooks);
+        //std::cout << "rooks moves: " << all_moves.size() << "\n";
 
         std::vector<Move> queen = rules.generate_queen_moves(*this);
         all_moves = add_in_vector(all_moves, queen);
+        //std::cout << "queen moves: " << all_moves.size() << "\n";
 
         std::vector<Move> knights = rules.generate_knight_moves(*this);
         all_moves = add_in_vector(all_moves, knights);
+        //std::cout << "knights moves: " << all_moves.size() << "\n";
 
         std::vector<Move> res;
         // Put yourself in check part
@@ -185,8 +184,45 @@ namespace board {
 
     bool Chessboard::is_check()
     {
-        bool check = board_.is_check(white_turn_);
+        bool check = board_.is_check(!white_turn_);
         return check;
+    }
+
+    bool Chessboard::is_draw()
+    {
+        return generate_legal_moves().size() == 0;
+    }
+
+    bool Chessboard::is_checkmate()
+    {
+        bool check = board_.is_check(!white_turn_);
+        if (!check)
+            return check;
+
+        white_turn_ = !white_turn_;
+        auto moves = generate_legal_moves();
+        bool checkmate = true;
+        for (auto move : moves)
+        {
+            auto pair_r = move.move_get();
+            Move virgin_move = Move(pair_r.first, pair_r.second);
+            virgin_move.piece_set(move.piece_get());
+            Move revert = Move(pair_r.second, pair_r.first);
+            revert.piece_set(move.piece_get());
+            board_.do_move(virgin_move, white_turn_ ? Color::WHITE
+                    : Color::BLACK);
+            if (!board_.is_check(white_turn_))
+            {
+                checkmate = false;
+                board_.do_move(revert, white_turn_ ? Color::WHITE
+                                                   : Color::BLACK);
+                break;
+            }
+            board_.do_move(revert, white_turn_ ? Color::WHITE
+                                               : Color::BLACK);
+        }
+        white_turn_ = !white_turn_;
+        return checkmate;
     }
 
     void Chessboard::print()

@@ -114,8 +114,9 @@ namespace board {
 
     void Board::refresh_occupied()
     {
-        white_occupied_board = shared_bit(new Bitboard());
-        black_occupied_board = shared_bit(new Bitboard());
+        white_occupied_board->clear();
+        black_occupied_board->clear();
+        occupied_board->clear();
 
         *white_occupied_board |= *king_wb;
         *white_occupied_board |= *queen_wb;
@@ -164,9 +165,8 @@ namespace board {
         compute_king_danger(white_danger, king_power);
 
         int queen_power = utils::pow_two(queen_bb->board_get());
-        if (queen_power != -1)
-            compute_queen_danger(white_danger, black_occupied_board,
-                                white_occupied_board, queen_power);
+        compute_queen_danger(white_danger, black_occupied_board,
+                            white_occupied_board, queen_power);
 
         compute_bishop_danger(white_danger, black_occupied_board,
                               white_occupied_board, bishop_bb);

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 
+#include "../chessboard/chessboard.hh"
 #include "perft_object.hh"
 #include "fen_object.hh"
 
