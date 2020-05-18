@@ -193,4 +193,9 @@ namespace board {
     {
         board_.print();
     }
+
+    bool Chessboard::is_move_legal(Move move)
+    {
+        return move.queen_castling_get();
+    }
 }
