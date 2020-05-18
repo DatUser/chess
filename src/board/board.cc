@@ -87,6 +87,65 @@ namespace board {
 
     }
 
+    Board::Board(Board& board)
+    {
+        king_wb = shared_bit(new Bitboard(board.king_wb->board_get()));
+        queen_wb = shared_bit(new Bitboard(board.queen_wb->board_get()));
+        rook_wb = shared_bit(new Bitboard(board.rook_wb->board_get()));
+        knight_wb = shared_bit(new Bitboard(board.knight_wb->board_get()));
+        bishop_wb = shared_bit(new Bitboard(board.bishop_wb->board_get()));
+        pawn_wb = shared_bit(new Bitboard(board.pawn_wb->board_get()));
+
+        king_bb = shared_bit(new Bitboard(board.king_bb->board_get()));
+        queen_bb = shared_bit(new Bitboard(board.queen_bb->board_get()));
+        rook_bb = shared_bit(new Bitboard(board.rook_bb->board_get()));
+        knight_bb = shared_bit(new Bitboard(board.knight_bb->board_get()));
+        bishop_bb = shared_bit(new Bitboard(board.bishop_bb->board_get()));
+        pawn_bb = shared_bit(new Bitboard(board.pawn_bb->board_get()));
+
+        white_occupied_board = shared_bit(new Bitboard(
+                                    board.white_occupied_board->board_get()));
+        black_occupied_board = shared_bit(new Bitboard(
+                                    board.black_occupied_board->board_get()));
+        occupied_board = shared_bit(new Bitboard(
+                                    board.occupied_board->board_get()));
+
+        white_danger = shared_bit(new Bitboard(board.white_danger
+                                  ->board_get()));
+        black_danger = shared_bit(new Bitboard(board.black_danger
+                                  ->board_get()));
+    }
+
+    Board& Board::operator=(Board& board)
+    {
+        king_wb = shared_bit(new Bitboard(board.king_wb->board_get()));
+        queen_wb = shared_bit(new Bitboard(board.queen_wb->board_get()));
+        rook_wb = shared_bit(new Bitboard(board.rook_wb->board_get()));
+        knight_wb = shared_bit(new Bitboard(board.knight_wb->board_get()));
+        bishop_wb = shared_bit(new Bitboard(board.bishop_wb->board_get()));
+        pawn_wb = shared_bit(new Bitboard(board.pawn_wb->board_get()));
+
+        king_bb = shared_bit(new Bitboard(board.king_bb->board_get()));
+        queen_bb = shared_bit(new Bitboard(board.queen_bb->board_get()));
+        rook_bb = shared_bit(new Bitboard(board.rook_bb->board_get()));
+        knight_bb = shared_bit(new Bitboard(board.knight_bb->board_get()));
+        bishop_bb = shared_bit(new Bitboard(board.bishop_bb->board_get()));
+        pawn_bb = shared_bit(new Bitboard(board.pawn_bb->board_get()));
+
+        white_occupied_board = shared_bit(new Bitboard(
+                                    board.white_occupied_board->board_get()));
+        black_occupied_board = shared_bit(new Bitboard(
+                                    board.black_occupied_board->board_get()));
+        occupied_board = shared_bit(new Bitboard(
+                                    board.occupied_board->board_get()));
+
+        white_danger = shared_bit(new Bitboard(board.white_danger
+                                  ->board_get()));
+        black_danger = shared_bit(new Bitboard(board.black_danger
+                                  ->board_get()));
+        return *this;
+    }
+
     void Board::put_piece(Color color, PieceType piece, Position pos)
     {
         switch (piece)

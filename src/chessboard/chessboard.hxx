@@ -6,6 +6,11 @@ inline Board Chessboard::getBoard()
     return board_;
 }
 
+inline void Chessboard::setBoard(Board& board)
+{
+     board_ = board;
+}
+
 inline bool Chessboard::isWhiteTurn()
 {
     return white_turn_;

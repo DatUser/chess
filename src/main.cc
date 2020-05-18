@@ -97,17 +97,22 @@ int main(int argc, char** argv) {
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
             std::cout << bfile <<  brank << " " << efile << erank << "\n";
         }*/
-        /*pobject.chessboard_get().print();
+        for (int i = 0; i < 120; i++) {
+            pobject.chessboard_get().print();
             std::cout << chess_engine::evaluate(pobject.chessboard_get()) << "\n";
-            auto move = chess_engine::search(pobject.chessboard_get(), 4);
+            auto move = chess_engine::search(pobject.chessboard_get(), 1);
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
             char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
             auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
-            std::cout << bfile <<  brank << " " << efile << erank << "\n";*/
+            std::cout << bfile <<  brank << " " << efile << erank << "\n";
     } else {
         Chessboard chessboard;
         chess_engine::search(chessboard, 4);
+            std::cout << bfile <<  brank << " " << efile << erank << "\n";
+            pobject.chessboard_get().do_move(move);
+            pobject.chessboard_get().setWhiteTurn(!pobject.chessboard_get().isWhiteTurn());
+            std::cout << "i: " << i << "\n";
     }
 
     close_listeners();
