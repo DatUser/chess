@@ -39,6 +39,8 @@ namespace board
 
             bool en_passant_get();
 
+            bool operator==(const Move& move);
+
         private:
             const std::pair<Position, Position> move_;
             PieceType piece_ = PieceType::NONE;
