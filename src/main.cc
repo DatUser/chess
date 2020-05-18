@@ -53,6 +53,7 @@ void close_listeners() {
 int main(int argc, char** argv) {
 
     OptionParser parser(argc, argv);
+    open_listeners(parser);
 
     if (parser.help_get()) {
         std::cout << "-h [ --help ]             show usage"
@@ -66,17 +67,16 @@ int main(int argc, char** argv) {
     }
     else if (parser.pgn_get() != "")
     {
-        open_listeners(parser);
 
 
         std::vector<board::Move> moves =
                     board::get_moves_from_pgn(parser.pgn_get());
         board::Chessboard chessboard = board::generate_chessboard(moves);
+        chess_engine::search(chessboard, 4);
     }
 
-    if (parser.perft_get().compare(""))
+    else if (parser.perft_get().compare(""))
     {
-        open_listeners(parser);
 
 
         ifstream file;
@@ -104,6 +104,9 @@ int main(int argc, char** argv) {
             auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
             std::cout << bfile <<  brank << " " << efile << erank << "\n";*/
+    } else {
+        Chessboard chessboard;
+        chess_engine::search(chessboard, 4);
     }
 
     close_listeners();
