@@ -196,6 +196,14 @@ namespace board {
 
     bool Chessboard::is_move_legal(Move move)
     {
-        return move.queen_castling_get();
+        std::vector<Move> moves = generate_legal_moves();
+        for (Move m : moves)
+        {
+            if (m == move)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
