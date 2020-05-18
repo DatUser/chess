@@ -92,12 +92,12 @@ namespace board {
 
     void Bitboard::case_set(Position position) {
         board_ |= utils::two_pow(utils::utype(position.rank_get()) * 8
-                               + utils::utype(position.file_get()));
+                               + 7 - utils::utype(position.file_get()));
     }
 
     void Bitboard::remove(Position position) {
         board_ ^= utils::two_pow(utils::utype(position.rank_get()) * 8
-                               + utils::utype(position.file_get()));
+                               + 7 - utils::utype(position.file_get()));
     }
 
     Bitboard Bitboard::operator|=(Bitboard other) {

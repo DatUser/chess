@@ -3,13 +3,15 @@
 
 namespace board {
     Chessboard::Chessboard() {
-        board_ = Board();
+        auto temp = Board();
+        board_ = temp;
     }
 
     Chessboard::Chessboard(vector<string> splited_input)
     {
         // First line
-        board_ = Board(splited_input[0]);
+        auto temp = Board(splited_input[0]);
+        board_ = temp;
 
         // Second line
         if (splited_input[1][0] == 'w')

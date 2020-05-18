@@ -17,6 +17,8 @@ namespace board {
     public:
         Board();
         Board(string ranks);
+        Board(Board& board);
+        Board& operator=(Board& board);
 
         /* Refreshes the occupied_board */
         void refresh_occupied();
@@ -56,7 +58,6 @@ namespace board {
         // DEBUG TIER
         void print();
 
-    private:
         // Bitboards needed for the white side
         shared_bit king_wb;
         shared_bit queen_wb;
@@ -82,6 +83,7 @@ namespace board {
         shared_bit white_danger;
         shared_bit black_danger;
 
+    private:
         // Methods needed to compute the danger grids
         void compute_king_danger(shared_bit board, int power);
         void compute_queen_danger(shared_bit board, shared_bit ally,

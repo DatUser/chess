@@ -27,6 +27,7 @@ namespace board {
         std::pair<PieceType, Color> operator[](Position position);
 
         Board getBoard();
+        void setBoard(Board& board);
         bool isWhiteTurn();
         void setWhiteTurn(bool wt);
         bool getWhiteKingCastling();
