@@ -95,6 +95,11 @@ namespace board {
                                + utils::utype(position.file_get()));
     }
 
+    void Bitboard::remove(Position position) {
+        board_ ^= utils::two_pow(utils::utype(position.rank_get()) * 8
+                               + utils::utype(position.file_get()));
+    }
+
     Bitboard Bitboard::operator|=(Bitboard other) {
         board_ |= other.board_get();
         return *this;
