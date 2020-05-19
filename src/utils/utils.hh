@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../all.hh"
+#include <cmath>
 
 using namespace board;
 
@@ -14,4 +15,6 @@ namespace utils {
     unsigned long long int to_int(board::Position position);
 
     unsigned long long int floor_two(unsigned long long int number);
+
+    Position get_position(unsigned long long int board);
 }
