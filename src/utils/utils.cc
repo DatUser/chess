@@ -90,7 +90,7 @@ namespace utils {
     }
 
    unsigned long long int to_int(board::Position position) {
-        int file = utils::utype(position.file_get());
+        int file = 7 - utils::utype(position.file_get());
         int rank = utils::utype(position.rank_get());
         return file + (rank * 8);
     }

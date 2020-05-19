@@ -89,6 +89,8 @@ namespace chess_engine {
         board.do_move(move);
         board.setWhiteTurn(!board.isWhiteTurn());
         auto moves = board.generate_legal_moves();
+        if (moves.size() == 0)
+            return -9999;
         int act = rec_search(board, depth - 1, moves[0], !maxmin);
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
