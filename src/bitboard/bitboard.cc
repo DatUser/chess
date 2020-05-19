@@ -122,6 +122,26 @@ namespace board {
         {
             r = Rank::TWO;
         }
+        else if (board >= 65536 and board <= 8388608)
+        {
+            r = Rank::THREE;
+        }
+        else if (board >= 16777216 and board <= 2147483648)
+        {
+            r = Rank::FOUR;
+        }
+        else if (board >= 4294967296 and board <= 549755813888)
+        {
+            r = Rank::FIVE;
+        }
+        else if (board >= 1099511627776 and board <= 140737488355328)
+        {
+            r = Rank::SIX;
+        }
+        else if (board >= 281474976710656 and board <= 36028797018963970)
+        {
+            r = Rank::SEVEN;
+        }
         else
         {
             r = Rank::EIGHT;
