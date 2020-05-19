@@ -14,6 +14,12 @@ namespace perft_parser {
         while (getline(ss, item, ' ')) {
             items.push_back(item);
         }
+        if (items[0].compare("position") == 0) {
+            items.erase(items.begin());
+        }
+        if (items[0].compare("fen") == 0) {
+            items.erase(items.begin());
+        }
         int depth = stoi(items[items.size() - 1]);
         items.pop_back();
 
