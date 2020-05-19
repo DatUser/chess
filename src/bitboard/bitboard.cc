@@ -109,4 +109,24 @@ namespace board {
         this->board_ = other.board_get();
         return *this;
     }
+
+
+    Position Bitboard::get_position(unsigned long long board)
+    {
+        Rank r;
+        if (board >= 1 and board <= 128)
+        {
+            r = Rank::ONE;
+        }
+        else if (board >= 256 and board <= 32768)
+        {
+            r = Rank::TWO;
+        }
+        else
+        {
+            r = Rank::EIGHT;
+        }
+
+        return Position(File::A, r);
+    }
 }
