@@ -23,8 +23,6 @@ namespace board {
         void remove(Position position);
         void clear();
 
-        Position get_position(unsigned long long board);
-
         Bitboard operator|=(Bitboard other);
         Bitboard operator=(Bitboard& other);
 
