@@ -102,6 +102,7 @@ bool is_max_pos(Position& pos, int direction) {
         int ord_factor = 0;
         set_direction(abs_factor, ord_factor, direction);
         Position pos(utils::get_position(posbit));
+        Position newPos(File::A, Rank::ONE);
         //File posX = pos.file_get();
         //Rank posY = pos.rank_get();
         //int x = static_cast<int>(posX);
@@ -109,7 +110,7 @@ bool is_max_pos(Position& pos, int direction) {
         bool overload = false;
 
         for (int i = 1; not overload and not (posbit & ally->board_get()); i++) {
-            newPos = utils::convert(posbit = posbit << direction);
+            newPos = utils::get_position(posbit = posbit << direction);
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
                         (white_turn) ? Color::BLACK : Color::WHITE);
