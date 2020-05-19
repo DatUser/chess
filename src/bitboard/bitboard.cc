@@ -114,31 +114,31 @@ namespace board {
     Position Bitboard::get_position(unsigned long long board)
     {
         Rank r;
-        if (board >= 1 and board <= 128)
+        if (board >= pow(2, 0) and board <= pow(2, 7))
         {
             r = Rank::ONE;
         }
-        else if (board >= 256 and board <= 32768)
+        else if (board >= pow(2, 8) and board <= pow(2, 15))
         {
             r = Rank::TWO;
         }
-        else if (board >= 65536 and board <= 8388608)
+        else if (board >= pow(2, 16) and board <= pow(2, 23))
         {
             r = Rank::THREE;
         }
-        else if (board >= 16777216 and board <= 2147483648)
+        else if (board >= pow(2, 24) and board <= pow(2, 31))
         {
             r = Rank::FOUR;
         }
-        else if (board >= 4294967296 and board <= 549755813888)
+        else if (board >= pow(2, 32) and board <= pow(2, 39))
         {
             r = Rank::FIVE;
         }
-        else if (board >= 1099511627776 and board <= 140737488355328)
+        else if (board >= pow(2, 40) and board <= pow(2, 47))
         {
             r = Rank::SIX;
         }
-        else if (board >= 281474976710656 and board <= 36028797018963970)
+        else if (board >= pow(2, 48) and board <= pow(2, 55))
         {
             r = Rank::SEVEN;
         }
