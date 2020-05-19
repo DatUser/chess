@@ -155,8 +155,6 @@ int main(int argc, char** argv) {
                                 + pos_to_string(bestmove.move_get().second);
             ai::play_move(best_str);
         }
-            ai::play_move(best_str);
-        }
     }
 
     close_listeners();
