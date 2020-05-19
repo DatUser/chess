@@ -120,6 +120,11 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
+        ofstream file("moves");
+        if (not file.is_open()) {
+            cerr << "cannot open file" << endl;
+            exit(1);
+        }
         while ((line = ai::get_board()).compare(""))
         {
             stringstream ss(line);
@@ -131,7 +136,24 @@ int main(int argc, char** argv) {
             }
             move = items[items.size() - 1];
             auto to_play = utils::to_move(move);
+
+            if (items[0] == "position")
+                items.erase(items.begin());
+            if (items[0] == "fen")
+                items.erase(items.begin());
+
+            auto board = board::Chessboard(items);
+            board.do_move(to_play);
+            auto bestmove = chess_engine::search(board, 4);
+
+            auto best_str = pos_to_string(bestmove.move_get().first)
+                                + pos_to_string(bestmove.move_get().second);
+
+            cout << best_str << endl;
+            ai::play_move(best_str);
         }
+
+        file.close();
     }
 
     close_listeners();
