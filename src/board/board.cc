@@ -52,7 +52,7 @@ namespace board {
         black_danger = shared_bit(new Bitboard());
 
         int rank = 7;
-        int file = 7;
+        int file = 0;
         for (long unsigned int i = 0; i < ranks.size(); i++)
         {
             if (ranks[i] >= 'a' && ranks[i] <= 'z')
@@ -62,7 +62,7 @@ namespace board {
                 File f = (File) file;
                 Position pos = Position(f, r);
                 put_piece(Color::BLACK, piece, pos);
-                file--;
+                file++;
             }
             else if (ranks[i] >= 'A' && ranks[i] <= 'Z')
             {
@@ -71,17 +71,17 @@ namespace board {
                 File f = (File) file;
                 Position pos = Position(f, r);
                 put_piece(Color::WHITE, piece, pos);
-                file--;
+                file++;
             }
             else if (ranks[i] >= '1' && ranks[i] <= '8')
             {
                 int number = ranks[i] - '0';
-                file -= number;
+                file += number;
             }
             else if (ranks[i] == '/')
             {
                 rank--;
-                file = 7;
+                file = 0;
             }
         }
 

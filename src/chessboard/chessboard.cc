@@ -277,7 +277,7 @@ namespace board {
                     break;
             }
         }
-        auto bitboard = utils::to_int(begin);
+        auto bitboard = utils::two_pow(utils::to_int(begin));
         if (isWhiteTurn())
         {
             if (getBoard().king_wb->board_get() & bitboard)
@@ -295,17 +295,17 @@ namespace board {
         }
         else
         {
-            if (getBoard().king_wb->board_get() & bitboard)
+            if (getBoard().king_bb->board_get() & bitboard)
                 res.piece_set(PieceType::KING);
-            else if (getBoard().queen_wb->board_get() & bitboard)
+            else if (getBoard().queen_bb->board_get() & bitboard)
                 res.piece_set(PieceType::QUEEN);
-            else if (getBoard().knight_wb->board_get() & bitboard)
+            else if (getBoard().knight_bb->board_get() & bitboard)
                 res.piece_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_wb->board_get() & bitboard)
+            else if (getBoard().bishop_bb->board_get() & bitboard)
                 res.piece_set(PieceType::BISHOP);
-            else if (getBoard().rook_wb->board_get() & bitboard)
+            else if (getBoard().rook_bb->board_get() & bitboard)
                 res.piece_set(PieceType::ROOK);
-            else if (getBoard().pawn_wb->board_get() & bitboard)
+            else if (getBoard().pawn_bb->board_get() & bitboard)
                 res.piece_set(PieceType::PAWN);
         }
         return res;
