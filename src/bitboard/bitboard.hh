@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <optional>
+#include <cmath>
 #include "../all.hh"
 #include "../utils/all.hh"
 
