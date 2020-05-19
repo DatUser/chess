@@ -4,6 +4,7 @@
 #include "parser/option-parser.hh"
 #include "perft_parser/perft_parser.hh"
 #include "AI/ai.hh"
+#include "uci.hh"
 
 #include "generate-chessboard.hh"
 #include <parser/option-parser.hh>
@@ -12,6 +13,8 @@
 #include <listener.hh>
 #include <listener/listener-manager.hh>
 
+
+using namespace std;
 
 //CHECK RETURN VALUES
 
@@ -73,8 +76,7 @@ int main(int argc, char** argv) {
                     board::get_moves_from_pgn(parser.pgn_get());
         board::Chessboard chessboard = board::generate_chessboard(moves);
     }
-
-    if (parser.perft_get().compare(""))
+    else if (parser.perft_get().compare(""))
     {
         open_listeners(parser);
 
@@ -108,6 +110,23 @@ int main(int argc, char** argv) {
             pobject.chessboard_get().do_move(move);
             pobject.chessboard_get().setWhiteTurn(!pobject.chessboard_get().isWhiteTurn());
             std::cout << "i: " << i << "\n";
+        }
+    }
+    else
+    {
+        ai::init("EscanorEngine");
+        std::string line;
+        while ((line = ai::get_board()).compare(""))
+        {
+            stringstream ss(line);
+            string item;
+            string move;
+            vector<string> items;
+            while (getline(ss, item, ' ')) {
+                items.push_back(item);
+            }
+            move = items[items.size() - 1];
+            auto to_play = utils::to_move(move);
         }
     }
 
