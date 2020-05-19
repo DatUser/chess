@@ -122,15 +122,8 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
-        ofstream file("moves");
-        if (not file.is_open()) {
-            cerr << "cannot open file" << endl;
-            exit(1);
-        }
         while ((line = ai::get_board()).compare(""))
         {
-            file << line << "\n";
-            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -153,11 +146,8 @@ int main(int argc, char** argv) {
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
 
-            file << best_str << "\n";
-            file.flush();
             ai::play_move(best_str);
         }
-
         file.close();
     }
 
