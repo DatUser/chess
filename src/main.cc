@@ -119,11 +119,8 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
-        ofstream file("moves");
         while ((line = ai::get_board()).compare(""))
         {
-            file << line << "\n";
-            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -156,6 +153,8 @@ int main(int argc, char** argv) {
 
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
+            ai::play_move(best_str);
+        }
             ai::play_move(best_str);
         }
     }
