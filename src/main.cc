@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         auto moves = pobject.chessboard_get().generate_legal_moves();
         std::cout << moves.size() << std::endl;
         chess_engine::search(pobject.chessboard_get(), 4);
-        auto bestmove = chess_engine::search(pobject.chessboard_get(), 3);
+        auto bestmove = chess_engine::search(pobject.chessboard_get(), 2);
         /*for (long unsigned int i = 0; i < moves.size(); i++) {
             auto move = moves[i];
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
@@ -148,7 +148,7 @@ int main(int argc, char** argv) {
 
             auto board = board::Chessboard(items);
             board.do_move(to_play);
-            auto bestmove = chess_engine::search(board, 4);
+            auto bestmove = chess_engine::search(board, 2);
 
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
