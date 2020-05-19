@@ -147,6 +147,11 @@ namespace board {
             r = Rank::EIGHT;
         }
 
-        return Position(File::A, r);
+        int file = log2(board);
+
+        //Since File::A == 0
+        File f = static_cast<File>(file - 1);
+
+        return Position(f, r);
     }
 }
