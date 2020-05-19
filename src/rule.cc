@@ -494,6 +494,60 @@ bool is_max_pos(Position& pos, int direction) {
         return m;
     }
 
+    /*void pawn_step(std::vector<Move>& moves, Position pos, Board board,
+            bool white_turn) {
+        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
+        Position newpos(pos.file_get(), static_cast<Rank>(y));
+
+        if (in_board(newpos, 0, 0) and
+            not board.is_occupied(board.occupied_board_get(), newpos)) {
+            Move mv(pos, newpos);
+            mv.piece_set(PieceType::PAWN);
+            moves.push_back(mv);
+        }
+    }*/
+
+
+    /*void single_step(unsigned long long int pawn, Board board, bool white_turn,
+                     std::vector<Move>& moves)
+    {
+        int color = (white_turn) ? 0 : 1;
+        unsigned long long int new_pos = (pawn << 8) >> (color << 4);
+        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        if (not new_pos and occupied)
+        {
+            Position begin = utils::get_position(pawn);
+            Position end = utils::get_position(new_pos);
+            Move mv = Move(begin, end);
+            moves.push_back(mv);
+        }
+    }
+
+
+
+    std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
+    {
+        std::vector<Move> moves;
+        Board board = chessboard.getBoard();
+        bool white_turn = chessboard.isWhiteTurn();
+        unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get() 
+                                                    : board.pawn_bb.get()->board_get();
+
+
+        unsigned long long int acc = 0;
+        unsigned long long int pawn = 0;
+        while (acc < pawns)
+        {
+            pawn = pawns ^ (pawns & (pawns - acc - 1));
+            //single_step
+            single_step(pawn, board, white_turn, moves);
+            //double_step
+            acc |= pawn;
+        }
+
+        return moves;
+    }*/
+
     bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
         Position pos(static_cast<File>(x), static_cast<Rank>(y));
         return in_board(x, y) and board.is_occupied(bitboard, pos);
