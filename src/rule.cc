@@ -54,17 +54,93 @@ namespace board
         }
     }
 
-    void add_diags(Position pos, std::vector<Move>& moves,
+    void set_direction(int& abs, int& ord, int direction) {
+        switch (direction) {
+        case 7:
+            abs = 1;
+            ord = 1;
+            break;
+        case 9:
+            abs = -1;
+            ord = 1;
+            break;
+        case -7:
+            abs = 1;
+            ord = -1;
+            break;
+        case -9:
+            abs = -1;
+            ord = -1;
+            break;
+        }
+    }
+
+/*
+**    9    7
+**     \  /
+**      p
+**     /  \
+**    -7  -9
+*/
+
+bool is_max_pos(Position& pos, int direction) {
+    return (pos.rank_get() == Rank::EIGHT and direction > 0)
+    or (pos.rank_get() == Rank::ONE and (direction == -9 or direction == -7))
+    or (pos.file_get() == File::H and (direction == -9 or direction == 7))
+    or (pos.file_get() == File::A and (direction == 9 or direction == -7));
+}
+
+    void add_diag_bit(unsigned long long int posbit, std::vector<Move>& moves,
+                                    Board& board, bool white_turn,
+                                    int direction,
+                                    //std::pair<int, int>& direction,
+                                    PieceType piece) {
+        shared_bit ally = (white_turn) ? board.white_occupied_board_get()
+                            : board.black_occupied_board_get();
+
+        int abs_factor = 0;
+        int ord_factor = 0;
+        set_direction(abs_factor, ord_factor, direction);
+        Position pos(utils::get_position(posbit));
+        //File posX = pos.file_get();
+        //Rank posY = pos.rank_get();
+        //int x = static_cast<int>(posX);
+        //int y = static_cast<int>(posY);
+        bool overload = false;
+
+        for (int i = 1; not overload and not (posbit & ally->board_get()); i++) {
+            newPos = utils::convert(posbit = posbit << direction);
+            Move mv = Move(pos, newPos);
+            opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+            if (opt.has_value()) {
+                mv.capture_set(opt.value());
+                mv.piece_set(piece);
+                moves.push_back(mv);
+                break;
+            } else {
+                mv.piece_set(piece);
+                moves.push_back(mv);
+            }
+            overload = is_max_pos(newPos, direction);
+        }
+    }
+
+    void add_diags(/*Position*/unsigned long long int pos, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     PieceType piece) {
-        std::pair<int, int> direction(-1, -1);
+        /*std::pair<int, int> direction(-1, -1);
         add_diag(pos, moves, board, white_turn, direction, piece);
         add_diag(pos, moves, board, white_turn,
                             (direction = std::pair<int, int>(1, -1)), piece);
         add_diag(pos, moves, board, white_turn,
                             (direction = std::pair<int, int>(-1, 1)), piece);
         add_diag(pos, moves, board, white_turn,
-                            (direction = std::pair<int, int>(1, 1)), piece);
+                            (direction = std::pair<int, int>(1, 1)), piece);*/
+        add_diag_bit(pos, moves, board, white_turn, 9, piece);
+        add_diag_bit(pos, moves, board, white_turn, 7, piece);
+        add_diag_bit(pos, moves, board, white_turn, -7, piece);
+        add_diag_bit(pos, moves, board, white_turn, -9, piece);
     }
 
     bool in_board(int x, int y)
@@ -660,14 +736,21 @@ namespace board
         std::vector<Move> m;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        std::vector<Position> queen = (white_turn) ? board.get_white_queen()
-                            : board.get_black_queen();
-        for (unsigned int i = 0; i < queen.size(); i++) {
-            add_diags(queen[i], m, board, white_turn, PieceType::QUEEN);
-            add_forward(queen[i], m, board, white_turn, PieceType::QUEEN);
-            add_backward(queen[i], m, board, white_turn, PieceType::QUEEN);
-            add_leftward(queen[i], m, board, white_turn, PieceType::QUEEN);
-            add_rightward(queen[i], m, board, white_turn, PieceType::QUEEN);
+        unsigned long long int queen = ((white_turn)
+                            ? board.queen_wb : board.queen_bb)->board_get();
+        unsigned long long int acc = 0;
+        unsigned long long int move = 0;
+
+        while (acc <= queen) {
+            move = queen ^ (queen & (queen - acc - 1));
+
+            add_diags(move, m, board, white_turn, PieceType::QUEEN);
+            /*add_forward(move, m, board, white_turn, PieceType::QUEEN);
+            add_backward(move, m, board, white_turn, PieceType::QUEEN);
+            add_leftward(move, m, board, white_turn, PieceType::QUEEN);
+            add_rightward(move, m, board, white_turn, PieceType::QUEEN);*/
+
+            acc |= move;
         }
         return m;
     }
@@ -676,10 +759,20 @@ namespace board
         std::vector<Move> m;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        std::vector<Position> bishops = (white_turn) ? board.get_white_bishop()
+        unsigned long long int bishop = ((white_turn)
+                            ? board.bishop_wb : board.bishop_bb)->board_get();
+        unsigned long long int acc = 0;
+        unsigned long long int move = 0;
+
+        while (acc <= bishop) {
+            move = bishop ^ (bishop & (bishop - acc - 1));
+            add_diags(move, m, board, white_turn, PieceType::BISHOP);
+            acc |= move;
+        }
+        /*std::vector<Position> bishops = (white_turn) ? board.get_white_bishop()
                             : board.get_black_bishop();
         for (unsigned int i = 0; i < bishops.size(); i++)
-            add_diags(bishops[i], m, board, white_turn, PieceType::BISHOP);
+            add_diags(bishops[i], m, board, white_turn, PieceType::BISHOP);*/
 
         return m;
     }
