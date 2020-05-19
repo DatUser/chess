@@ -121,6 +121,7 @@ namespace board {
                 }
             }
         }
+        //white_turn_ = not white_turn_;
     }
 
     std::vector<Move> add_in_vector(std::vector<Move> v1, std::vector<Move> v2)
