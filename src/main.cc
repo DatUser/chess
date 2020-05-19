@@ -90,6 +90,7 @@ int main(int argc, char** argv) {
         auto pobject = perft_parser::parse_perft(line);
         auto moves = pobject.chessboard_get().generate_legal_moves();
         std::cout << moves.size() << std::endl;
+        auto bestmove = chess_engine::search(pobject.chessboard_get(), 3);
         /*for (long unsigned int i = 0; i < moves.size(); i++) {
             auto move = moves[i];
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
@@ -98,10 +99,10 @@ int main(int argc, char** argv) {
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
             std::cout << bfile <<  brank << " " << efile << erank << "\n";
         }*/
-        for (int i = 0; i < 120; i++) {
+        /*for (int i = 0; i < 120; i++) {
             pobject.chessboard_get().print();
             std::cout << chess_engine::evaluate(pobject.chessboard_get()) << "\n";
-            auto move = chess_engine::search(pobject.chessboard_get(), 1);
+            auto move = chess_engine::search(pobject.chessboard_get(), 2);
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
             char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
             auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
@@ -110,7 +111,8 @@ int main(int argc, char** argv) {
             pobject.chessboard_get().do_move(move);
             pobject.chessboard_get().setWhiteTurn(!pobject.chessboard_get().isWhiteTurn());
             std::cout << "i: " << i << "\n";
-        }
+        }*/
+
     }
     else
     {
@@ -123,6 +125,8 @@ int main(int argc, char** argv) {
         }
         while ((line = ai::get_board()).compare(""))
         {
+            file << line << "\n";
+            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -145,7 +149,8 @@ int main(int argc, char** argv) {
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
 
-            cout << best_str << endl;
+            file << best_str << "\n";
+            file.flush();
             ai::play_move(best_str);
         }
 
