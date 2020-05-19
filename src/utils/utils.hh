@@ -12,7 +12,6 @@ namespace utils {
     board::Position to_position(int power);
     board::Position to_position(int x, int y);
     unsigned long long int to_int(board::Position position);
-    board::Move to_move(std::string move);
 
     unsigned long long int floor_two(unsigned long long int number);
 }

@@ -450,6 +450,7 @@ namespace board
                 {
                     Move mv = Move(pos, pos2);
                     mv.king_castling_set(true);
+                    mv.piece_set(PieceType::KING);
                     moves.push_back(mv);
                 }
         }

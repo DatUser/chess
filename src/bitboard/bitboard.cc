@@ -71,11 +71,11 @@ namespace board {
     bool Bitboard::move(Position start_pos, Position end_pos)
     {
         /* Int coordinates of the starting position */
-        int s_file = 7 - utils::utype(start_pos.file_get());
+        int s_file = utils::utype(start_pos.file_get());
         int s_rank = utils::utype(start_pos.rank_get());
 
         /* Int coordinates of the ending position */
-        int e_file = 7 - utils::utype(end_pos.file_get());
+        int e_file = utils::utype(end_pos.file_get());
         int e_rank = utils::utype(end_pos.rank_get());
 
         /* Corresponding bits */
@@ -92,12 +92,12 @@ namespace board {
 
     void Bitboard::case_set(Position position) {
         board_ |= utils::two_pow(utils::utype(position.rank_get()) * 8
-                               + 7 - utils::utype(position.file_get()));
+                               + utils::utype(position.file_get()));
     }
 
     void Bitboard::remove(Position position) {
         board_ ^= utils::two_pow(utils::utype(position.rank_get()) * 8
-                               + 7 - utils::utype(position.file_get()));
+                               + utils::utype(position.file_get()));
     }
 
     Bitboard Bitboard::operator|=(Bitboard other) {

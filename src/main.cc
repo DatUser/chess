@@ -70,17 +70,13 @@ int main(int argc, char** argv) {
     }
     else if (parser.pgn_get() != "")
     {
-
-
         std::vector<board::Move> moves =
                     board::get_moves_from_pgn(parser.pgn_get());
         board::Chessboard chessboard = board::generate_chessboard(moves);
-        chess_engine::search(chessboard, 4);
+        chess_engine::search(chessboard, 2);
     }
     else if (parser.perft_get().compare(""))
     {
-
-
         ifstream file;
         file.open(parser.perft_get());
         if (!file.is_open())
@@ -90,8 +86,8 @@ int main(int argc, char** argv) {
         auto pobject = perft_parser::parse_perft(line);
         auto moves = pobject.chessboard_get().generate_legal_moves();
         std::cout << moves.size() << std::endl;
-        chess_engine::search(pobject.chessboard_get(), 4);
-        auto bestmove = chess_engine::search(pobject.chessboard_get(), 2);
+        pobject.chessboard_get().print();
+        auto bestmove = chess_engine::search(pobject.chessboard_get(), 4);
         /*for (long unsigned int i = 0; i < moves.size(); i++) {
             auto move = moves[i];
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
@@ -109,7 +105,7 @@ int main(int argc, char** argv) {
             auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
             std::cout << bfile <<  brank << " " << efile << erank << "\n";
-    } else {
+        } else {
         Chessboard chessboard;
         chess_engine::search(chessboard, 4);
             std::cout << bfile <<  brank << " " << efile << erank << "\n";
@@ -122,15 +118,8 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
-        ofstream file("moves");
-        if (not file.is_open()) {
-            cerr << "cannot open file" << endl;
-            exit(1);
-        }
         while ((line = ai::get_board()).compare(""))
         {
-            file << line << "\n";
-            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -139,7 +128,6 @@ int main(int argc, char** argv) {
                 items.push_back(item);
             }
             move = items[items.size() - 1];
-            auto to_play = utils::to_move(move);
 
             if (items[0] == "position")
                 items.erase(items.begin());
@@ -147,18 +135,16 @@ int main(int argc, char** argv) {
                 items.erase(items.begin());
 
             auto board = board::Chessboard(items);
+            auto to_play = board.to_move(move);
+
             board.do_move(to_play);
             auto bestmove = chess_engine::search(board, 2);
 
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
 
-            file << best_str << "\n";
-            file.flush();
             ai::play_move(best_str);
         }
-
-        file.close();
     }
 
     close_listeners();

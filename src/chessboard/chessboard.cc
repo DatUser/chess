@@ -121,7 +121,7 @@ namespace board {
                 }
             }
         }
-        //white_turn_ = not white_turn_;
+        white_turn_ = not white_turn_;
     }
 
     std::vector<Move> add_in_vector(std::vector<Move> v1, std::vector<Move> v2)
@@ -244,5 +244,71 @@ namespace board {
             }
         }
         return false;
+    }
+
+    Move Chessboard::to_move(string move)
+    {
+        int bfile = move[0] - 'a';
+        int brank = move[1] - '1';
+        int efile = move[2] - 'a';
+        int erank = move[3] - '1';
+
+        auto begin = board::Position((board::File) bfile, (board::Rank) brank);
+        auto end = board::Position((board::File) efile, (board::Rank) erank);
+
+        auto res = Move(begin, end);
+        if (move.size() == 5)
+        {
+            switch (move[4])
+            {
+                case 'q':
+                    res.promotion_set(PieceType::QUEEN);
+                    break;
+                case 'b':
+                    res.promotion_set(PieceType::BISHOP);
+                    break;
+                case 'k':
+                    res.promotion_set(PieceType::KNIGHT);
+                    break;
+                case 'r':
+                    res.promotion_set(PieceType::ROOK);
+                    break;
+                default:
+                    break;
+            }
+        }
+        auto bitboard = utils::to_int(begin);
+        if (isWhiteTurn())
+        {
+            if (getBoard().king_wb->board_get() & bitboard)
+                res.piece_set(PieceType::KING);
+            else if (getBoard().queen_wb->board_get() & bitboard)
+                res.piece_set(PieceType::QUEEN);
+            else if (getBoard().knight_wb->board_get() & bitboard)
+                res.piece_set(PieceType::KNIGHT);
+            else if (getBoard().bishop_wb->board_get() & bitboard)
+                res.piece_set(PieceType::BISHOP);
+            else if (getBoard().rook_wb->board_get() & bitboard)
+                res.piece_set(PieceType::ROOK);
+            else if (getBoard().pawn_wb->board_get() & bitboard)
+                res.piece_set(PieceType::PAWN);
+        }
+        else
+        {
+            if (getBoard().king_wb->board_get() & bitboard)
+                res.piece_set(PieceType::KING);
+            else if (getBoard().queen_wb->board_get() & bitboard)
+                res.piece_set(PieceType::QUEEN);
+            else if (getBoard().knight_wb->board_get() & bitboard)
+                res.piece_set(PieceType::KNIGHT);
+            else if (getBoard().bishop_wb->board_get() & bitboard)
+                res.piece_set(PieceType::BISHOP);
+            else if (getBoard().rook_wb->board_get() & bitboard)
+                res.piece_set(PieceType::ROOK);
+            else if (getBoard().pawn_wb->board_get() & bitboard)
+                res.piece_set(PieceType::PAWN);
+        }
+        return res;
+
     }
 }

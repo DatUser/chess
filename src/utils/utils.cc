@@ -19,8 +19,6 @@ namespace utils {
     }
 
     board::Position to_position(int power) {
-        //std::cout << "Power: " << power << "\n";
-        //std::cout << "x: " << power % 8 << " y: " << power / 8 << "\n";
         return to_position(power % 8, power / 8);
     }
 
@@ -91,42 +89,8 @@ namespace utils {
         return board::Position(file, rank);
     }
 
-    board::Move to_move(std::string move) {
-        int bfile = move[0] - 'a';
-        int brank = move[1] - '0';
-        int efile = move[2] - 'a';
-        int erank = move[3] - '0';
-
-        auto begin = board::Position((board::File) bfile, (board::Rank) brank);
-        auto end = board::Position((board::File) efile, (board::Rank) erank);
-
-        auto res = Move(begin, end);
-        if (move.size() == 5)
-        {
-            switch (move[4])
-            {
-                case 'q':
-                    res.promotion_set(PieceType::QUEEN);
-                    break;
-                case 'b':
-                    res.promotion_set(PieceType::BISHOP);
-                    break;
-                case 'k':
-                    res.promotion_set(PieceType::KNIGHT);
-                    break;
-                case 'r':
-                    res.promotion_set(PieceType::ROOK);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return res;
-    }
-
-
-    unsigned long long int to_int(board::Position position) {
-        int file = 7 - utils::utype(position.file_get());
+   unsigned long long int to_int(board::Position position) {
+        int file = utils::utype(position.file_get());
         int rank = utils::utype(position.rank_get());
         return file + (rank * 8);
     }

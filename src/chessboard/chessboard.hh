@@ -43,6 +43,8 @@ namespace board {
         // DEBUG TIER
         void print();
 
+        Move to_move(string move);
+
     private:
         Board board_;
         bool white_turn_;
