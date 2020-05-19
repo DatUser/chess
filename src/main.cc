@@ -79,8 +79,6 @@ int main(int argc, char** argv) {
     }
     else if (parser.perft_get().compare(""))
     {
-
-
         ifstream file;
         file.open(parser.perft_get());
         if (!file.is_open())
@@ -148,7 +146,6 @@ int main(int argc, char** argv) {
 
             ai::play_move(best_str);
         }
-        file.close();
     }
 
     close_listeners();
