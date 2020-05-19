@@ -109,49 +109,4 @@ namespace board {
         this->board_ = other.board_get();
         return *this;
     }
-
-
-    Position Bitboard::get_position(unsigned long long board)
-    {
-        Rank r;
-        if (board >= pow(2, 0) and board <= pow(2, 7))
-        {
-            r = Rank::ONE;
-        }
-        else if (board >= pow(2, 8) and board <= pow(2, 15))
-        {
-            r = Rank::TWO;
-        }
-        else if (board >= pow(2, 16) and board <= pow(2, 23))
-        {
-            r = Rank::THREE;
-        }
-        else if (board >= pow(2, 24) and board <= pow(2, 31))
-        {
-            r = Rank::FOUR;
-        }
-        else if (board >= pow(2, 32) and board <= pow(2, 39))
-        {
-            r = Rank::FIVE;
-        }
-        else if (board >= pow(2, 40) and board <= pow(2, 47))
-        {
-            r = Rank::SIX;
-        }
-        else if (board >= pow(2, 48) and board <= pow(2, 55))
-        {
-            r = Rank::SEVEN;
-        }
-        else
-        {
-            r = Rank::EIGHT;
-        }
-
-        int file = log2(board);
-
-        //Since File::A == 0
-        File f = static_cast<File>(file - 1);
-
-        return Position(f, r);
-    }
 }
