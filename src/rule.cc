@@ -525,6 +525,26 @@ bool is_max_pos(Position& pos, int direction) {
     }
 
 
+    void double_step(unsigned long long int pawn, Board board, bool white_turn,
+                     std::vector<Move>& moves)
+    {
+        int color = (white_turn) ? 0 : 1;
+        unsigned long long int new_pos = (pawn << 16) >> (color << 5);
+        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        if (not (new_pos & occupied))
+        {
+            Position begin = utils::get_position(pawn);
+            if ((white_turn and begin.rank_get() == Rank::TWO) or
+                (not white_turn and begin.rank_get() == Rank::SEVEN))
+            {
+                Position end = utils::get_position(new_pos);
+                Move mv = Move(begin, end);
+                mv.piece_set(PieceType::PAWN);
+                moves.push_back(mv);
+            }
+        }
+    }
+
 
     std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
     {
@@ -540,9 +560,8 @@ bool is_max_pos(Position& pos, int direction) {
         while (acc < pawns)
         {
             pawn = pawns ^ (pawns & (pawns - acc - 1));
-            //single_step
             single_step(pawn, board, white_turn, moves);
-            //double_step
+            double_step(pawn, board, white_turn, moves);
             acc |= pawn;
         }
 
