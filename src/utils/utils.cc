@@ -142,7 +142,9 @@ namespace utils {
         int file = log2(board);
 
         //Since File::A == 0
-        File f = static_cast<File>(file - 1);
+        file = file % 8;
+        File f;
+        f = static_cast<File>(7 - file);
 
         return Position(f, r);
     }
