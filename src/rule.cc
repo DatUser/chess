@@ -72,6 +72,24 @@ namespace board
             abs = -1;
             ord = -1;
             break;
+        case -1:
+            abs = 1;
+            ord = 0;
+            break;
+        case 1:
+            abs = -1;
+            ord = 0;
+            break;
+        case 8:
+            abs = 0;
+            ord = 1;
+            break;
+        case -8:
+            abs = 0;
+            ord = -1;
+            break;
+        default:
+            break;
         }
     }
 
@@ -125,10 +143,11 @@ bool is_max_pos(Position& pos, int direction) {
         //int x = static_cast<int>(posX);
         //int y = static_cast<int>(posY);
         bool overload = false;
-
+        newPos = utils::get_position(posbit);
         while (not (overload = is_max_pos(newPos, direction))
-                    and not (posbit & ally)) {
-            newPos = utils::get_position(posbit = posbit << direction);
+            and not (((direction < 0) ? posbit = posbit >> -direction
+                                      : posbit = posbit << direction) & ally)) {
+            newPos = utils::get_position(posbit);
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
                         (white_turn) ? Color::BLACK : Color::WHITE);
