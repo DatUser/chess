@@ -174,7 +174,7 @@ namespace board {
             setBoard(temp);
             board_.do_move(all_moves[i], white_turn_ ? Color::WHITE
                                                      : Color::BLACK);
-            if (!board_.is_check(!white_turn_))
+            if (!board_.is_check(white_turn_))
             {
                 res.push_back(all_moves[i]);
             }
