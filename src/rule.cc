@@ -514,7 +514,7 @@ bool is_max_pos(Position& pos, int direction) {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (pawn << 8) >> (color << 4);
         unsigned long long int occupied = board.occupied_board.get()->board_get();
-        if (not new_pos and occupied)
+        if (not (new_pos & occupied))
         {
             Position begin = utils::get_position(pawn);
             Position end = utils::get_position(new_pos);
