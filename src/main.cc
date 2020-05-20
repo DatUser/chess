@@ -94,10 +94,13 @@ int main(int argc, char** argv) {
         std::string line;
         while ((line = ai::get_board()).compare(""))
         {
+            ofstream file("moves");
+            file << line << "\n";
+            file.flush();
             stringstream ss(line);
             string item;
             string move;
-            vector<string> items;
+           vector<string> items;
             while (getline(ss, item, ' ')) {
                 items.push_back(item);
             }
@@ -107,24 +110,34 @@ int main(int argc, char** argv) {
             if (items[0] == "fen")
                 items.erase(items.begin());
 
-            auto board = board::Chessboard(items);
+            :x
             string temp = "moves";
             auto begin_moves = find(items.begin(), items.end(), temp);
             begin_moves++;
+            board.print();
             while (begin_moves != items.end())
             {
                 if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a' and (*begin_moves)[0] > 'f'))
                     break;
                 move = *begin_moves;
+                std::cout << move << "\n";
                 items.pop_back();
                 auto to_play = board.to_move(move);
                 board.do_move(to_play);
                 begin_moves++;
+                board.print();
             }
-
             auto bestmove = chess_engine::search(board, 2);
+
+            auto brank = utils::utype(bestmove.move_get().first.rank_get()) + 1;
+            char bfile = utils::utype(bestmove.move_get().first.file_get()) + 'a';
+            auto erank = utils::utype(bestmove.move_get().second.rank_get()) + 1;
+            char efile = utils::utype(bestmove.move_get().second.file_get()) + 'a';
+            std::cout << bfile <<  brank << " " << efile << erank << "\n";
+
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
+            std::cout << best_str << "\n";
             ai::play_move(best_str);
         }
     }
