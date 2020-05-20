@@ -1,4 +1,6 @@
 #include "rule.hh"
+#define BLACK_QUEEN_CAST 8070450532247928832
+#define WHITE_QUEEN_CAST 112
 
 namespace board
 {
@@ -529,8 +531,9 @@ namespace board
                         unsigned long long int pos, bool white_turn, Board board)
     {
         unsigned long long int occupied = board.occupied_board_get().get()->board_get();
-        unsigned long long int tmp = (white_turn) ? 96 : pow(2, 61) + pow(2, 62);
-        if (pos == ((white_turn) ? 8 : pow(2, 59)) and not (tmp & occupied))
+        unsigned long long int block = (white_turn) ? WHITE_QUEEN_CAST
+                                    : BLACK_QUEEN_CAST;
+        if (/*pos == ((white_turn) ? 8 : pow(2, 59)) and*/ not (block & occupied))
         {
             Position begin = utils::get_position(pos);
             Position end = utils::get_position(pos << 2);
@@ -576,11 +579,11 @@ namespace board
 
         if (king_castling)
         {
-        //    check_king_castling(moves, king, white_turn, board);
+            check_king_castling(moves, king, white_turn, board);
         }
         if (queen_castling)
         {
-        //    check_queen_castling(moves, king, white_turn, board);
+            check_queen_castling(moves, king, white_turn, board);
         }
 
         add_single_xys(king, moves, board, white_turn, PieceType::KING);
