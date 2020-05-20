@@ -111,8 +111,9 @@ bool is_max_pos(Position& pos, int direction) {
                                     int direction,
                                     //std::pair<int, int>& direction,
                                     PieceType piece) {
-        shared_bit ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
+        unsigned long long int ally =
+                            ((white_turn) ? board.white_occupied_board_get()
+                            : board.black_occupied_board_get())->board_get();
 
         int abs_factor = 0;
         int ord_factor = 0;
@@ -125,7 +126,8 @@ bool is_max_pos(Position& pos, int direction) {
         //int y = static_cast<int>(posY);
         bool overload = false;
 
-        while (not overload and not (posbit & ally->board_get())) {
+        while (not (overload = is_max_pos(newPos, direction))
+                    and not (posbit & ally)) {
             newPos = utils::get_position(posbit = posbit << direction);
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
@@ -139,7 +141,6 @@ bool is_max_pos(Position& pos, int direction) {
                 mv.piece_set(piece);
                 moves.push_back(mv);
             }
-            overload = is_max_pos(newPos, direction);
         }
     }
 
