@@ -76,21 +76,37 @@ namespace board
     }
 
 /*
-**    9    7
-**     \  /
-**      p
-**     /  \
-**    -7  -9
+**   9  8  7
+**    \ | /
+** 1 <- p -> -1
+**    / | \
+**  -7 -8  -9
 */
 
-bool is_max_pos(Position& pos, int direction) {
-    return (pos.rank_get() == Rank::EIGHT and direction > 0)
-    or (pos.rank_get() == Rank::ONE and (direction == -9 or direction == -7))
-    or (pos.file_get() == File::H and (direction == -9 or direction == 7))
-    or (pos.file_get() == File::A and (direction == 9 or direction == -7));
+inline bool is_top(int direction) {
+    return direction == 9 or direction == 8 or direction == 7;
 }
 
-    void add_diag_bit(unsigned long long int posbit, std::vector<Move>& moves,
+inline bool is_bot(int direction) {
+    return direction == -9 or direction == -8 or direction == -7;
+}
+
+inline bool is_right(int direction) {
+    return direction == 7 or direction == -1 or direction == -9;
+}
+
+inline bool is_left(int direction) {
+    return direction == 9 or direction == 1 or direction == -7;
+}
+
+bool is_max_pos(Position& pos, int direction) {
+    return (pos.rank_get() == Rank::EIGHT and is_top(direction))
+            or (pos.rank_get() == Rank::ONE and is_bot(direction))
+            or (pos.file_get() == File::H and is_right(direction))
+            or (pos.file_get() == File::A and is_left(direction));
+}
+
+    void add_moves(unsigned long long int posbit, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     int direction,
                                     //std::pair<int, int>& direction,
@@ -109,7 +125,7 @@ bool is_max_pos(Position& pos, int direction) {
         //int y = static_cast<int>(posY);
         bool overload = false;
 
-        for (int i = 1; not overload and not (posbit & ally->board_get()); i++) {
+        while (not overload and not (posbit & ally->board_get())) {
             newPos = utils::get_position(posbit = posbit << direction);
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
@@ -138,10 +154,19 @@ bool is_max_pos(Position& pos, int direction) {
                             (direction = std::pair<int, int>(-1, 1)), piece);
         add_diag(pos, moves, board, white_turn,
                             (direction = std::pair<int, int>(1, 1)), piece);*/
-        add_diag_bit(pos, moves, board, white_turn, 9, piece);
-        add_diag_bit(pos, moves, board, white_turn, 7, piece);
-        add_diag_bit(pos, moves, board, white_turn, -7, piece);
-        add_diag_bit(pos, moves, board, white_turn, -9, piece);
+        add_moves(pos, moves, board, white_turn, 9, piece);
+        add_moves(pos, moves, board, white_turn, 7, piece);
+        add_moves(pos, moves, board, white_turn, -7, piece);
+        add_moves(pos, moves, board, white_turn, -9, piece);
+    }
+
+    void add_xys(/*Position*/unsigned long long int pos, std::vector<Move>& moves,
+                                    Board& board, bool white_turn,
+                                    PieceType piece) {
+        add_moves(pos, moves, board, white_turn, 8, piece);
+        add_moves(pos, moves, board, white_turn, -8, piece);
+        add_moves(pos, moves, board, white_turn, 1, piece);
+        add_moves(pos, moves, board, white_turn, -1, piece);
     }
 
     bool in_board(int x, int y)
@@ -192,7 +217,7 @@ bool is_max_pos(Position& pos, int direction) {
         }
     }
 
-    void add_backward(Position pos, std::vector<Move>& moves,
+    /*void add_backward(Position pos, std::vector<Move>& moves,
                         Board board, bool white_turn, PieceType piece)
     {
         auto ally = (white_turn) ? board.white_occupied_board_get()
@@ -308,7 +333,7 @@ bool is_max_pos(Position& pos, int direction) {
                 return;
             }
         }
-    }
+    }*/
 
     void pawn_step(std::vector<Move>& moves, Position pos, Board board,
             bool white_turn) {
@@ -707,7 +732,12 @@ bool is_max_pos(Position& pos, int direction) {
     {
         std::vector<Move> m;
         Board board = chessboard.getBoard();
-        std::vector<Position> positions = (chessboard.isWhiteTurn()) ?
+        bool white_turn = chessboard.isWhiteTurn();
+        unsigned long long int rook = ((white_turn)
+                            ? board.rook_wb : board.rook_bb)->board_get();
+        unsigned long long int acc = 0;
+        unsigned long long int pos = 0;
+        /*std::vector<Position> positions = (chessboard.isWhiteTurn()) ?
                                            board.get_white_rook()
                                            : board.get_black_rook();
 
@@ -722,11 +752,15 @@ bool is_max_pos(Position& pos, int direction) {
 
         for (Position p : positions)
         {
-            bool white_turn = chessboard.isWhiteTurn();
-            add_forward(p, m, board, white_turn, PieceType::ROOK);
+            bool white_turn = chessboard.isWhiteTurn();*/
+       while (acc < rook) {
+            pos = rook ^ (rook & (rook - acc - 1));
+            add_xys(pos, m, board, white_turn, PieceType::ROOK);
+            /*add_forward(p, m, board, white_turn, PieceType::ROOK);
             add_backward(p, m, board, white_turn, PieceType::ROOK);
             add_leftward(p, m, board, white_turn, PieceType::ROOK);
-            add_rightward(p, m, board, white_turn, PieceType::ROOK);
+            add_rightward(p, m, board, white_turn, PieceType::ROOK);*/
+            acc |= pos;
         }
 
         return m;
@@ -740,18 +774,19 @@ bool is_max_pos(Position& pos, int direction) {
         unsigned long long int queen = ((white_turn)
                             ? board.queen_wb : board.queen_bb)->board_get();
         unsigned long long int acc = 0;
-        unsigned long long int move = 0;
+        unsigned long long int pos = 0;
 
-        while (acc <= queen) {
-            move = queen ^ (queen & (queen - acc - 1));
+        while (acc < queen) {
+            pos = queen ^ (queen & (queen - acc - 1));
 
-            add_diags(move, m, board, white_turn, PieceType::QUEEN);
+            add_diags(pos, m, board, white_turn, PieceType::QUEEN);
+            add_xys(pos, m, board, white_turn, PieceType::QUEEN);
             /*add_forward(move, m, board, white_turn, PieceType::QUEEN);
             add_backward(move, m, board, white_turn, PieceType::QUEEN);
             add_leftward(move, m, board, white_turn, PieceType::QUEEN);
             add_rightward(move, m, board, white_turn, PieceType::QUEEN);*/
 
-            acc |= move;
+            acc |= pos;
         }
         return m;
     }
@@ -763,12 +798,12 @@ bool is_max_pos(Position& pos, int direction) {
         unsigned long long int bishop = ((white_turn)
                             ? board.bishop_wb : board.bishop_bb)->board_get();
         unsigned long long int acc = 0;
-        unsigned long long int move = 0;
+        unsigned long long int pos = 0;
 
-        while (acc <= bishop) {
-            move = bishop ^ (bishop & (bishop - acc - 1));
-            add_diags(move, m, board, white_turn, PieceType::BISHOP);
-            acc |= move;
+        while (acc < bishop) {
+            pos = bishop ^ (bishop & (bishop - acc - 1));
+            add_diags(pos, m, board, white_turn, PieceType::BISHOP);
+            acc |= pos;
         }
         /*std::vector<Position> bishops = (white_turn) ? board.get_white_bishop()
                             : board.get_black_bishop();
