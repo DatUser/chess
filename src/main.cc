@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
                 board.do_move(to_play);
                 begin_moves++;
             }
-            auto bestmove = chess_engine::search(board, 3);
+            auto bestmove = chess_engine::search(board, 2);
 
             auto best_str = pos_to_string(bestmove.move_get().first)
                                 + pos_to_string(bestmove.move_get().second);
