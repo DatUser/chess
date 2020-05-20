@@ -101,28 +101,28 @@ namespace board
 **  -7 -8  -9
 */
 
-inline bool is_top(int direction) {
-    return direction == 9 or direction == 8 or direction == 7;
-}
+    inline bool is_top(int direction) {
+        return direction == 9 or direction == 8 or direction == 7;
+    }
 
-inline bool is_bot(int direction) {
-    return direction == -9 or direction == -8 or direction == -7;
-}
+    inline bool is_bot(int direction) {
+        return direction == -9 or direction == -8 or direction == -7;
+    }
 
-inline bool is_right(int direction) {
-    return direction == 7 or direction == -1 or direction == -9;
-}
+    inline bool is_right(int direction) {
+        return direction == 7 or direction == -1 or direction == -9;
+    }
 
-inline bool is_left(int direction) {
-    return direction == 9 or direction == 1 or direction == -7;
-}
+    inline bool is_left(int direction) {
+        return direction == 9 or direction == 1 or direction == -7;
+    }
 
-bool is_max_pos(Position& pos, int direction) {
-    return (pos.rank_get() == Rank::EIGHT and is_top(direction))
-            or (pos.rank_get() == Rank::ONE and is_bot(direction))
-            or (pos.file_get() == File::H and is_right(direction))
-            or (pos.file_get() == File::A and is_left(direction));
-}
+    bool is_max_pos(Position& pos, int direction) {
+        return (pos.rank_get() == Rank::EIGHT and is_top(direction))
+                or (pos.rank_get() == Rank::ONE and is_bot(direction))
+                or (pos.file_get() == File::H and is_right(direction))
+                or (pos.file_get() == File::A and is_left(direction));
+    }
 
     void add_moves(unsigned long long int posbit, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
@@ -133,9 +133,9 @@ bool is_max_pos(Position& pos, int direction) {
                             ((white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get())->board_get();
 
-        int abs_factor = 0;
-        int ord_factor = 0;
-        set_direction(abs_factor, ord_factor, direction);
+        //int abs_factor = 0;
+        //int ord_factor = 0;
+        //set_direction(abs_factor, ord_factor, direction);
         Position pos(utils::get_position(posbit));
         Position newPos(File::A, Rank::ONE);
         //File posX = pos.file_get();
@@ -407,7 +407,7 @@ bool is_max_pos(Position& pos, int direction) {
                 posA.file_get() == posB.file_get();
     }
 
-    void pawn_eat(std::vector<Move>& moves, Position pos,
+    /*void pawn_eat(std::vector<Move>& moves, Position pos,
             Chessboard chessboard, bool white_turn) {
         int x_r = static_cast<int>(pos.file_get()) + 1;
         int x_l = static_cast<int>(pos.file_get()) - 1;
@@ -475,7 +475,7 @@ bool is_max_pos(Position& pos, int direction) {
 
             }
         }
-    }
+    }*/
 
     /*std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
     {
@@ -528,6 +528,51 @@ bool is_max_pos(Position& pos, int direction) {
     }*/
 
 
+    void add_move_bis(unsigned long long int posbit, std::vector<Move>& moves,
+                                    Board& board, bool white_turn,
+                                    int direction,
+                                    //std::pair<int, int>& direction,
+                                    PieceType piece)
+    {
+        unsigned long long int ally =
+                            ((white_turn) ? board.white_occupied_board_get()
+                            : board.black_occupied_board_get())->board_get();
+
+        Position pos(utils::get_position(posbit));
+        Position newPos(File::A, Rank::ONE);
+        bool overload = false;
+        newPos = utils::get_position(posbit);
+        if (not (overload = is_max_pos(newPos, direction))
+            and not (((direction < 0) ? posbit = posbit >> -direction
+                                      : posbit = posbit << direction) & ally))
+        {
+            newPos = utils::get_position(posbit);
+            Move mv = Move(pos, newPos);
+            opt_piecetype_t opt = board.is_occupied(newPos,
+                        (white_turn) ? Color::BLACK : Color::WHITE);
+            if (opt.has_value())
+            {
+                if (piece == PieceType::PAWN and ((white_turn and pos.rank_get() == Rank::SEVEN) or 
+                    (not white_turn and pos.rank_get() == Rank::TWO)))
+                {
+                    add_promotion(moves, pos, newPos, static_cast<int>(opt.value()));
+                }
+                else
+                {
+                    Move mv = Move(pos, newPos);
+                    mv.capture_set(opt.value());
+                    mv.piece_set(piece);
+                    moves.push_back(mv);
+                }
+            }
+            else if (piece != PieceType::PAWN)
+            {
+                mv.piece_set(piece);
+                moves.push_back(mv);
+            }
+        }
+    }
+
     void single_step(unsigned long long int pawn, Board board, bool white_turn,
                      std::vector<Move>& moves)
     {
@@ -538,11 +583,29 @@ bool is_max_pos(Position& pos, int direction) {
         {
             Position begin = utils::get_position(pawn);
             Position end = utils::get_position(new_pos);
-            Move mv = Move(begin, end);
-            mv.piece_set(PieceType::PAWN);
-            moves.push_back(mv);
+            if ((white_turn and begin.rank_get() == Rank::SEVEN) or 
+                (not white_turn and begin.rank_get() == Rank::TWO))
+            {
+                add_promotion(moves, begin, end, -1);
+            }
+            else
+            {
+                Move mv = Move(begin, end);
+                mv.piece_set(PieceType::PAWN);
+                moves.push_back(mv);
+            }
         }
-    }
+        if (white_turn)
+        {
+            add_move_bis(pawn, moves, board, white_turn, 7, PieceType::PAWN);
+            add_move_bis(pawn, moves, board, white_turn, 9, PieceType::PAWN);
+        }
+        else
+        {
+            add_move_bis(pawn, moves, board, white_turn, -7, PieceType::PAWN);
+            add_move_bis(pawn, moves, board, white_turn, -9, PieceType::PAWN);
+        }
+   }
 
 
     void double_step(unsigned long long int pawn, Board board, bool white_turn,
@@ -566,6 +629,9 @@ bool is_max_pos(Position& pos, int direction) {
     }
 
 
+
+
+
     std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
     {
         std::vector<Move> moves;
@@ -582,6 +648,10 @@ bool is_max_pos(Position& pos, int direction) {
             pawn = pawns ^ (pawns & (pawns - acc - 1));
             single_step(pawn, board, white_turn, moves);
             double_step(pawn, board, white_turn, moves);
+            if (chessboard.getEnPassant().has_value())
+            {
+                //Position begin = utils::get_position(pawn);
+            }
             acc |= pawn;
         }
 
