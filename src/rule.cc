@@ -237,125 +237,8 @@ namespace board
         }
     }
 
-    /*void add_backward(Position pos, std::vector<Move>& moves,
-                        Board board, bool white_turn, PieceType piece)
-    {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
-        File file = pos.file_get();
-        int f = static_cast<int>(pos.file_get());
-        int r = static_cast<int>(pos.rank_get());
-        for (int i = 1; i < 8 - r; i++)
-        {
-            Position new_pos = Position(file, static_cast<Rank>(r - i));
-            if (in_board(f, r - i))
-            {
-                opt_piecetype_t opt = board.is_occupied(new_pos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
 
-                Move mv = Move(pos, new_pos);
-                if (board.is_occupied(ally, new_pos))
-                {
-                    return;
-                }
-                else if (opt.has_value())
-                {
-                    mv.piece_set(piece);
-                    mv.capture_set(opt.value());
-                    moves.push_back(mv);
-                }
-                else
-                {
-                    mv.piece_set(piece);
-                    moves.push_back(mv);
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-
-    void add_rightward(Position pos, std::vector<Move>& moves,
-                            Board board, bool white_turn, PieceType piece)
-    {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
-        Rank rank = pos.rank_get();
-        int f = static_cast<int>(pos.file_get());
-        int r = static_cast<int>(pos.rank_get());
-        for (int i = 1; i < 8; i++)
-        {
-            Position new_pos = Position(static_cast<File>(f + i), rank);
-            if (in_board(f + i, r))
-            {
-                opt_piecetype_t opt = board.is_occupied(new_pos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-                Move mv = Move(pos, new_pos);
-                if (board.is_occupied(ally, new_pos))
-                {
-                    return;
-                }
-                else if (opt.has_value())
-                {
-                    mv.piece_set(piece);
-                    mv.capture_set(opt.value());
-                    moves.push_back(mv);
-                }
-                else
-                {
-                    mv.piece_set(piece);
-                    moves.push_back(mv);
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-
-    void add_leftward(Position pos, std::vector<Move>& moves,
-                        Board board, bool white_turn, PieceType piece)
-    {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
-        Rank rank = pos.rank_get();
-        int f = static_cast<int>(pos.file_get());
-        int r = static_cast<int>(pos.rank_get());
-        for (int i = 1; i < 8; i++)
-        {
-            Position new_pos = Position(static_cast<File>(f - i), rank);
-            if (in_board(f - i, r))
-            {
-                opt_piecetype_t opt = board.is_occupied(new_pos,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-                Move mv = Move(pos, new_pos);
-                if (board.is_occupied(ally, new_pos))
-                {
-                    return;
-                }
-                else if (opt.has_value())
-                {
-                    mv.piece_set(piece);
-                    mv.capture_set(opt.value());
-                    moves.push_back(mv);
-                }
-                else
-                {
-                    mv.piece_set(piece);
-                    moves.push_back(mv);
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
-    }*/
-
-    void pawn_step(std::vector<Move>& moves, Position pos, Board board,
+    /*void pawn_step(std::vector<Move>& moves, Position pos, Board board,
             bool white_turn) {
         int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
         Position newpos(pos.file_get(), static_cast<Rank>(y));
@@ -366,7 +249,7 @@ namespace board
             mv.piece_set(PieceType::PAWN);
             moves.push_back(mv);
         }
-    }
+    }*/
 
     void add_promotion(std::vector<Move>& moves, Position pos, Position newpos,
                 int capture) {
@@ -382,7 +265,7 @@ namespace board
     }
 
     //Since it is at the sames place we deal with it in the same funcs
-    void pawn_double_step_promotion(std::vector<Move>& moves, Position pos,
+    /*void pawn_double_step_promotion(std::vector<Move>& moves, Position pos,
             Board board, bool doubl, bool white_turn) {
         int y = static_cast<int>(pos.rank_get()) +
                 ((doubl) ? 2  * ((white_turn) ? 1 : -1)
@@ -405,7 +288,7 @@ namespace board
     bool pos_equal(Position posA, Position posB) {
         return posA.rank_get() == posB.rank_get() and
                 posA.file_get() == posB.file_get();
-    }
+    }*/
 
     /*void pawn_eat(std::vector<Move>& moves, Position pos,
             Chessboard chessboard, bool white_turn) {
@@ -477,55 +360,6 @@ namespace board
         }
     }*/
 
-    /*std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
-    {
-        std::vector<Move> m;
-        Board board = chessboard.getBoard();
-        bool white_turn = chessboard.isWhiteTurn();
-        std::vector<Position> pawns = (white_turn) ? board.get_white_pawn()
-                            : board.get_black_pawn();
-        for (unsigned int i = 0; i < pawns.size(); i++) {
-            switch (pawns[i].rank_get()) {
-            case Rank::ONE:
-            case Rank::EIGHT:
-                break;
-
-            case Rank::TWO:
-                pawn_step(m, pawns[i], board, white_turn);
-                pawn_double_step_promotion(m, pawns[i], board,
-                                            white_turn, white_turn);
-                pawn_eat(m, pawns[i], chessboard, white_turn);
-                break;
-
-            case Rank::SEVEN:
-                pawn_step(m, pawns[i], board, white_turn);
-                pawn_double_step_promotion(m, pawns[i], board,
-                                            not white_turn, white_turn);
-                pawn_eat(m, pawns[i], chessboard, white_turn);
-                break;
-
-            default:
-                pawn_step(m, pawns[i], board, white_turn);
-                pawn_eat(m, pawns[i], chessboard, white_turn);
-                break;
-            }
-        }
-
-        return m;
-    }*/
-
-    /*void pawn_step(std::vector<Move>& moves, Position pos, Board board,
-            bool white_turn) {
-        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
-        Position newpos(pos.file_get(), static_cast<Rank>(y));
-
-        if (in_board(newpos, 0, 0) and
-            not board.is_occupied(board.occupied_board_get(), newpos)) {
-            Move mv(pos, newpos);
-            mv.piece_set(PieceType::PAWN);
-            moves.push_back(mv);
-        }
-    }*/
 
 
     void add_move_bis(unsigned long long int posbit, std::vector<Move>& moves,
@@ -648,9 +482,21 @@ namespace board
             pawn = pawns ^ (pawns & (pawns - acc - 1));
             single_step(pawn, board, white_turn, moves);
             double_step(pawn, board, white_turn, moves);
-            if (chessboard.getEnPassant().has_value())
+            if (chessboard.getEnPassantBitboard().has_value())
             {
-                //Position begin = utils::get_position(pawn);
+                Position begin = utils::get_position(pawn);
+                int color = (white_turn) ? 0 : 1;
+                unsigned long long int en_passant = chessboard.getEnPassantBitboard().value()->board_get();
+                unsigned long long int left_pos = pawn << 1;
+                if (left_pos == en_passant or (left_pos = pawn >> 1) == en_passant)
+                {
+                    Position end = utils::get_position((left_pos << 8) >> (color << 4));
+                    Move mv = Move(begin, end);
+                    mv.piece_set(PieceType::PAWN);
+                    mv.en_passant_set(true);
+                    mv.capture_set(PieceType::PAWN);
+                    moves.push_back(mv);
+                }
             }
             acc |= pawn;
         }
