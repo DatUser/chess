@@ -145,8 +145,8 @@ namespace board {
         all_moves = add_in_vector(all_moves, pawns);
         //std::cout << "pawns moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> king = rules.generate_king_moves(*this);
-        all_moves = add_in_vector(all_moves, king);
+        //std::vector<Move> king = rules.generate_king_moves(*this);
+        //all_moves = add_in_vector(all_moves, king);
         //std::cout << "king moves: " << all_moves.size() << "\n";
 
         std::vector<Move> bishops = rules.generate_bishop_moves(*this);
