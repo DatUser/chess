@@ -447,8 +447,9 @@ namespace board
     {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (pawn << 16) >> (color << 5);
+        unsigned long long int new_pos2 = (pawn << 8) >> (color << 4);
         unsigned long long int occupied = board.occupied_board.get()->board_get();
-        if (not (new_pos & occupied))
+        if (not (new_pos & occupied) and not (new_pos2 & occupied))
         {
             Position begin = utils::get_position(pawn);
             if ((white_turn and begin.rank_get() == Rank::TWO) or
@@ -479,7 +480,7 @@ namespace board
         {
             pawn = pawns ^ (pawns & (pawns - acc - 1));
             single_step(pawn, board, white_turn, moves);
-            double_step(pawn, board, white_turn, moves);
+            //double_step(pawn, board, white_turn, moves);
             if (chessboard.getEnPassantBitboard().has_value())
             {
                 Position begin = utils::get_position(pawn);

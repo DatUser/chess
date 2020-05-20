@@ -97,8 +97,8 @@ namespace chess_engine {
                 res.push_back(i);
             }
         }
-        std::cout << "size: " << res.size() << "\n";
-        std::cout << "rand: " << rand() % res.size() << "\n";
+        //std::cout << "size: " << res.size() << "\n";
+        //std::cout << "rand: " << rand() % res.size() << "\n";
         srand(time(NULL));
         return moves[(rand() % res.size())];
     }
