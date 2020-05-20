@@ -464,8 +464,6 @@ namespace board
 
 
 
-
-
     std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
     {
         std::vector<Move> moves;
@@ -509,235 +507,87 @@ namespace board
         return in_board(x, y) and board.is_occupied(bitboard, pos);
     }
 
+
     void check_king_castling(std::vector<Move>& moves,
-                        Position pos, bool white_turn, Board board)
+                        unsigned long long int pos, bool white_turn, Board board)
     {
-        //auto board = chessboard.getBoard();
-        auto occupied = board.occupied_board_get();
-        int f = static_cast<int>(pos.file_get());
-        int r = static_cast<int>(pos.rank_get());
-        Rank rank = pos.rank_get();
-
-        if (in_board(f + 3, r)) {
-            Position pos1 = Position(static_cast<File>(f + 1), rank);
-            Position pos2 = Position(static_cast<File>(f + 2), rank);
-            Position posTower = Position(static_cast<File>(f + 3), rank);
-            opt_piecetype_t opt = board.is_occupied(posTower,
-                            (white_turn) ? Color::WHITE : Color::BLACK);
-
-            if (in_board(f + 1, r) and not board.is_occupied(occupied, pos1)
-                and in_board(f + 2, r) and
-                not board.is_occupied(occupied, pos2)
-                and opt.has_value() and opt.value() == PieceType::ROOK) {
-                    //indeed it is the pos just before the tower
-                    Move mv = Move(pos, pos2);
-                    mv.piece_set(PieceType::KING);
-                    mv.king_castling_set(true);
-                    moves.push_back(mv);
-                }
+        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int tmp = (white_turn) ? 6 : pow(2, 58) + pow(2, 57);
+        if (pos == ((white_turn) ? 8 : pow(2, 59)) and not(tmp & occupied))
+        {
+            Position begin = utils::get_position(pos);
+            Position end = utils::get_position(pos >> 2);
+            Move mv = Move(begin, end);
+            mv.king_castling_set(true);
+            mv.piece_set(PieceType::KING);
+            moves.push_back(mv);
         }
     }
-
 
     void check_queen_castling(std::vector<Move>& moves,
-                        Position pos, bool white_turn, Board board)
+                        unsigned long long int pos, bool white_turn, Board board)
     {
-
-        auto occupied = board.occupied_board_get();
-        int f = static_cast<int>(pos.file_get());
-        int r = static_cast<int>(pos.rank_get());
-        Rank rank = pos.rank_get();
-
-        if (in_board(f - 3, r))
+        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int tmp = (white_turn) ? 96 : pow(2, 61) + pow(2, 62);
+        if (pos == ((white_turn) ? 8 : pow(2, 59)) and not (tmp & occupied))
         {
-            Position pos1 = Position(static_cast<File>(f - 1), rank);
-            Position pos2 = Position(static_cast<File>(f - 2), rank);
-            Position posTower = Position(static_cast<File>(f - 3), rank);
-            opt_piecetype_t opt = board.is_occupied(posTower,
-                            (white_turn) ? Color::WHITE : Color::BLACK);
-
-            if (in_board(f - 1, r) and not board.is_occupied(occupied, pos1)
-                and in_board(f - 2, r) and not board.is_occupied(occupied, pos2)
-                and opt.has_value() and opt.value() == PieceType::ROOK)
-                {
-                    Move mv = Move(pos, pos2);
-                    mv.king_castling_set(true);
-                    mv.piece_set(PieceType::KING);
-                    moves.push_back(mv);
-                }
+            Position begin = utils::get_position(pos);
+            Position end = utils::get_position(pos << 2);
+            Move mv = Move(begin, end);
+            mv.queen_castling_set(true);
+            mv.piece_set(PieceType::KING);
+            moves.push_back(mv);
         }
     }
+
+
+
+
+    void add_single_xys(unsigned long long int pos, std::vector<Move>& moves,
+                                    Board& board, bool white_turn,
+                                    PieceType piece)
+    {
+        add_move_bis(pos, moves, board, white_turn, 8, piece);
+        add_move_bis(pos, moves, board, white_turn, -8, piece);
+        add_move_bis(pos, moves, board, white_turn, 1, piece);
+        add_move_bis(pos, moves, board, white_turn, -1, piece);
+        add_move_bis(pos, moves, board, white_turn, -7, piece);
+        add_move_bis(pos, moves, board, white_turn, 7, piece);
+        add_move_bis(pos, moves, board, white_turn, 9, piece);
+        add_move_bis(pos, moves, board, white_turn, -9, piece);
+    }
+
 
     std::vector<Move> Rule::generate_king_moves(Chessboard chessboard)
     {
-        std::vector<Move> m;
+        std::vector<Move> moves;
         Board board = chessboard.getBoard();
-        std::vector<Position> positions = (chessboard.isWhiteTurn()) ?
-                                          board.get_white_king()
-                                          : board.get_black_king();
-
-        auto allies = (chessboard.isWhiteTurn()) ?
-                           board.white_occupied_board_get()
-                           : board.black_occupied_board_get();
-
-        auto enemies = (chessboard.isWhiteTurn()) ?
-                           board.black_occupied_board_get()
-                           : board.white_occupied_board_get();
-
-        if (chessboard.isWhiteTurn())
-        {
-            positions = board.get_white_king();
-        }
-        else
-        {
-            positions = board.get_black_king();
-        }
         bool white_turn = chessboard.isWhiteTurn();
+        unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get() 
+                                                    : board.king_bb.get()->board_get();
+
+
+        unsigned long long int king = kings ^ (kings & (kings - 1));
         bool king_castling = (white_turn) ? chessboard.getWhiteKingCastling()
                                     : chessboard.getBlackKingCastling();
         bool queen_castling = (white_turn) ? chessboard.getWhiteQueenCastling()
                                     : chessboard.getBlackQueenCastling();
 
-        for (Position p : positions)
+        if (king_castling)
         {
-            if (king_castling)
-            {
-                check_king_castling(m, p, chessboard.isWhiteTurn(), board);
-            }
-            if (queen_castling)
-            {
-                check_queen_castling(m, p, chessboard.isWhiteTurn(), board);
-            }
-
-            File file = p.file_get();
-            Rank rank = p.rank_get();
-            int f = static_cast<int>(p.file_get());
-            int r = static_cast<int>(p.rank_get());
-
-            Position pos1 = Position(static_cast<File>(f - 1),
-                                        static_cast<Rank>(r + 1));
-            Position pos2 = Position(file, static_cast<Rank>(r + 1));
-            Position pos3 = Position(static_cast<File>(f + 1),
-                                        static_cast<Rank>(r + 1));
-            Position pos4 = Position(static_cast<File>(f - 1), rank);
-            Position pos5 = Position(static_cast<File>(f + 1), rank);
-            Position pos6 = Position(static_cast<File>(f - 1),
-                                        static_cast<Rank>(r - 1));
-            Position pos7 = Position(file, static_cast<Rank>(r - 1));
-            Position pos8 = Position(static_cast<File>(f + 1),
-                                        static_cast<Rank>(r - 1));
-
-            PieceType piece = PieceType::KING;
-
-            if (in_board(f - 1, r + 1) and not board.is_occupied(allies, pos1))
-            {
-                Move mv = Move(p, pos1);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos1))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f, r + 1) and not board.is_occupied(allies, pos2))
-            {
-                Move mv = Move(p, pos2);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos2))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f + 1, r + 1) and not board.is_occupied(allies, pos3))
-            {
-                Move mv = Move(p, pos3);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos3))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f - 1, r) and not board.is_occupied(allies, pos4))
-            {
-                Move mv = Move(p, pos4);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos4))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f + 1, r) and not board.is_occupied(allies, pos5))
-            {
-                Move mv = Move(p, pos5);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos5))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f - 1, r - 1) and not board.is_occupied(allies, pos6))
-            {
-                Move mv = Move(p, pos6);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos6))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f, r - 1) and not board.is_occupied(allies, pos7))
-            {
-                Move mv = Move(p, pos7);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos7))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
-            if (in_board(f + 1, r - 1) and not board.is_occupied(allies, pos8))
-            {
-                Move mv = Move(p, pos8);
-                mv.piece_set(piece);
-                if (board.is_occupied(enemies, pos8))
-                {
-                    m.push_back(mv);
-                }
-                else
-                {
-                    m.push_back(mv);
-                }
-            }
+            check_king_castling(moves, king, white_turn, board);
+        }
+        if (queen_castling)
+        {
+            check_queen_castling(moves, king, white_turn, board);
         }
 
-        return m;
+        add_single_xys(king, moves, board, white_turn, PieceType::KING);
+
+        return moves;
     }
 
+  
     std::vector<Move> Rule::generate_rook_moves(Chessboard chessboard)
     {
         std::vector<Move> m;
