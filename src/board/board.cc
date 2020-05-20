@@ -385,16 +385,16 @@ namespace board {
                 switch (move.promotion_get())
                 {
                     case PieceType::QUEEN:
-                        board = (color == Color::WHITE ? queen_bb : queen_wb);
+                        board = (color == Color::WHITE ? queen_wb: queen_bb);
                         break;
                     case PieceType::ROOK:
-                        board = (color == Color::WHITE ? rook_bb : rook_wb);
+                        board = (color == Color::WHITE ? rook_wb : rook_bb);
                         break;
                     case PieceType::BISHOP:
-                        board =  (color == Color::WHITE ? bishop_bb : bishop_wb);
+                        board =  (color == Color::WHITE ? bishop_wb : bishop_bb);
                         break;
                     case PieceType::KNIGHT:
-                        board = (color == Color::WHITE ? knight_bb : knight_wb);
+                        board = (color == Color::WHITE ? knight_wb : knight_bb);
                         break;
                     default:
                         break;
