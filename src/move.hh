@@ -1,4 +1,7 @@
 #pragma once
+
+#include <stdlib.h>
+
 #include "all.hh"
 
 namespace board
