@@ -576,11 +576,11 @@ namespace board
 
         if (king_castling)
         {
-            check_king_castling(moves, king, white_turn, board);
+        //    check_king_castling(moves, king, white_turn, board);
         }
         if (queen_castling)
         {
-            check_queen_castling(moves, king, white_turn, board);
+        //    check_queen_castling(moves, king, white_turn, board);
         }
 
         add_single_xys(king, moves, board, white_turn, PieceType::KING);
@@ -588,7 +588,6 @@ namespace board
         return moves;
     }
 
-  
     std::vector<Move> Rule::generate_rook_moves(Chessboard chessboard)
     {
         std::vector<Move> m;
