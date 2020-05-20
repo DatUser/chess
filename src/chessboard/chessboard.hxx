@@ -46,6 +46,11 @@ inline std::optional<Position> Chessboard::getEnPassant()
     return en_passant_;
 }
 
+inline std::optional<Bitboard*> Chessboard::getEnPassantBitboard()
+{
+    return en_passant_bitboard_;
+}
+
 inline unsigned int Chessboard::getTurn()
 {
     return turn_;

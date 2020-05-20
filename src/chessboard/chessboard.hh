@@ -35,6 +35,7 @@ namespace board {
         bool getBlackKingCastling();
         bool getBlackQueenCastling();
         std::optional<Position> getEnPassant();
+        std::optional<Bitboard*> getEnPassantBitboard();
         unsigned int getTurn();
         unsigned int getLastFiftyTurn();
 
@@ -53,6 +54,8 @@ namespace board {
         bool black_king_castling_;
         bool black_queen_castling_;
         optional<Position> en_passant_;
+        std::optional<Bitboard*> en_passant_bitboard_;
+        //Bitboard b;
         unsigned int turn_;
         unsigned int last_fifty_turn;
     };
