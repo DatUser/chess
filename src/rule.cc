@@ -457,7 +457,7 @@ bool is_max_pos(Position& pos, int direction) {
         }
     }
 
-    std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
+    /*std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
     {
         std::vector<Move> m;
         Board board = chessboard.getBoard();
@@ -492,7 +492,7 @@ bool is_max_pos(Position& pos, int direction) {
         }
 
         return m;
-    }
+    }*/
 
     /*void pawn_step(std::vector<Move>& moves, Position pos, Board board,
             bool white_turn) {
@@ -508,7 +508,7 @@ bool is_max_pos(Position& pos, int direction) {
     }*/
 
 
-    /*void single_step(unsigned long long int pawn, Board board, bool white_turn,
+    void single_step(unsigned long long int pawn, Board board, bool white_turn,
                      std::vector<Move>& moves)
     {
         int color = (white_turn) ? 0 : 1;
@@ -519,6 +519,7 @@ bool is_max_pos(Position& pos, int direction) {
             Position begin = utils::get_position(pawn);
             Position end = utils::get_position(new_pos);
             Move mv = Move(begin, end);
+            mv.piece_set(PieceType::PAWN);
             moves.push_back(mv);
         }
     }
@@ -546,7 +547,7 @@ bool is_max_pos(Position& pos, int direction) {
         }
 
         return moves;
-    }*/
+    }
 
     bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
         Position pos(static_cast<File>(x), static_cast<Rank>(y));
