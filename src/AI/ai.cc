@@ -1,6 +1,11 @@
 #include "ai.hh"
 
 #define CENTER 1099494850560
+#define QUEEN_WT 200
+#define ROOK_WT 140
+#define KNIGHT_WT 70
+#define BISHOP_WT 50
+#define PAWN_WT 10
 
 namespace chess_engine {
 
@@ -24,26 +29,31 @@ namespace chess_engine {
         auto board = chessboard.getBoard();
         int res = 0;
         auto black_p = board.get_black_pawn();
+        auto black_q = board.get_black_queen();
+        auto black_b = board.get_black_bishop();
+        auto black_r = board.get_black_rook();
+        auto black_k = board.get_black_knight();
 
         // Calculating queens impact
         auto pieces = board.get_white_queen();
-        res += pieces.size() * 200;
+        res += (pieces.size() - black_q.size()) * QUEEN_WT;
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_white_rook();
-        res += pieces.size() * (140 - 5 * black_p.size());
+        res += (pieces.size() - black_r.size())
+                * (ROOK_WT - 5 * black_p.size());
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_white_pawn();
-        res += board.get_white_knight().size()
-            * (50 - 2 * (black_p.size() + pieces.size()));
+        res += (board.get_white_knight().size() - black_k.size())
+            * (KNIGHT_WT - 2 * (black_p.size() + pieces.size()));
 
         // Calculating pawn impact
-        res += pieces.size() * 10;
+        res += (pieces.size() - black_p.size()) * PAWN_WT;
 
         // Calculating bishop impact
         pieces = board.get_white_bishop();
-        res += pieces.size() * 50;
+        res += (pieces.size() - black_b.size()) * BISHOP_WT;
         //res += chessboard.generate_legal_moves().size();
         return res;
     }
@@ -53,26 +63,31 @@ namespace chess_engine {
         auto board = chessboard.getBoard();
         int res = 0;
         auto white_p = board.get_white_pawn();
+        auto white_q = board.get_white_queen();
+        auto white_b = board.get_white_bishop();
+        auto white_r = board.get_white_rook();
+        auto white_k = board.get_white_knight();
 
         // Calculating queens impact
         auto pieces = board.get_black_queen();
-        res += pieces.size() * 200;
+        res += (pieces.size() - white_q.size()) * QUEEN_WT;
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_black_rook();
-        res += pieces.size() * (140 - 5 * white_p.size()) ;
+        res += (pieces.size() - white_r.size())
+                * (ROOK_WT - 5 * white_p.size());
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_black_pawn();
-        res += board.get_black_knight().size()
-            * (50 - 2 * (white_p.size() + pieces.size()));
+        res += (board.get_black_knight().size() - white_k.size())
+            * (KNIGHT_WT - 2 * (white_p.size() + pieces.size()));
 
         // Calculating pawn impact
-        res += pieces.size() * 10;
+        res += (pieces.size() - white_p.size()) * PAWN_WT;
 
         // Calculating bishop impact
         pieces = board.get_black_bishop();
-        res += pieces.size() * 50;
+        res += (pieces.size() - white_b.size()) * BISHOP_WT;
 
         //res += chessboard.generate_legal_moves().size();
         return res;
@@ -87,6 +102,26 @@ namespace chess_engine {
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
             auto temp = rec_search(board, depth - 1, moves[i], false);
+            auto piece_capture = moves[i].capture_get();
+            if (piece_capture != PieceType::NONE)
+            {
+                switch (piece_capture)
+                {
+                    case PieceType::QUEEN:
+                        temp += 100;
+                        break;
+                    case PieceType::ROOK:
+                        temp += 50;
+                        break;
+                    case PieceType::BISHOP:
+                    case PieceType::KNIGHT:
+                        temp += 30;
+                        break;
+                    default:
+                        temp += 10;
+                        break;
+                }
+            }
             if (temp > act)
             {
                 res.clear();
@@ -123,11 +158,32 @@ namespace chess_engine {
         board.setWhiteTurn(!board.isWhiteTurn());
         auto moves = board.generate_legal_moves();
         if (moves.size() == 0)
-            return -9999;
+            return 9999 * (maxmin ? 1 : -1);
         int act = rec_search(board, depth - 1, moves[0], !maxmin);
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
-            int temp = rec_search(board, depth - 1, moves[i], !maxmin);
+            int temp = rec_search(board, depth - 1, moves[i], !maxmin)
+                        * (maxmin ? 1 : -1);
+            auto piece_capture = moves[i].capture_get();
+            if (piece_capture != PieceType::NONE)
+            {
+                switch (piece_capture)
+                {
+                    case PieceType::QUEEN:
+                        temp += 100 * (maxmin ? 1 : -1);
+                        break;
+                    case PieceType::ROOK:
+                        temp += 50 * (maxmin ? 1 : -1);
+                        break;
+                    case PieceType::BISHOP:
+                    case PieceType::KNIGHT:
+                        temp += 30 * (maxmin ? 1 : -1);
+                        break;
+                    default:
+                        temp += 10 * (maxmin ? 1 : -1);
+                        break;
+                }
+            }
             if (maxmin and act < temp)
                 act = temp;
             else if (!maxmin and act > temp)

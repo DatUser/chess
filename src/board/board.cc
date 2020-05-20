@@ -223,9 +223,8 @@ namespace board {
         int king_power = utils::pow_two(king_bb->board_get());
         compute_king_danger(white_danger, king_power);
 
-        int queen_power = utils::pow_two(queen_bb->board_get());
         compute_queen_danger(white_danger, black_occupied_board,
-                            white_occupied_board, queen_power);
+                            white_occupied_board, queen_bb);
 
         compute_bishop_danger(white_danger, black_occupied_board,
                               white_occupied_board, bishop_bb);
@@ -246,10 +245,8 @@ namespace board {
         int king_power = utils::pow_two(king_wb->board_get());
         compute_king_danger(black_danger, king_power);
 
-        int queen_power = utils::pow_two(queen_wb->board_get());
-        if (queen_power != -1)
-            compute_queen_danger(black_danger, white_occupied_board,
-                                black_occupied_board, queen_power);
+        compute_queen_danger(black_danger, white_occupied_board,
+                              black_occupied_board, queen_wb);
 
         compute_bishop_danger(black_danger, white_occupied_board,
                               black_occupied_board, bishop_wb);
@@ -590,9 +587,14 @@ namespace board {
     }
 
     void Board::compute_queen_danger(shared_bit board, shared_bit ally,
-                                     shared_bit enemy, int power) {
-        compute_lines(board, ally, enemy, power);
-        compute_diagonals(board, ally, enemy, power);
+                                     shared_bit enemy, shared_bit queens) {
+        unsigned long long int tmp = queens->board_get();
+        while (tmp) {
+            unsigned long long int floor = utils::floor_two(tmp);
+            tmp -= floor;
+            compute_lines(board, ally, enemy, utils::pow_two(floor));
+            compute_diagonals(board, ally, enemy, utils::pow_two(floor));
+        }
     }
 
     void Board::compute_bishop_danger(shared_bit board, shared_bit ally,

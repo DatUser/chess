@@ -87,7 +87,7 @@ namespace board {
         // Methods needed to compute the danger grids
         void compute_king_danger(shared_bit board, int power);
         void compute_queen_danger(shared_bit board, shared_bit ally,
-                                  shared_bit enemy, int power);
+                                  shared_bit enemy, shared_bit queens);
         void compute_bishop_danger(shared_bit board, shared_bit ally,
                                    shared_bit enemy, shared_bit bishops);
         void compute_rook_danger(shared_bit board, shared_bit ally,
