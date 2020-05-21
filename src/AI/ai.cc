@@ -15,13 +15,13 @@ namespace chess_engine {
                                                 bool maxmin);
     int evaluate(Chessboard& chessboard)
     {
-        if (chessboard.is_checkmate())
+        if (chessboard.is_checkmate(chessboard.isWhiteTurn()))
             return 999999;
         if (chessboard.is_draw())
             return 0;
         if (chessboard.isWhiteTurn())
             return evaluate_white(chessboard);
-        return evaluate_white(chessboard);
+        return evaluate_black(chessboard);
     }
 
     int evaluate_white(Chessboard& chessboard)
@@ -135,7 +135,7 @@ namespace chess_engine {
         //std::cout << "size: " << res.size() << "\n";
         //std::cout << "rand: " << rand() % res.size() << "\n";
         srand(time(NULL));
-        return moves[(rand() % res.size())];
+        return moves[res[(rand() % res.size())]];
     }
 
     int rec_search(Chessboard& board, int depth, Move move,
@@ -155,6 +155,10 @@ namespace chess_engine {
         auto temp = Board(board.getBoard());
         board.setBoard(temp);
         board.do_move(move);
+        if (board.is_checkmate(board.isWhiteTurn()))
+        {
+            return 999999 * (maxmin ? -1 : 1);
+        }
         board.setWhiteTurn(!board.isWhiteTurn());
         auto moves = board.generate_legal_moves();
         if (moves.size() == 0)

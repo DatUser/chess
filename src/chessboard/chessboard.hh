@@ -21,8 +21,8 @@ namespace board {
         std::vector<Move> generate_legal_moves();
         void do_move(Move move);
         bool is_move_legal(Move move);
-        bool is_check();
-        bool is_checkmate();
+        bool is_check(bool color);
+        bool is_checkmate(bool color);
         bool is_draw();
         std::pair<PieceType, Color> operator[](Position position);
 
