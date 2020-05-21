@@ -91,9 +91,12 @@ int main(int argc, char** argv) {
     else
     {
         ai::init("EscanorEngine");
+        ofstream file("moves");
         std::string line;
         while ((line = ai::get_board()).compare(""))
         {
+            file << line << std::endl;
+            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -107,26 +110,47 @@ int main(int argc, char** argv) {
             if (items[0] == "fen")
                 items.erase(items.begin());
 
-            auto board = Chessboard(items);
-            string temp = "moves";
-            auto begin_moves = find(items.begin(), items.end(), temp);
-            begin_moves++;
-            while (begin_moves != items.end())
+            Chessboard board;
+            if (items[0] == "startpos")
             {
-                if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
-                        and (*begin_moves)[0] > 'f'))
-                    break;
-                move = *begin_moves;
-                items.pop_back();
-                auto to_play = board.to_move(move);
-                board.do_move(to_play);
-                begin_moves++;
-            }
-            auto bestmove = chess_engine::search(board, 3);
+                auto board = Chessboard();
+                string temp = "moves";
+                auto begin_moves = find(items.begin(), items.end(), temp);
+                do {
+                    begin_moves++;
+                    if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
+                                and (*begin_moves)[0] > 'f'))
+                        break;
+                    move = *begin_moves;
+                    auto to_play = board.to_move(move);
+                    board.do_move(to_play);
+                } while (begin_moves != items.end());
+                auto bestmove = chess_engine::search(board, 2);
 
-            auto best_str = pos_to_string(bestmove.move_get().first)
-                                + pos_to_string(bestmove.move_get().second);
-            ai::play_move(best_str);
+                auto best_str = pos_to_string(bestmove.move_get().first)
+                    + pos_to_string(bestmove.move_get().second);
+                ai::play_move(best_str);
+            }
+            else
+            {
+                auto board = Chessboard(items);
+                string temp = "moves";
+                auto begin_moves = find(items.begin(), items.end(), temp);
+                do {
+                    begin_moves++;
+                    if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
+                                and (*begin_moves)[0] > 'f'))
+                        break;
+                    move = *begin_moves;
+                    auto to_play = board.to_move(move);
+                    board.do_move(to_play);
+                } while (begin_moves != items.end());
+                auto bestmove = chess_engine::search(board, 2);
+
+                auto best_str = pos_to_string(bestmove.move_get().first)
+                    + pos_to_string(bestmove.move_get().second);
+                ai::play_move(best_str);
+            }
         }
     }
 

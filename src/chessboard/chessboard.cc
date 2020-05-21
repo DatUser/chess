@@ -5,6 +5,13 @@ namespace board {
     Chessboard::Chessboard() {
         auto temp = Board();
         board_ = temp;
+        white_turn_ = true;
+        white_king_castling_ = true;
+        white_queen_castling_ = true;
+        black_king_castling_ = true;
+        black_queen_castling_ = true;
+        turn_ = 0;
+        last_fifty_turn = 0;
     }
 
     Chessboard::Chessboard(vector<string> splited_input)
@@ -222,9 +229,9 @@ namespace board {
         return res;
     }
 
-    bool Chessboard::is_check()
+    bool Chessboard::is_check(bool color)
     {
-        bool check = board_.is_check(!white_turn_);
+        bool check = board_.is_check(color);
         return check;
     }
 
@@ -233,35 +240,28 @@ namespace board {
         return generate_legal_moves().size() == 0;
     }
 
-    bool Chessboard::is_checkmate()
+    bool Chessboard::is_checkmate(bool color)
     {
-        bool check = board_.is_check(!white_turn_);
+        bool check = board_.is_check(color);
         if (!check)
             return check;
 
-        white_turn_ = !white_turn_;
         auto moves = generate_legal_moves();
         bool checkmate = true;
+        auto save = getBoard();
         for (auto move : moves)
         {
-            auto pair_r = move.move_get();
-            Move virgin_move = Move(pair_r.first, pair_r.second);
-            virgin_move.piece_set(move.piece_get());
-            Move revert = Move(pair_r.second, pair_r.first);
-            revert.piece_set(move.piece_get());
-            board_.do_move(virgin_move, white_turn_ ? Color::WHITE
-                    : Color::BLACK);
+            auto temp = Board(getBoard());
+            setBoard(temp);
+            do_move(move);
             if (!board_.is_check(white_turn_))
             {
                 checkmate = false;
-                board_.do_move(revert, white_turn_ ? Color::WHITE
-                                                   : Color::BLACK);
+                setBoard(save);
                 break;
             }
-            board_.do_move(revert, white_turn_ ? Color::WHITE
-                                               : Color::BLACK);
+            setBoard(save);
         }
-        white_turn_ = !white_turn_;
         return checkmate;
     }
 
