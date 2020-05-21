@@ -101,8 +101,11 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
+        std::ofstream os("moves");
         while ((line = ai::get_board()).compare(""))
         {
+            os << line << std::endl;
+            os.flush();
             stringstream ss(line);
             string item;
             string move;

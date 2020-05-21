@@ -476,7 +476,8 @@ namespace board
                      std::vector<Move>& moves)
     {
         int color = (white_turn) ? 0 : 1;
-        unsigned long long int new_pos = (pawn << 16) >> (color << 5);
+        unsigned long long int new_pos = (white_turn) ? (pawn << 16)
+                                                    : (pawn >> 16);
         unsigned long long int new_pos2 = (pawn << 8) >> (color << 4);
         unsigned long long int occupied = board.occupied_board.get()->board_get();
         if (not (new_pos & occupied) and not (new_pos2 & occupied))
