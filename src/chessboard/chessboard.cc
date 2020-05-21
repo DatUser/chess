@@ -69,6 +69,44 @@ namespace board {
             listener->on_piece_moved(move.piece_get(), move.move_get().first,
                                                        move.move_get().second);
         board_.do_move(move, white_turn_ ? Color::WHITE : Color::BLACK);
+        if (move.piece_get() == PieceType::KING)
+        {
+            if (white_turn_)
+             {
+                white_king_castling_ = false;
+                white_queen_castling_ = false;
+            }
+            else
+            {
+                black_king_castling_ = false;
+                black_queen_castling_ = false;
+            }
+        }
+        else if (move.piece_get() == PieceType::ROOK)
+        {
+            if (move.move_get().first.file_get() == File::A)
+            {
+                if (white_turn_)
+                {
+                    white_queen_castling_ = false;
+                }
+                else
+                {
+                    black_queen_castling_ = false;
+                }
+            }
+            else if (move.move_get().first.file_get() == File::H)
+            {
+                if (white_turn_)
+                {
+                    white_king_castling_ = false;
+                }
+                else
+                {
+                    black_king_castling_ = false;
+                }
+            }
+        }
         if (move.capture_get() != PieceType::NONE)
         {
             for (auto listener : listeners)

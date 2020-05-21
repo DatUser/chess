@@ -1,5 +1,10 @@
 #include "board.hh"
 
+#define WHITE_RIGHT_ROOK 1<<0
+#define WHITE_LEFT_ROOK 1<<7
+#define BLACK_RIGHT_ROOK 1<<55
+#define BLACK_LEFT_ROOK 1<<63
+
 namespace board {
 
     Board::Board()
