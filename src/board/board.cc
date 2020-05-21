@@ -633,14 +633,14 @@ namespace board {
                     board->board_set(board->board_get() | res);
                 }
             }
-            offset = white ? 8 : -8;
+            /*offset = white ? 8 : -8;
             res = utils::two_pow(floor_pow + offset);
             if (offset + floor_pow <= 63 and offset + floor_pow >= 0) {
                 Position position = utils::to_position(floor_pow + offset);
                 if (!is_occupied(ally, position)) {
                     board->board_set(board->board_get() | res);
                 }
-            }
+            }*/
             offset = white ? 7 : -9;
             res = utils::two_pow(floor_pow + offset);
             if (offset + floor_pow <= 63 and offset + floor_pow >= 0) {
