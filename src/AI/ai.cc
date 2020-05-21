@@ -1,10 +1,10 @@
 #include "ai.hh"
 
 #define CENTER 1099494850560
-#define QUEEN_WT 200
-#define ROOK_WT 140
-#define KNIGHT_WT 70
-#define BISHOP_WT 50
+#define QUEEN_WT 500
+#define ROOK_WT 200
+#define KNIGHT_WT 150
+#define BISHOP_WT 200
 #define PAWN_WT 10
 
 namespace chess_engine {
@@ -111,11 +111,11 @@ namespace chess_engine {
                         temp += 500;
                         break;
                     case PieceType::ROOK:
-                        temp += 50;
+                        temp += 150;
                         break;
                     case PieceType::BISHOP:
                     case PieceType::KNIGHT:
-                        temp += 30;
+                        temp += 200;
                         break;
                     default:
                         temp += 10;
