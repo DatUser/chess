@@ -103,26 +103,54 @@ namespace board
 **  -7 -8  -9
 */
 
+    inline bool is_double_top(int direction) {
+        return direction == 15 or direction == 17;
+    }
+
+    inline bool is_double_bot(int direction) {
+        return direction == -15 or direction == -17;
+     }
+
+    inline bool is_double_right(int direction) {
+        return direction == 6 or direction == -10;
+    }
+
+    inline bool is_double_left(int direction) {
+        return direction == -6 or direction == 10;
+    }
+
     inline bool is_top(int direction) {
-        return direction == 9 or direction == 8 or direction == 7;
+        return direction == 9 or direction == 8 or direction == 7
+                or direction == 6  or direction == 10
+                or is_double_top(direction);
     }
 
     inline bool is_bot(int direction) {
-        return direction == -9 or direction == -8 or direction == -7;
-    }
+        return direction == -9 or direction == -8 or direction == -7
+                or direction == -6 or direction == -10
+                or is_double_bot(direction);
+     }
 
     inline bool is_right(int direction) {
-        return direction == 7 or direction == -1 or direction == -9;
+        return direction == 7 or direction == -1 or direction == -9
+                or direction == 15 or direction == -17
+                or is_double_right(direction);
     }
 
     inline bool is_left(int direction) {
-        return direction == 9 or direction == 1 or direction == -7;
+        return direction == 9 or direction == 1 or direction == -7
+                or direction == -15 or direction == 17
+                or is_double_left(direction);
     }
 
     bool is_max_pos(Position& pos, int direction) {
         return (pos.rank_get() == Rank::EIGHT and is_top(direction))
+                or (pos.rank_get() == Rank::SEVEN and is_double_top(direction))
                 or (pos.rank_get() == Rank::ONE and is_bot(direction))
+                or (pos.rank_get() == Rank::TWO and is_double_bot(direction))
                 or (pos.file_get() == File::H and is_right(direction))
+                or (pos.file_get() == File::G and is_double_right(direction))
+                or (pos.file_get() == File::B and is_double_left(direction))
                 or (pos.file_get() == File::A and is_left(direction));
     }
 
@@ -388,7 +416,7 @@ namespace board
                         (white_turn) ? Color::BLACK : Color::WHITE);
             if (opt.has_value())
             {
-                if (piece == PieceType::PAWN and ((white_turn and pos.rank_get() == Rank::SEVEN) or 
+                if (piece == PieceType::PAWN and ((white_turn and pos.rank_get() == Rank::SEVEN) or
                     (not white_turn and pos.rank_get() == Rank::TWO)))
                 {
                     add_promotion(moves, pos, newPos, static_cast<int>(opt.value()));
@@ -419,7 +447,7 @@ namespace board
         {
             Position begin = utils::get_position(pawn);
             Position end = utils::get_position(new_pos);
-            if ((white_turn and begin.rank_get() == Rank::SEVEN) or 
+            if ((white_turn and begin.rank_get() == Rank::SEVEN) or
                 (not white_turn and begin.rank_get() == Rank::TWO))
             {
                 add_promotion(moves, begin, end, -1);
@@ -472,7 +500,7 @@ namespace board
         std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get() 
+        unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get()
                                                     : board.pawn_bb.get()->board_get();
 
 
@@ -679,6 +707,26 @@ namespace board
     std::vector<Move> Rule::generate_knight_moves(Chessboard chessboard)
     {
         std::vector<Move> m;
+        Board board = chessboard.getBoard();
+        bool white_turn = chessboard.isWhiteTurn();
+        unsigned long long int knight = ((white_turn)
+                            ? board.knight_wb : board.knight_bb)->board_get();
+        unsigned long long int acc = 0;
+        unsigned long long int pos = 0;
+
+        while (acc < knight) {
+            pos = knight ^ (knight & (knight - acc - 1));
+            add_move_bis(pos, m, board, white_turn, 17, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, 15, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, 10, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, 6, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, -6, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, -10, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, -15, PieceType::KNIGHT);
+            add_move_bis(pos, m, board, white_turn, -17, PieceType::KNIGHT);
+            acc |= pos;
+        }
+        /*std::vector<Move> m;
         bool white_turn = chessboard.isWhiteTurn();
         Board board = chessboard.getBoard();
         std::vector<Position> knights = (white_turn) ? board.get_white_knight()
@@ -791,7 +839,7 @@ namespace board
                 mv.piece_set(PieceType::KNIGHT);
                 m.push_back(mv);
             }
-        }
+        }*/
         return m;
     }
 }
