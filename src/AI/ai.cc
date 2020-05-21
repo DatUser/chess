@@ -108,7 +108,7 @@ namespace chess_engine {
                 switch (piece_capture)
                 {
                     case PieceType::QUEEN:
-                        temp += 100;
+                        temp += 500;
                         break;
                     case PieceType::ROOK:
                         temp += 50;

@@ -510,7 +510,7 @@ namespace board
         {
             pawn = pawns ^ (pawns & (pawns - acc - 1));
             single_step(pawn, board, white_turn, moves);
-            //double_step(pawn, board, white_turn, moves);
+            double_step(pawn, board, white_turn, moves);
             if (chessboard.getEnPassantBitboard().has_value())
             {
                 Position begin = utils::get_position(pawn);
