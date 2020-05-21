@@ -132,14 +132,6 @@ namespace chess_engine {
                 res.push_back(i);
             }
         }
-        for (long unsigned int i = 0; i < moves.size(); i++) {
-            auto move = moves[i];
-            auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
-            char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
-            auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
-            char efile = utils::utype(move.move_get().second.file_get()) + 'a';
-            std::cout << bfile <<  brank << " " << efile << erank << "\n";
-        }
         //std::cout << "size: " << res.size() << "\n";
         //std::cout << "rand: " << rand() % res.size() << "\n";
         srand(time(NULL));

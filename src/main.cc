@@ -87,25 +87,13 @@ int main(int argc, char** argv) {
         auto pobject = perft_parser::parse_perft(line);
         auto moves = pobject.chessboard_get().generate_legal_moves();
         std::cout << moves.size() << std::endl;
-        for (long unsigned int i = 0; i < moves.size(); i++) {
-            auto move = moves[i];
-            auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
-            char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
-            auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
-            char efile = utils::utype(move.move_get().second.file_get()) + 'a';
-            std::cout << bfile <<  brank << " " << efile << erank << "\n";
-        }
-        pobject.chessboard_get().print();
     }
     else
     {
         ai::init("EscanorEngine");
         std::string line;
-        std::ofstream os("moves");
         while ((line = ai::get_board()).compare(""))
         {
-            os << line << std::endl;
-            os.flush();
             stringstream ss(line);
             string item;
             string move;
