@@ -1,4 +1,5 @@
 #include "ai.hh"
+#include <climits>
 
 #define CENTER 1099494850560
 #define QUEEN_WT 500
@@ -12,7 +13,7 @@ namespace chess_engine {
     int evaluate_white(Chessboard& board);
     int evaluate_black(Chessboard& board);
     int rec_search(Chessboard& board, int depth, Move move,
-                                                bool maxmin);
+                                                bool maxmin, int max, int min);
     int evaluate(Chessboard& chessboard)
     {
         if (chessboard.is_checkmate(chessboard.isWhiteTurn()))
@@ -97,11 +98,14 @@ namespace chess_engine {
     {
         auto moves = board.generate_legal_moves();
         auto res = vector<int>();
-        int act = rec_search(board, depth - 1, moves[0], false);
+        int max = INT_MIN;
+        int min = INT_MAX;
+        int act = rec_search(board, depth - 1, moves[0], false, max, min);
         res.push_back(0);
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
-            auto temp = rec_search(board, depth - 1, moves[i], false);
+            auto temp = rec_search(board, depth - 1, moves[i], false, max,
+                                    min);
             auto piece_capture = moves[i].capture_get();
             if (piece_capture != PieceType::NONE)
             {
@@ -139,7 +143,7 @@ namespace chess_engine {
     }
 
     int rec_search(Chessboard& board, int depth, Move move,
-                                                 bool maxmin)
+                                                 bool maxmin, int max, int min)
     {
         if (depth <= 0)
         {
@@ -163,11 +167,11 @@ namespace chess_engine {
         auto moves = board.generate_legal_moves();
         if (moves.size() == 0)
             return 9999 * (maxmin ? 1 : -1);
-        int act = rec_search(board, depth - 1, moves[0], !maxmin);
+        int act = rec_search(board, depth - 1, moves[0], !maxmin, max, min);
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
-            int temp = rec_search(board, depth - 1, moves[i], !maxmin)
-                        * (maxmin ? 1 : -1);
+            int temp = rec_search(board, depth - 1, moves[i], !maxmin, max,
+                        min) * (maxmin ? 1 : -1);
             auto piece_capture = moves[i].capture_get();
             if (piece_capture != PieceType::NONE)
             {
@@ -188,10 +192,17 @@ namespace chess_engine {
                         break;
                 }
             }
-            if (maxmin and act < temp)
+            /*if (maxmin and act < temp)
                 act = temp;
             else if (!maxmin and act > temp)
-                act = temp;
+                act = temp;*/
+            act = (maxmin and act < temp) ? temp : act;
+            act = (!maxmin and act > temp) ? temp : act;
+            max = (maxmin and act > max) ? act : max;
+            min = (!maxmin and act < min) ? act : min;
+
+            if (max >= min)
+                break;
         }
         board.setWhiteTurn(!board.isWhiteTurn());
         board.setBoard(save);

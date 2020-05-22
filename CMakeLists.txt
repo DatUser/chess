@@ -4,7 +4,7 @@
 # set(MYVAR "val1" "val2") creates a list
 
 set(OPT_FLAGS
-    "-Ofast -mtune=native -floop-parallelize-all"
+    "-Ofast -mtune=native -floop-parallelize-all -fgcse-sm"
 )
 
 # END OPTIMIZATION FLAGS

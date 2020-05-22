@@ -91,12 +91,9 @@ int main(int argc, char** argv) {
     else
     {
         ai::init("EscanorEngine");
-        ofstream file("moves");
         std::string line;
         while ((line = ai::get_board()).compare(""))
         {
-            file << line << std::endl;
-            file.flush();
             stringstream ss(line);
             string item;
             string move;
@@ -125,7 +122,7 @@ int main(int argc, char** argv) {
                     auto to_play = board.to_move(move);
                     board.do_move(to_play);
                 } while (begin_moves != items.end());
-                auto bestmove = chess_engine::search(board, 2);
+                auto bestmove = chess_engine::search(board, 3);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
                     + pos_to_string(bestmove.move_get().second);
@@ -145,7 +142,7 @@ int main(int argc, char** argv) {
                     auto to_play = board.to_move(move);
                     board.do_move(to_play);
                 } while (begin_moves != items.end());
-                auto bestmove = chess_engine::search(board, 2);
+                auto bestmove = chess_engine::search(board, 3);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
                     + pos_to_string(bestmove.move_get().second);
