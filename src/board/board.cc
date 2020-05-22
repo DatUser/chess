@@ -205,7 +205,7 @@ namespace board {
 
     void Board::compute_danger() {
         // First refresh the occupied bitboard
-        refresh_occupied();
+        // refresh_occupied();
         // Then computes the white danger bitboard
         compute_white_danger();
         // DEBUG PURPOSES
