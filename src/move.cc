@@ -25,4 +25,23 @@ namespace board
 
         return false;
     }
+
+    Move Move::operator=(Move& move)
+    {
+        if (move == *this)
+        {
+            return move;
+        }
+
+        std::pair<Position, Position> pos = move.move_get();
+        Move new_move = Move(pos.first, pos.second);
+        new_move.piece_set(move.piece_get());
+        new_move.promotion_set(move.promotion_get());
+        new_move.capture_set(move.capture_get());
+        new_move.double_pawn_push_set(move.double_pawn_push_get());
+        new_move.king_castling_set(move.king_castling_get());
+        new_move.queen_castling_set(move.queen_castling_get());
+        new_move.en_passant_set(move.en_passant_get());
+        return new_move;
+    }
 }
