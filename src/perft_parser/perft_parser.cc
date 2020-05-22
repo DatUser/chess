@@ -23,7 +23,49 @@ namespace perft_parser {
         int depth = stoi(items[items.size() - 1]);
         items.pop_back();
 
-        auto c = Chessboard(items);
+        auto king_wb = Bitboard();
+        auto queen_wb = Bitboard();
+        auto knight_wb = Bitboard();
+        auto bishop_wb = Bitboard();
+        auto rook_wb = Bitboard();
+        auto pawn_wb = Bitboard();
+
+        auto king_bb = Bitboard();
+        auto queen_bb = Bitboard();
+        auto knight_bb = Bitboard();
+        auto bishop_bb = Bitboard();
+        auto rook_bb = Bitboard();
+        auto pawn_bb = Bitboard();
+
+        auto occupied_board = Bitboard();
+
+        auto white_occupied_board = Bitboard();
+        auto black_occupied_board = Bitboard();
+
+        auto white_danger = Bitboard();
+        auto black_danger = Bitboard();
+
+        auto board = Board(
+                king_wb,
+                queen_wb,
+                knight_wb,
+                bishop_wb,
+                rook_wb,
+                pawn_wb,
+                king_bb,
+                queen_bb,
+                knight_bb,
+                bishop_bb,
+                rook_bb,
+                pawn_bb,
+                white_occupied_board,
+                black_occupied_board,
+                occupied_board,
+                white_danger,
+                black_danger,
+                items[0]);
+
+        auto c = Chessboard(board, items);
         ListenerManager::instance().chessboard_set(&c);
         auto listeners = ListenerManager::instance().listeners_get();
         for (auto listener : listeners)
@@ -34,7 +76,49 @@ namespace perft_parser {
     // ASK YAKA ABOUT CHESSBOARD CONSTRUCTOR
     Chessboard parse_fen(vector<string> splited_input)
     {
-        auto c = Chessboard(splited_input);
+
+        auto king_wb = Bitboard();
+        auto queen_wb = Bitboard();
+        auto knight_wb = Bitboard();
+        auto bishop_wb = Bitboard();
+        auto rook_wb = Bitboard();
+        auto pawn_wb = Bitboard();
+
+        auto king_bb = Bitboard();
+        auto queen_bb = Bitboard();
+        auto knight_bb = Bitboard();
+        auto bishop_bb = Bitboard();
+        auto rook_bb = Bitboard();
+        auto pawn_bb = Bitboard();
+
+        auto occupied_board = Bitboard();
+
+        auto white_occupied_board = Bitboard();
+        auto black_occupied_board = Bitboard();
+
+        auto white_danger = Bitboard();
+        auto black_danger = Bitboard();
+
+        auto board = Board(
+                king_wb,
+                queen_wb,
+                knight_wb,
+                bishop_wb,
+                rook_wb,
+                pawn_wb,
+                king_bb,
+                queen_bb,
+                knight_bb,
+                bishop_bb,
+                rook_bb,
+                pawn_bb,
+                white_occupied_board,
+                black_occupied_board,
+                occupied_board,
+                white_danger,
+                black_danger,
+                splited_input[0]);
+        auto c = Chessboard(board,splited_input);
         ListenerManager::instance().chessboard_set(&c);
         auto listeners = ListenerManager::instance().listeners_get();
         for (auto listener : listeners)

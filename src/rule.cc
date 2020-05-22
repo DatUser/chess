@@ -26,7 +26,7 @@ namespace board
                                     Board& board, bool white_turn,
                                     std::pair<int, int>& direction,
                                     PieceType piece) {
-        shared_bit ally = (white_turn) ? board.white_occupied_board_get()
+        bit ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
         int abs_factor = direction.first;
         int ord_factor = direction.second;
@@ -161,7 +161,7 @@ namespace board
                                     PieceType piece) {
         unsigned long long int ally =
                             ((white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get())->board_get();
+                            : board.black_occupied_board_get()).board_get();
 
         //int abs_factor = 0;
         //int ord_factor = 0;
@@ -400,7 +400,7 @@ namespace board
     {
         unsigned long long int ally =
                             ((white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get())->board_get();
+                            : board.black_occupied_board_get()).board_get();
 
         Position pos(utils::get_position(posbit));
         Position newPos(File::A, Rank::ONE);
@@ -442,7 +442,7 @@ namespace board
     {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (pawn << 8) >> (color << 4);
-        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        unsigned long long int occupied = board.occupied_board.board_get();
         if (not (new_pos & occupied))
         {
             Position begin = utils::get_position(pawn);
@@ -479,7 +479,7 @@ namespace board
         unsigned long long int new_pos = (white_turn) ? (pawn << 16)
                                                     : (pawn >> 16);
         unsigned long long int new_pos2 = (pawn << 8) >> (color << 4);
-        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        unsigned long long int occupied = board.occupied_board.board_get();
         if (not (new_pos & occupied) and not (new_pos2 & occupied))
         {
             Position begin = utils::get_position(pawn);
@@ -501,8 +501,8 @@ namespace board
         std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get()
-                                                    : board.pawn_bb.get()->board_get();
+        unsigned long long int pawns = (white_turn) ? board.pawn_wb.board_get()
+                                                    : board.pawn_bb.board_get();
 
 
         unsigned long long int acc = 0;
@@ -534,7 +534,7 @@ namespace board
         return moves;
     }
 
-    bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
+    bool occupied(Board& board, int x, int y, bit& bitboard) {
         Position pos(static_cast<File>(x), static_cast<Rank>(y));
         return in_board(x, y) and board.is_occupied(bitboard, pos);
     }
@@ -543,7 +543,7 @@ namespace board
     void check_king_castling(std::vector<Move>& moves,
                         unsigned long long int pos, bool white_turn, Board board)
     {
-        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int occupied = board.occupied_board_get().board_get();
         unsigned long long int tmp = (white_turn) ? 6 : pow(2, 58) + pow(2, 57);
         if (pos == ((white_turn) ? 8 : pow(2, 59)) and not(tmp & occupied))
         {
@@ -559,7 +559,7 @@ namespace board
     void check_queen_castling(std::vector<Move>& moves,
                         unsigned long long int pos, bool white_turn, Board board)
     {
-        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int occupied = board.occupied_board_get().board_get();
         unsigned long long int block = (white_turn) ? WHITE_QUEEN_CAST
                                     : BLACK_QUEEN_CAST;
         if (pos == ((white_turn) ? 8 : pow(2, 59)) and not (block & occupied))
@@ -596,8 +596,8 @@ namespace board
         std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get()
-                                                    : board.king_bb.get()->board_get();
+        unsigned long long int kings = (white_turn) ? board.king_wb.board_get()
+                                                    : board.king_bb.board_get();
 
 
         unsigned long long int king = kings ^ (kings & (kings - 1));
@@ -628,7 +628,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int rook = ((white_turn)
-                            ? board.rook_wb : board.rook_bb)->board_get();
+                            ? board.rook_wb : board.rook_bb).board_get();
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
         /*std::vector<Position> positions = (chessboard.isWhiteTurn()) ?
@@ -666,7 +666,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int queen = ((white_turn)
-                            ? board.queen_wb : board.queen_bb)->board_get();
+                            ? board.queen_wb : board.queen_bb).board_get();
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 
@@ -690,7 +690,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int bishop = ((white_turn)
-                            ? board.bishop_wb : board.bishop_bb)->board_get();
+                            ? board.bishop_wb : board.bishop_bb).board_get();
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 
@@ -713,7 +713,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int knight = ((white_turn)
-                            ? board.knight_wb : board.knight_bb)->board_get();
+                            ? board.knight_wb : board.knight_bb).board_get();
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 

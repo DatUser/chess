@@ -1,7 +1,7 @@
 #pragma once
 
 #include "chessboard.hh"
-inline Board Chessboard::getBoard()
+inline Board& Chessboard::getBoard()
 {
     return board_;
 }

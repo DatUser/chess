@@ -24,7 +24,7 @@ namespace board {
         void clear();
 
         Bitboard operator|=(Bitboard other);
-        Bitboard operator=(Bitboard& other);
+        Bitboard operator=(Bitboard other);
 
         // Inlined methods
         unsigned long long int board_get();

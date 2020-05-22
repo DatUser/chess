@@ -2,9 +2,9 @@
 #include "rule.hh"
 
 namespace board {
-    Chessboard::Chessboard() {
-        auto temp = Board();
-        board_ = temp;
+    Chessboard::Chessboard(Board& board)
+    : board_(board)
+    {
         white_turn_ = true;
         white_king_castling_ = true;
         white_queen_castling_ = true;
@@ -14,12 +14,9 @@ namespace board {
         last_fifty_turn = 0;
     }
 
-    Chessboard::Chessboard(vector<string> splited_input)
+    Chessboard::Chessboard(Board& board, vector<string> splited_input)
+    : board_(board)
     {
-        // First line
-        auto temp = Board(splited_input[0]);
-        board_ = temp;
-
         // Second line
         if (splited_input[1][0] == 'w')
             white_turn_ = true;
@@ -318,7 +315,7 @@ namespace board {
         auto bitend = utils::two_pow(utils::to_int(end));
         if (isWhiteTurn())
         {
-            if (getBoard().king_wb->board_get() & bitboard)
+            if (getBoard().king_wb.board_get() & bitboard)
             {
                 res.piece_set(PieceType::KING);
                 if (bitboard << 2 == bitend)
@@ -330,34 +327,34 @@ namespace board {
                     res.king_castling_set(true);
                 }
             }
-            else if (getBoard().queen_wb->board_get() & bitboard)
+            else if (getBoard().queen_wb.board_get() & bitboard)
                 res.piece_set(PieceType::QUEEN);
-            else if (getBoard().knight_wb->board_get() & bitboard)
+            else if (getBoard().knight_wb.board_get() & bitboard)
                 res.piece_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_wb->board_get() & bitboard)
+            else if (getBoard().bishop_wb.board_get() & bitboard)
                 res.piece_set(PieceType::BISHOP);
-            else if (getBoard().rook_wb->board_get() & bitboard)
+            else if (getBoard().rook_wb.board_get() & bitboard)
                 res.piece_set(PieceType::ROOK);
-            else if (getBoard().pawn_wb->board_get() & bitboard)
+            else if (getBoard().pawn_wb.board_get() & bitboard)
                 res.piece_set(PieceType::PAWN);
 
-            if (getBoard().king_bb->board_get() & bitend)
+            if (getBoard().king_bb.board_get() & bitend)
                 res.capture_set(PieceType::KING);
-            else if (getBoard().queen_bb->board_get() & bitend)
+            else if (getBoard().queen_bb.board_get() & bitend)
                 res.capture_set(PieceType::QUEEN);
-            else if (getBoard().knight_bb->board_get() & bitend)
+            else if (getBoard().knight_bb.board_get() & bitend)
                 res.capture_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_bb->board_get() & bitend)
+            else if (getBoard().bishop_bb.board_get() & bitend)
                 res.capture_set(PieceType::BISHOP);
-            else if (getBoard().rook_bb->board_get() & bitend)
+            else if (getBoard().rook_bb.board_get() & bitend)
                 res.capture_set(PieceType::ROOK);
-            else if (getBoard().pawn_bb->board_get() & bitend)
+            else if (getBoard().pawn_bb.board_get() & bitend)
                 res.capture_set(PieceType::PAWN);
 
         }
         else
         {
-            if (getBoard().king_bb->board_get() & bitboard)
+            if (getBoard().king_bb.board_get() & bitboard)
             {
                 res.piece_set(PieceType::KING);
                 res.piece_set(PieceType::KING);
@@ -370,28 +367,28 @@ namespace board {
                     res.king_castling_set(true);
                 }
             }
-            else if (getBoard().queen_bb->board_get() & bitboard)
+            else if (getBoard().queen_bb.board_get() & bitboard)
                 res.piece_set(PieceType::QUEEN);
-            else if (getBoard().knight_bb->board_get() & bitboard)
+            else if (getBoard().knight_bb.board_get() & bitboard)
                 res.piece_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_bb->board_get() & bitboard)
+            else if (getBoard().bishop_bb.board_get() & bitboard)
                 res.piece_set(PieceType::BISHOP);
-            else if (getBoard().rook_bb->board_get() & bitboard)
+            else if (getBoard().rook_bb.board_get() & bitboard)
                 res.piece_set(PieceType::ROOK);
-            else if (getBoard().pawn_bb->board_get() & bitboard)
+            else if (getBoard().pawn_bb.board_get() & bitboard)
                 res.piece_set(PieceType::PAWN);
 
-            if (getBoard().king_wb->board_get() & bitend)
+            if (getBoard().king_wb.board_get() & bitend)
                 res.capture_set(PieceType::KING);
-            else if (getBoard().queen_wb->board_get() & bitend)
+            else if (getBoard().queen_wb.board_get() & bitend)
                 res.capture_set(PieceType::QUEEN);
-            else if (getBoard().knight_wb->board_get() & bitend)
+            else if (getBoard().knight_wb.board_get() & bitend)
                 res.capture_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_wb->board_get() & bitend)
+            else if (getBoard().bishop_wb.board_get() & bitend)
                 res.capture_set(PieceType::BISHOP);
-            else if (getBoard().rook_wb->board_get() & bitend)
+            else if (getBoard().rook_wb.board_get() & bitend)
                 res.capture_set(PieceType::ROOK);
-            else if (getBoard().pawn_wb->board_get() & bitend)
+            else if (getBoard().pawn_wb.board_get() & bitend)
                 res.capture_set(PieceType::PAWN);
         }
 

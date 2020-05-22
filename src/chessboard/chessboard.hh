@@ -15,8 +15,8 @@ namespace board {
         using side_piece_t = pair<PieceType, Color>;
         using opt_piece_t = optional<side_piece_t>;
 
-        Chessboard();
-        Chessboard(vector<string> splited_input);
+        Chessboard(Board& board);
+        Chessboard(Board& board, vector<string> splited_input);
 
         std::vector<Move> generate_legal_moves();
         void do_move(Move move);
@@ -26,7 +26,7 @@ namespace board {
         bool is_draw();
         std::pair<PieceType, Color> operator[](Position position);
 
-        Board getBoard();
+        Board& getBoard();
         void setBoard(Board& board);
         bool isWhiteTurn();
         void setWhiteTurn(bool wt);
@@ -47,7 +47,7 @@ namespace board {
         Move to_move(string move);
 
     private:
-        Board board_;
+        Board& board_;
         bool white_turn_;
         bool white_king_castling_;
         bool white_queen_castling_;
