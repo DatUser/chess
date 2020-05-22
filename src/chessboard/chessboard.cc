@@ -200,28 +200,28 @@ namespace board {
         Rule rules = Rule();
         std::vector<Move> all_moves;
 
-        std::vector<Move> pawns = rules.generate_pawn_moves(*this);
-        all_moves = add_in_vector(all_moves, pawns);
+        /*std::vector<Move> pawns = */rules.generate_pawn_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, pawns);
         //std::cout << "pawns moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> king = rules.generate_king_moves(*this);
-        all_moves = add_in_vector(all_moves, king);
+        /*std::vector<Move> king = */rules.generate_king_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, king);
         //std::cout << "king moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> bishops = rules.generate_bishop_moves(*this);
-        all_moves = add_in_vector(all_moves, bishops);
+        /*std::vector<Move> bishops = */rules.generate_bishop_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, bishops);
         //std::cout << "bishops moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> rooks = rules.generate_rook_moves(*this);
-        all_moves = add_in_vector(all_moves, rooks);
+        /*std::vector<Move> rooks = */rules.generate_rook_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, rooks);
         //std::cout << "rooks moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> queen = rules.generate_queen_moves(*this);
-        all_moves = add_in_vector(all_moves, queen);
+        /*std::vector<Move> queen = */rules.generate_queen_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, queen);
         //std::cout << "queen moves: " << all_moves.size() << "\n";
 
-        std::vector<Move> knights = rules.generate_knight_moves(*this);
-        all_moves = add_in_vector(all_moves, knights);
+        /*std::vector<Move> knights = */rules.generate_knight_moves(*this, all_moves);
+        //all_moves = add_in_vector(all_moves, knights);
         //std::cout << "knights moves: " << all_moves.size() << "\n";
 
         std::vector<Move> res;

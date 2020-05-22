@@ -2,7 +2,7 @@
 #include <climits>
 
 #define CENTER 1099494850560
-#define QUEEN_WT 500
+#define QUEEN_WT 1000
 #define ROOK_WT 200
 #define KNIGHT_WT 150
 #define BISHOP_WT 200
@@ -148,7 +148,7 @@ namespace chess_engine {
         if (depth <= 0)
         {
             auto save = board.getBoard();
-            auto temp = Board(board.getBoard());
+            auto temp = Board(save);
             board.setBoard(temp);
             board.do_move(move);
             int res = evaluate(board);
@@ -156,7 +156,7 @@ namespace chess_engine {
             return res;
         }
         auto save = board.getBoard();
-        auto temp = Board(board.getBoard());
+        auto temp = Board(save);
         board.setBoard(temp);
         board.do_move(move);
         if (board.is_checkmate(board.isWhiteTurn()))

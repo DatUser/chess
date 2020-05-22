@@ -11,7 +11,7 @@ namespace board
                 static_cast<int>(posY) + y <= static_cast<int>(Rank::EIGHT);
     }
 
-    bool in_board(Position pos, int x, int y) {
+    bool in_board(Position& pos, int x, int y) {
         return static_cast<int>(pos.file_get()) + x
             >= static_cast<int>(File::A)
             and static_cast<int>(pos.file_get()) + x
@@ -22,7 +22,7 @@ namespace board
             <= static_cast<int>(Rank::EIGHT);
     }
 
-    void add_diag(Position pos, std::vector<Move>& moves,
+    void add_diag(Position& pos, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     std::pair<int, int>& direction,
                                     PieceType piece) {
@@ -228,8 +228,8 @@ namespace board
     }
 
 
-    void add_forward(Position pos, std::vector<Move>& moves,
-                        Board board, bool white_turn, PieceType piece)
+    void add_forward(Position& pos, std::vector<Move>& moves,
+                        Board& board, bool white_turn, PieceType piece)
     {
         auto ally = (white_turn) ? board.white_occupied_board_get()
                             : board.black_occupied_board_get();
@@ -281,7 +281,7 @@ namespace board
         }
     }*/
 
-    void add_promotion(std::vector<Move>& moves, Position pos, Position newpos,
+    void add_promotion(std::vector<Move>& moves, Position& pos, Position& newpos,
                 int capture) {
 
         for (int i = 0; i < 4; i++) {
@@ -437,8 +437,8 @@ namespace board
         }
     }
 
-    void single_step(unsigned long long int pawn, Board board, bool white_turn,
-                     std::vector<Move>& moves)
+    void single_step(unsigned long long int pawn, Board& board,
+                        bool white_turn, std::vector<Move>& moves)
     {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (pawn << 8) >> (color << 4);
@@ -472,8 +472,8 @@ namespace board
    }
 
 
-    void double_step(unsigned long long int pawn, Board board, bool white_turn,
-                     std::vector<Move>& moves)
+    void double_step(unsigned long long int pawn, Board& board,
+                        bool white_turn, std::vector<Move>& moves)
     {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (white_turn) ? (pawn << 16)
@@ -496,9 +496,9 @@ namespace board
 
 
 
-    std::vector<Move> Rule::generate_pawn_moves(Chessboard chessboard)
+    void Rule::generate_pawn_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves)
     {
-        std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get()
@@ -530,8 +530,6 @@ namespace board
             }
             acc |= pawn;
         }
-
-        return moves;
     }
 
     bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
@@ -541,7 +539,8 @@ namespace board
 
 
     void check_king_castling(std::vector<Move>& moves,
-                        unsigned long long int pos, bool white_turn, Board board)
+                        unsigned long long int pos, bool white_turn,
+                        Board& board)
     {
         unsigned long long int occupied = board.occupied_board_get().get()->board_get();
         unsigned long long int tmp = (white_turn) ? 6 : pow(2, 58) + pow(2, 57);
@@ -557,7 +556,8 @@ namespace board
     }
 
     void check_queen_castling(std::vector<Move>& moves,
-                        unsigned long long int pos, bool white_turn, Board board)
+                        unsigned long long int pos, bool white_turn,
+                        Board& board)
     {
         unsigned long long int occupied = board.occupied_board_get().get()->board_get();
         unsigned long long int block = (white_turn) ? WHITE_QUEEN_CAST
@@ -591,9 +591,9 @@ namespace board
     }
 
 
-    std::vector<Move> Rule::generate_king_moves(Chessboard chessboard)
+    void Rule::generate_king_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves)
     {
-        std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get()
@@ -618,51 +618,27 @@ namespace board
         }
 
         add_single_xys(king, moves, board, white_turn, PieceType::KING);
-
-        return moves;
     }
 
-    std::vector<Move> Rule::generate_rook_moves(Chessboard chessboard)
+    void Rule::generate_rook_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves)
     {
-        std::vector<Move> m;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int rook = ((white_turn)
                             ? board.rook_wb : board.rook_bb)->board_get();
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
-        /*std::vector<Position> positions = (chessboard.isWhiteTurn()) ?
-                                           board.get_white_rook()
-                                           : board.get_black_rook();
-
-        if (chessboard.isWhiteTurn())
-        {
-            positions = board.get_white_rook();
-        }
-        else
-        {
-            positions = board.get_black_rook();
-        }
-
-        for (Position p : positions)
-        {
-            bool white_turn = chessboard.isWhiteTurn();*/
        while (acc < rook) {
             pos = rook ^ (rook & (rook - acc - 1));
-            add_xys(pos, m, board, white_turn, PieceType::ROOK);
-            /*add_forward(p, m, board, white_turn, PieceType::ROOK);
-            add_backward(p, m, board, white_turn, PieceType::ROOK);
-            add_leftward(p, m, board, white_turn, PieceType::ROOK);
-            add_rightward(p, m, board, white_turn, PieceType::ROOK);*/
+            add_xys(pos, moves, board, white_turn, PieceType::ROOK);
             acc |= pos;
         }
-
-        return m;
     }
 
-    std::vector<Move> Rule::generate_queen_moves(Chessboard chessboard)
+    void Rule::generate_queen_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves)
     {
-        std::vector<Move> m;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int queen = ((white_turn)
@@ -673,20 +649,14 @@ namespace board
         while (acc < queen) {
             pos = queen ^ (queen & (queen - acc - 1));
 
-            add_diags(pos, m, board, white_turn, PieceType::QUEEN);
-            add_xys(pos, m, board, white_turn, PieceType::QUEEN);
-            /*add_forward(move, m, board, white_turn, PieceType::QUEEN);
-            add_backward(move, m, board, white_turn, PieceType::QUEEN);
-            add_leftward(move, m, board, white_turn, PieceType::QUEEN);
-            add_rightward(move, m, board, white_turn, PieceType::QUEEN);*/
-
+            add_diags(pos, moves, board, white_turn, PieceType::QUEEN);
+            add_xys(pos, moves, board, white_turn, PieceType::QUEEN);
             acc |= pos;
         }
-        return m;
     }
 
-    std::vector<Move> Rule::generate_bishop_moves(Chessboard chessboard) {
-        std::vector<Move> m;
+    void Rule::generate_bishop_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves) {
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int bishop = ((white_turn)
@@ -696,20 +666,14 @@ namespace board
 
         while (acc < bishop) {
             pos = bishop ^ (bishop & (bishop - acc - 1));
-            add_diags(pos, m, board, white_turn, PieceType::BISHOP);
+            add_diags(pos, moves, board, white_turn, PieceType::BISHOP);
             acc |= pos;
         }
-        /*std::vector<Position> bishops = (white_turn) ? board.get_white_bishop()
-                            : board.get_black_bishop();
-        for (unsigned int i = 0; i < bishops.size(); i++)
-            add_diags(bishops[i], m, board, white_turn, PieceType::BISHOP);*/
-
-        return m;
     }
 
-    std::vector<Move> Rule::generate_knight_moves(Chessboard chessboard)
+    void Rule::generate_knight_moves(Chessboard& chessboard,
+                                    std::vector<Move>& moves)
     {
-        std::vector<Move> m;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int knight = ((white_turn)
@@ -719,130 +683,15 @@ namespace board
 
         while (acc < knight) {
             pos = knight ^ (knight & (knight - acc - 1));
-            add_move_bis(pos, m, board, white_turn, 17, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, 15, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, 10, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, 6, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, -6, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, -10, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, -15, PieceType::KNIGHT);
-            add_move_bis(pos, m, board, white_turn, -17, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, 17, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, 15, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, 10, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, 6, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -6, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -10, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -15, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -17, PieceType::KNIGHT);
             acc |= pos;
         }
-        /*std::vector<Move> m;
-        bool white_turn = chessboard.isWhiteTurn();
-        Board board = chessboard.getBoard();
-        std::vector<Position> knights = (white_turn) ? board.get_white_knight()
-                            : board.get_black_knight();
-        auto allies = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
-
-        int x;
-        int y;
-        Position newPos(File::A, Rank::ONE);
-        for (Position pos : knights) {
-            x = static_cast<int>(pos.file_get());
-            y = static_cast<int>(pos.rank_get());
-            if (in_board(pos, -2, -1) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x - 2),
-                    static_cast<Rank>(y - 1)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-            }
-            if (in_board(pos, -2, 1) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x - 2),
-                    static_cast<Rank>(y + 1)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-            }
-            if (in_board(pos, 2, -1) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x + 2),
-                    static_cast<Rank>(y - 1)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-            }
-            if (in_board(pos, 2, 1) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x + 2),
-                    static_cast<Rank>(y + 1)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-            }
-            if (in_board(pos, -1, -2) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x - 1),
-                    static_cast<Rank>(y - 2)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-
-            }
-            if (in_board(pos, -1, 2) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x - 1),
-                    static_cast<Rank>(y + 2)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-
-            }
-            if (in_board(pos, 1, -2) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x + 1),
-                    static_cast<Rank>(y - 2)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-
-            }
-            if (in_board(pos, 1, 2) and not board.is_occupied(allies,
-                    (newPos = Position(static_cast<File>(x + 1),
-                    static_cast<Rank>(y + 2)))))
-            {
-                Move mv = Move(pos, newPos);
-                opt_piecetype_t opt = board.is_occupied(newPos,
-                        (white_turn) ? Color::BLACK : Color::WHITE);
-                if (opt.has_value())
-                    mv.capture_set(opt.value());
-                mv.piece_set(PieceType::KNIGHT);
-                m.push_back(mv);
-            }
-        }*/
-        return m;
     }
 }
