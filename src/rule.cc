@@ -562,7 +562,7 @@ namespace board
         unsigned long long int occupied = board.occupied_board_get().get()->board_get();
         unsigned long long int block = (white_turn) ? WHITE_QUEEN_CAST
                                     : BLACK_QUEEN_CAST;
-        if (/*pos == ((white_turn) ? 8 : pow(2, 59)) and*/ not (block & occupied))
+        if (pos == ((white_turn) ? 8 : pow(2, 59)) and not (block & occupied))
         {
             Position begin = utils::get_position(pos);
             Position end = utils::get_position(pos << 2);
@@ -596,7 +596,7 @@ namespace board
         std::vector<Move> moves;
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get() 
+        unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get()
                                                     : board.king_bb.get()->board_get();
 
 
@@ -606,13 +606,15 @@ namespace board
         bool queen_castling = (white_turn) ? chessboard.getWhiteQueenCastling()
                                     : chessboard.getBlackQueenCastling();
 
-        if (king_castling)
-        {
-            check_king_castling(moves, king, white_turn, board);
-        }
-        if (queen_castling)
-        {
-            check_queen_castling(moves, king, white_turn, board);
+        if (!chessboard.is_check(white_turn)) {
+            if (king_castling)
+            {
+                check_king_castling(moves, king, white_turn, board);
+            }
+            if (queen_castling)
+            {
+                check_queen_castling(moves, king, white_turn, board);
+            }
         }
 
         add_single_xys(king, moves, board, white_turn, PieceType::KING);
