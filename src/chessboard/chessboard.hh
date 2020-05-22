@@ -46,6 +46,8 @@ namespace board {
 
         Move to_move(string move);
 
+        void delete_king_moves(std::vector<Move>& moves);
+
     private:
         Board board_;
         bool white_turn_;

@@ -178,6 +178,20 @@ namespace board {
         return v1;
     }
 
+    void Chessboard::delete_king_moves(std::vector<Move>& moves)
+    {
+        auto cpt = moves.begin();
+        for (Move m : moves)
+        {
+            if (not is_check(isWhiteTurn()) and m.piece_get() == PieceType::KING and
+                not m.king_castling_get() and not m.queen_castling_get())
+            {
+                moves.erase(cpt);
+            }
+            cpt++;
+        }
+    }
+
 
     std::vector<Move> Chessboard::generate_legal_moves()
     {
@@ -225,6 +239,8 @@ namespace board {
             }
             setBoard(save);
         }
+
+        delete_king_moves(res);
 
         return res;
     }
