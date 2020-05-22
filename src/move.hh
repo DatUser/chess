@@ -10,7 +10,7 @@ namespace board
         public:
             Move(Position start, Position end);
             ~Move() = default;
-            Move& operator=(const Move& move) = default;
+            Move operator=(Move& move);
             Move(const Move& move) = default;
 
             std::pair<Position, Position> move_get() const;
