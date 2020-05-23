@@ -48,6 +48,8 @@ namespace board {
 
         void delete_king_moves(std::vector<Move>& moves);
 
+        bool perft = false;
+
     private:
         Board board_;
         bool white_turn_;

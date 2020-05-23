@@ -239,8 +239,8 @@ namespace board {
             }
             setBoard(save);
         }
-
-        delete_king_moves(res);
+        if (!perft)
+            delete_king_moves(res);
 
         return res;
     }
