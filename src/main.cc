@@ -113,15 +113,18 @@ int main(int argc, char** argv) {
                 auto board = Chessboard();
                 string temp = "moves";
                 auto begin_moves = find(items.begin(), items.end(), temp);
-                do {
-                    begin_moves++;
-                    if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
-                                and (*begin_moves)[0] > 'f'))
-                        break;
-                    move = *begin_moves;
-                    auto to_play = board.to_move(move);
-                    board.do_move(to_play);
-                } while (begin_moves != items.end());
+                if (begin_moves != items.end())
+                {
+                    do {
+                        begin_moves++;
+                        if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
+                                    and (*begin_moves)[0] > 'f'))
+                            break;
+                        move = *begin_moves;
+                        auto to_play = board.to_move(move);
+                        board.do_move(to_play);
+                    } while (begin_moves != items.end());
+                }
                 auto bestmove = chess_engine::search(board, 3);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
@@ -133,15 +136,18 @@ int main(int argc, char** argv) {
                 auto board = Chessboard(items);
                 string temp = "moves";
                 auto begin_moves = find(items.begin(), items.end(), temp);
-                do {
-                    begin_moves++;
-                    if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
+                if (begin_moves != items.end())
+                {
+                    do {
+                        begin_moves++;
+                        if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
                                 and (*begin_moves)[0] > 'f'))
-                        break;
-                    move = *begin_moves;
-                    auto to_play = board.to_move(move);
-                    board.do_move(to_play);
-                } while (begin_moves != items.end());
+                            break;
+                        move = *begin_moves;
+                        auto to_play = board.to_move(move);
+                        board.do_move(to_play);
+                    } while (begin_moves != items.end());
+                }
                 auto bestmove = chess_engine::search(board, 3);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
