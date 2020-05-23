@@ -51,7 +51,10 @@ void open_listeners(OptionParser& parser) {
 void close_listeners() {
     auto listens = listener::ListenerManager::instance().listeners_get();
     for (auto listen : listens)
+    {
         dlclose(listen);
+        delete listen;
+    }
 }
 
 int generate_perft_moves(Chessboard chessboard, int depth)
@@ -110,8 +113,11 @@ int main(int argc, char** argv) {
     {
         ai::init("EscanorEngine");
         std::string line;
+        ofstream file("moves");
         while ((line = ai::get_board()).compare(""))
         {
+            file << line << std::endl;
+            file.flush();
             stringstream ss(line);
             string item;
             string move;

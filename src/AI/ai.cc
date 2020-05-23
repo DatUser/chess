@@ -55,7 +55,7 @@ namespace chess_engine {
         // Calculating bishop impact
         pieces = board.get_white_bishop();
         res += (pieces.size() - black_b.size()) * BISHOP_WT;
-        //res += chessboard.generate_legal_moves().size();
+        res += chessboard.generate_legal_moves().size();
         return res;
     }
 
@@ -90,7 +90,7 @@ namespace chess_engine {
         pieces = board.get_black_bishop();
         res += (pieces.size() - white_b.size()) * BISHOP_WT;
 
-        //res += chessboard.generate_legal_moves().size();
+        res += chessboard.generate_legal_moves().size();
         return res;
     }
 
@@ -119,7 +119,7 @@ namespace chess_engine {
                         break;
                     case PieceType::BISHOP:
                     case PieceType::KNIGHT:
-                        temp += 200;
+                        temp += 100;
                         break;
                     default:
                         temp += 10;
@@ -161,34 +161,34 @@ namespace chess_engine {
         board.do_move(move);
         if (board.is_checkmate(board.isWhiteTurn()))
         {
-            return 999999 * (maxmin ? -1 : 1);
+            return 999999;
         }
         board.setWhiteTurn(!board.isWhiteTurn());
         auto moves = board.generate_legal_moves();
         if (moves.size() == 0)
-            return 9999 * (maxmin ? 1 : -1);
+            return 0;
         int act = rec_search(board, depth - 1, moves[0], !maxmin, max, min);
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
             int temp = rec_search(board, depth - 1, moves[i], !maxmin, max,
-                        min) * (maxmin ? 1 : -1);
+                        min);
             auto piece_capture = moves[i].capture_get();
             if (piece_capture != PieceType::NONE)
             {
                 switch (piece_capture)
                 {
                     case PieceType::QUEEN:
-                        temp += 100 * (maxmin ? 1 : -1);
+                        temp += 100;
                         break;
                     case PieceType::ROOK:
-                        temp += 50 * (maxmin ? 1 : -1);
+                        temp += 50;
                         break;
                     case PieceType::BISHOP:
                     case PieceType::KNIGHT:
-                        temp += 30 * (maxmin ? 1 : -1);
+                        temp += 30;
                         break;
                     default:
-                        temp += 10 * (maxmin ? 1 : -1);
+                        temp += 10;
                         break;
                 }
             }

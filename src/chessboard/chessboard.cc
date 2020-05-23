@@ -160,6 +160,7 @@ namespace board {
         }
         else
         {
+            white_turn_ = not white_turn_;
             auto moves = generate_legal_moves();
             if (moves.size() == 0)
             {
@@ -170,6 +171,7 @@ namespace board {
                     listener->on_draw();
                 }
             }
+            white_turn_ = not white_turn_;
         }
         white_turn_ = not white_turn_;
     }
