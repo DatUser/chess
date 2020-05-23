@@ -52,11 +52,21 @@ namespace board {
         }
 
         // Fourth line
-        /*if (splited_input[3][0] != '-')
+        if (splited_input[3][0] != '-')
         {
             auto file = splited_input[3][0] - 'a';
-            auto rank = splited_input[3][1] - '0';
-        }*/
+            //we want pawn position not where en_passant leads us
+            auto rank = splited_input[3][1] - '1' +
+                                ((white_turn_) ? -1 : 1);
+            Position pos(static_cast<File>(file), static_cast<Rank>(rank));
+            en_passant_ = pos;
+            en_passant_bitboard_ = pow(2, utils::to_int(pos));
+        }
+        else
+        {
+            en_passant_ = nullopt;
+            en_passant_bitboard_ = 0;
+        }
     }
 
     ChessboardInterface::opt_piece_t

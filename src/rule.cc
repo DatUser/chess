@@ -512,11 +512,12 @@ namespace board
             pawn = pawns ^ (pawns & (pawns - acc - 1));
             single_step(pawn, board, white_turn, moves);
             double_step(pawn, board, white_turn, moves);
-            if (chessboard.getEnPassantBitboard().has_value())
+            auto  en_passant = chessboard.getEnPassantBitboard();
+            if (en_passant)
             {
                 Position begin = utils::get_position(pawn);
                 int color = (white_turn) ? 0 : 1;
-                unsigned long long int en_passant = chessboard.getEnPassantBitboard().value()->board_get();
+                //unsigned long long int en_passant = chessboard.getEnPassantBitboard().value()->board_get();
                 unsigned long long int left_pos = pawn << 1;
                 if (left_pos == en_passant or (left_pos = pawn >> 1) == en_passant)
                 {
