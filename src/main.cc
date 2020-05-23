@@ -54,6 +54,24 @@ void close_listeners() {
         dlclose(listen);
 }
 
+int generate_perft_moves(Chessboard chessboard, int depth)
+{
+    int res = 0;
+    auto moves = chessboard.generate_legal_moves();
+    if (depth == 1)
+        return moves.size();
+    for (long unsigned int i = 0; i < moves.size(); i++)
+    {
+        auto save = chessboard.getBoard();
+        auto temp = Board(chessboard.getBoard());
+        chessboard.setBoard(temp);
+        chessboard.do_move(moves[i]);
+        res += generate_perft_moves(chessboard, depth - 1);
+        chessboard.setBoard(save);
+    }
+    return res;
+}
+
 int main(int argc, char** argv) {
 
     OptionParser parser(argc, argv);
@@ -85,8 +103,9 @@ int main(int argc, char** argv) {
         string line;
         getline(file, line);
         auto pobject = perft_parser::parse_perft(line);
-        auto moves = pobject.chessboard_get().generate_legal_moves();
-        std::cout << moves.size() << std::endl;
+        auto moves = generate_perft_moves(pobject.chessboard_get(),
+                                          pobject.depth_get());
+        std::cout << moves << std::endl;
     }
     else
     {
