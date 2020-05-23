@@ -24,6 +24,8 @@ void OptionParser::parse_option(int argc, char **argv) {
         }
 
         else if (tmp =="-l" or tmp == "--listeners") {
+            i++;
+            tmp = argv[i];
             while (i < argc and tmp[0] != '-') {
                 listeners_.push_back(tmp);
                 i++;

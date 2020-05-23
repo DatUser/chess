@@ -33,6 +33,7 @@ namespace board
         int i = 0;
         for (Move m : moves)
         {
+            chessboard.actualise_pgn_move(m);
             chessboard.setWhiteTurn((i % 2 == 0) ? true : false);
             chessboard.do_move(m);
             i++;

@@ -92,7 +92,6 @@ int main(int argc, char** argv) {
         std::vector<board::Move> moves =
                     board::get_moves_from_pgn(parser.pgn_get());
         board::Chessboard chessboard = board::generate_chessboard(moves);
-        chess_engine::search(chessboard, 2);
     }
     else if (parser.perft_get().compare(""))
     {

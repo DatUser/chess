@@ -25,6 +25,7 @@ namespace board {
         bool is_checkmate(bool color);
         bool is_draw();
         std::pair<PieceType, Color> operator[](Position position);
+        void actualise_pgn_move(Move& move);
 
         Board getBoard();
         void setBoard(Board& board);

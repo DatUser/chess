@@ -309,20 +309,22 @@ namespace board {
         return board->board_get() & utils::two_pow(power);
     }
 
-    void Board::do_move(Move move, Color color) {
+    void Board::do_move(Move& move, Color color) {
         if (move.king_castling_get())
         {
             auto board = (color == Color::WHITE ? king_wb : king_bb);
             board->move(move.move_get().first, move.move_get().second);
+            auto board2 = (color == Color::WHITE ? rook_wb : rook_bb);
             Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
-            board->move(Position(File::H, rank), Position(File::F, rank));
+            board2->move(Position(File::H, rank), Position(File::F, rank));
         }
         else if (move.queen_castling_get())
         {
             auto board = (color == Color::WHITE ? king_wb : king_bb);
             board->move(move.move_get().first, move.move_get().second);
+            auto board2 = (color == Color::WHITE ? rook_wb : rook_bb);
             Rank rank = (color == Color::WHITE ? Rank::ONE : Rank::EIGHT);
-            board->move(Position(File::A, rank), Position(File::D, rank));
+            board2->move(Position(File::A, rank), Position(File::D, rank));
         }
         else
         {

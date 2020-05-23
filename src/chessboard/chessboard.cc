@@ -141,17 +141,22 @@ namespace board {
         }
         if (board_.is_check(!white_turn_))
         {
-            for (auto listener : listeners)
-                listener->on_player_check(!white_turn_ ? Color::WHITE
-                                                       : Color::BLACK);
+            if (is_checkmate(!white_turn_))
+            {
+                for (auto listener : listeners) {
+                    listener->on_player_mat(!white_turn_ ? Color::WHITE
+                            : Color::BLACK);
+                    listener->on_game_finished();
+                }
 
-        }
-        else if (board_.is_check(!white_turn_))
-        {
-            // Need update, not accurate at all
-            for (auto listener : listeners)
-                listener->on_player_check(!white_turn_ ? Color::WHITE
-                                                       : Color::BLACK);
+            }
+            else
+            {
+                // Need update, not accurate at all
+                for (auto listener : listeners)
+                    listener->on_player_check(!white_turn_ ? Color::WHITE
+                                                           : Color::BLACK);
+            }
         }
         else
         {
@@ -261,23 +266,24 @@ namespace board {
         bool check = board_.is_check(color);
         if (!check)
             return check;
-
+        white_turn_ = !white_turn_;
         auto moves = generate_legal_moves();
         bool checkmate = true;
         auto save = getBoard();
         for (auto move : moves)
         {
             auto temp = Board(getBoard());
-            setBoard(temp);
-            do_move(move);
-            if (!board_.is_check(white_turn_))
+            board_ = temp;
+            board_.do_move(move, (color ? Color::WHITE : Color::BLACK));
+            if (!board_.is_check(color))
             {
                 checkmate = false;
-                setBoard(save);
+                board_ = save;
                 break;
             }
-            setBoard(save);
+            board_ = save;
         }
+        white_turn_ = !white_turn_;
         return checkmate;
     }
 
@@ -413,5 +419,50 @@ namespace board {
 
         return res;
 
+    }
+
+    void Chessboard::actualise_pgn_move(Move& move)
+    {
+        if (move.capture_get() != PieceType::NONE)
+        {
+            auto pow = utils::two_pow(utils::to_int(move.move_get().second));
+            if (white_turn_)
+            {
+                if (board_.pawn_bb->board_get() & pow)
+                    move.capture_set(PieceType::PAWN);
+                else if (board_.knight_bb->board_get() & pow)
+                    move.capture_set(PieceType::KNIGHT);
+                else if (board_.bishop_bb->board_get() & pow)
+                    move.capture_set(PieceType::BISHOP);
+                else if (board_.rook_bb->board_get() & pow)
+                    move.capture_set(PieceType::ROOK);
+                else if (board_.queen_bb->board_get() & pow)
+                    move.capture_set(PieceType::QUEEN);
+            }
+            else
+            {
+                if (board_.pawn_wb->board_get() & pow)
+                    move.capture_set(PieceType::PAWN);
+                else if (board_.knight_wb->board_get() & pow)
+                    move.capture_set(PieceType::KNIGHT);
+                else if (board_.bishop_wb->board_get() & pow)
+                    move.capture_set(PieceType::BISHOP);
+                else if (board_.rook_wb->board_get() & pow)
+                    move.capture_set(PieceType::ROOK);
+                else if (board_.queen_wb->board_get() & pow)
+                    move.capture_set(PieceType::QUEEN);
+            }
+        }
+        else if (move.piece_get() == PieceType::KING)
+        {
+            if (move.move_get().first.file_get() == File::E)
+            {
+                if (move.move_get().second.file_get() == File::G)
+                    move.king_castling_set(true);
+
+                else if (move.move_get().second.file_get() == File::C)
+                    move.queen_castling_set(true);
+            }
+        }
     }
 }

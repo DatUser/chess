@@ -34,7 +34,7 @@ namespace board {
         //bool is_occupied(Position position);
 
         /* Fait le move fait le move */
-        void do_move(Move move, Color color);
+        void do_move(Move& move, Color color);
         bool is_check(bool white_turn_);
 
         /* Get a list of position */
