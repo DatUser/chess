@@ -85,7 +85,6 @@ namespace chess_engine {
                 + worth_pos(RFC_BOARD_1 & board.bishop_wb, BISHOP_WT, 1, 4)
                 + worth_pos(RFC_BOARD_2 & board.bishop_wb, BISHOP_WT, 1, 3)
                 + worth_pos(RFC_BOARD_3 & board.bishop_wb, BISHOP_WT, 1, 2);
-        //res += chessboard.generate_legal_moves().size();
         return res;
     }
 
@@ -130,7 +129,6 @@ namespace chess_engine {
                 + worth_pos(RFC_BOARD_2 & board.bishop_bb, BISHOP_WT, 1, 3)
                 + worth_pos(RFC_BOARD_3 & board.bishop_bb, BISHOP_WT, 1, 2);
 
-        //res += chessboard.generate_legal_moves().size();
         return res;
     }
 
