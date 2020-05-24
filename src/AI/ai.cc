@@ -58,23 +58,23 @@ namespace chess_engine {
         // Calculating queens impact
         auto pieces = board.get_white_queen();
         res += (pieces.size() - black_q.size()) * QUEEN_WT
-                + worth_pos(RFC_BOARD_1 & board.queen_wb->board_get(), QUEEN_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.queen_wb->board_get(), QUEEN_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.queen_wb->board_get(), QUEEN_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.queen_wb, QUEEN_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.queen_wb, QUEEN_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.queen_wb, QUEEN_WT, 1, 2);
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_white_rook();
         res += (pieces.size() - black_r.size())
                 * (ROOK_WT - 5 * black_p.size())
-                + worth_pos(BABEL_WHITE & board.rook_wb->board_get(), ROOK_WT, 1, 2);
+                + worth_pos(BABEL_WHITE & board.rook_wb, ROOK_WT, 1, 2);
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_white_pawn();
         res += (board.get_white_knight().size() - black_k.size())
             * (KNIGHT_WT - 2 * (black_p.size() + pieces.size()))
-                + worth_pos(RFC_BOARD_1 & board.knight_wb->board_get(), KNIGHT_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.knight_wb->board_get(), KNIGHT_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.knight_wb->board_get(), KNIGHT_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.knight_wb, KNIGHT_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.knight_wb, KNIGHT_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.knight_wb, KNIGHT_WT, 1, 2);
 
         // Calculating pawn impact
         res += (pieces.size() - black_p.size()) * PAWN_WT;
@@ -82,9 +82,9 @@ namespace chess_engine {
         // Calculating bishop impact
         pieces = board.get_white_bishop();
         res += (pieces.size() - black_b.size()) * BISHOP_WT
-                + worth_pos(RFC_BOARD_1 & board.bishop_wb->board_get(), BISHOP_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.bishop_wb->board_get(), BISHOP_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.bishop_wb->board_get(), BISHOP_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.bishop_wb, BISHOP_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.bishop_wb, BISHOP_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.bishop_wb, BISHOP_WT, 1, 2);
         //res += chessboard.generate_legal_moves().size();
         return res;
     }
@@ -102,23 +102,23 @@ namespace chess_engine {
         // Calculating queens impact
         auto pieces = board.get_black_queen();
         res += (pieces.size() - white_q.size()) * QUEEN_WT
-                + worth_pos(RFC_BOARD_1 & board.queen_bb->board_get(), QUEEN_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.queen_bb->board_get(), QUEEN_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.queen_bb->board_get(), QUEEN_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.queen_bb, QUEEN_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.queen_bb, QUEEN_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.queen_bb, QUEEN_WT, 1, 2);
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_black_rook();
         res += (pieces.size() - white_r.size())
                 * (ROOK_WT - 5 * white_p.size())
-                + worth_pos(BABEL_BLACK & board.rook_bb->board_get(), ROOK_WT, 1, 2);
+                + worth_pos(BABEL_BLACK & board.rook_bb, ROOK_WT, 1, 2);
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_black_pawn();
         res += (board.get_black_knight().size() - white_k.size())
             * (KNIGHT_WT - 2 * (white_p.size() + pieces.size()))
-                + worth_pos(RFC_BOARD_1 & board.knight_bb->board_get(), KNIGHT_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.knight_bb->board_get(), KNIGHT_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.knight_bb->board_get(), KNIGHT_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.knight_bb, KNIGHT_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.knight_bb, KNIGHT_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.knight_bb, KNIGHT_WT, 1, 2);
 
         // Calculating pawn impact
         res += (pieces.size() - white_p.size()) * PAWN_WT;
@@ -126,9 +126,9 @@ namespace chess_engine {
         // Calculating bishop impact
         pieces = board.get_black_bishop();
         res += (pieces.size() - white_b.size()) * BISHOP_WT
-                + worth_pos(RFC_BOARD_1 & board.bishop_bb->board_get(), BISHOP_WT, 1, 4)
-                + worth_pos(RFC_BOARD_2 & board.bishop_bb->board_get(), BISHOP_WT, 1, 3)
-                + worth_pos(RFC_BOARD_3 & board.bishop_bb->board_get(), BISHOP_WT, 1, 2);
+                + worth_pos(RFC_BOARD_1 & board.bishop_bb, BISHOP_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.bishop_bb, BISHOP_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.bishop_bb, BISHOP_WT, 1, 2);
 
         //res += chessboard.generate_legal_moves().size();
         return res;

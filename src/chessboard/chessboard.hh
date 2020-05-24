@@ -59,11 +59,7 @@ namespace board {
         bool black_king_castling_;
         bool black_queen_castling_;
         optional<Position> en_passant_;
-<<<<<<< HEAD
         unsigned long long int en_passant_bitboard_;
-=======
-        bit en_passant_bitboard_;
->>>>>>> e2e42d0... Removed Bitboard class and changed implementation accordingly
         //Bitboard b;
         unsigned int turn_;
         unsigned int last_fifty_turn;
