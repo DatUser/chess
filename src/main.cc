@@ -68,6 +68,7 @@ int generate_perft_moves(Chessboard chessboard, int depth)
         }*/
     if (depth == 1)
         return moves.size();
+
     for (long unsigned int i = 0; i < moves.size(); i++)
     {
         auto save = chessboard.getBoard();
@@ -76,6 +77,7 @@ int generate_perft_moves(Chessboard chessboard, int depth)
         chessboard.do_move(moves[i]);
         res += generate_perft_moves(chessboard, depth - 1);
         chessboard.setBoard(save);
+        chessboard.setWhiteTurn(!chessboard.isWhiteTurn());
     }
     return res;
 }
