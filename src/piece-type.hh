@@ -54,4 +54,21 @@ namespace board
         }
     }
 
+    inline int value_piece(PieceType piece) {
+        switch (piece)
+                {
+                    case PieceType::KING:
+                        return 99999;
+                    case PieceType::QUEEN:
+                        return 500;
+                    case PieceType::ROOK:
+                        return 150;
+                    case PieceType::BISHOP:
+                    case PieceType::KNIGHT:
+                        return 200;
+                    default:
+                        return 10;
+                }
+    }
+
 } // namespace board

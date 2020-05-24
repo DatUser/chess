@@ -58,14 +58,14 @@ int generate_perft_moves(Chessboard chessboard, int depth)
 {
     int res = 0;
     auto moves = chessboard.generate_legal_moves();
-        for (long unsigned int i = 0; i < moves.size(); i++) {
+        /*for (long unsigned int i = 0; i < moves.size(); i++) {
             auto move = moves[i];
             auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
             char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
             auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
             char efile = utils::utype(move.move_get().second.file_get()) + 'a';
             std::cout << bfile <<  brank << " " << efile << erank << "\n";
-        }
+        }*/
     if (depth == 1)
         return moves.size();
     for (long unsigned int i = 0; i < moves.size(); i++)
