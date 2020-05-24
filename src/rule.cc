@@ -378,7 +378,9 @@ namespace board
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int pawns = (white_turn) ? board.pawn_wb
                                                     : board.pawn_bb;
-
+        unsigned long long int ally = (white_turn)
+                                        ? board.white_occupied_board
+                                        : board.black_occupied_board;
 
         unsigned long long int acc = 0;
         unsigned long long int pawn = 0;
@@ -388,14 +390,16 @@ namespace board
             single_step(pawn, board, white_turn, moves);
             double_step(pawn, board, white_turn, moves);
             auto  en_passant = chessboard.getEnPassantBitboard();
-            if (en_passant)
+            if (en_passant and not (en_passant & ally))
             {
                 Position begin = utils::get_position(pawn);
-                int color = (white_turn) ? 0 : 1;
-                unsigned long long int left_pos = pawn << 1;
-                if (left_pos == en_passant or (left_pos = pawn >> 1) == en_passant)
+                unsigned long long int left_pos = (white_turn) ? pawn << 9
+                                                    : pawn >> 7;
+                unsigned long long int right_pos = (white_turn) ? pawn << 7
+                                                    : pawn >> 9;
+                if (left_pos == en_passant or right_pos == en_passant)
                 {
-                    Position end = utils::get_position((left_pos << 8) >> (color << 4));
+                    Position end = utils::get_position(en_passant);
                     Move mv = Move(begin, end);
                     mv.piece_set(PieceType::PAWN);
                     mv.en_passant_set(true);

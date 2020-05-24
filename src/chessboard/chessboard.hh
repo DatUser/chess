@@ -54,10 +54,10 @@ namespace board {
     private:
         Board board_;
         bool white_turn_;
-        bool white_king_castling_;
-        bool white_queen_castling_;
-        bool black_king_castling_;
-        bool black_queen_castling_;
+        bool white_king_castling_ = false;
+        bool white_queen_castling_ = false;
+        bool black_king_castling_ = false;
+        bool black_queen_castling_ = false;
         optional<Position> en_passant_;
         unsigned long long int en_passant_bitboard_;
         //Bitboard b;

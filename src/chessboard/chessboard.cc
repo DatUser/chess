@@ -43,11 +43,6 @@ namespace board {
                 case 'q':
                     black_queen_castling_ = true;
                     break;
-                default:
-                    white_king_castling_ = false;
-                    white_queen_castling_ = false;
-                    black_king_castling_ = false;
-                    black_queen_castling_  = false;
             }
         }
 
@@ -56,8 +51,7 @@ namespace board {
         {
             auto file = splited_input[3][0] - 'a';
             //we want pawn position not where en_passant leads us
-            auto rank = splited_input[3][1] - '1' +
-                                ((white_turn_) ? -1 : 1);
+            auto rank = splited_input[3][1] - '1';
             Position pos(static_cast<File>(file), static_cast<Rank>(rank));
             en_passant_ = pos;
             en_passant_bitboard_ = pow(2, utils::to_int(pos));
