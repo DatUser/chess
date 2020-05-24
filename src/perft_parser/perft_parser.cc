@@ -32,7 +32,6 @@ namespace perft_parser {
         return PerftObject(c, depth);
     }
 
-    // ASK YAKA ABOUT CHESSBOARD CONSTRUCTOR
     Chessboard parse_fen(vector<string> splited_input)
     {
         auto c = Chessboard(splited_input);
