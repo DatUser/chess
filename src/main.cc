@@ -17,7 +17,6 @@
 
 using namespace std;
 
-//CHECK RETURN VALUES
 
 void open_listeners(OptionParser& parser) {
 
