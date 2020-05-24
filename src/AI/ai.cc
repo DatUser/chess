@@ -137,6 +137,8 @@ namespace chess_engine {
     Move search(Chessboard& board, int depth)
     {
         auto moves = board.generate_legal_moves();
+        if (moves.size() == 1)
+            return moves[0];
         auto res = vector<int>();
         int max = INT_MIN;
         int min = INT_MAX;
@@ -164,8 +166,6 @@ namespace chess_engine {
                 res.push_back(i);
             }
         }
-        //std::cout << "size: " << res.size() << "\n";
-        //std::cout << "rand: " << rand() % res.size() << "\n";
         srand(time(NULL));
         return moves[res[(rand() % res.size())]];
     }

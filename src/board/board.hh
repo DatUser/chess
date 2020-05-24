@@ -1,16 +1,17 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 
-#include "../bitboard/all.hh"
 #include "../all.hh"
 #include "../utils/all.hh"
 
 using namespace std;
+using namespace utils;
 
 namespace board {
-    using shared_bit = std::shared_ptr<Bitboard>;
-    class Chessboard;
+    using bit = unsigned long long int;
+
     class Board {
 
 
@@ -30,8 +31,7 @@ namespace board {
 
         /* Get the state of a case at coordinate given in input */
         opt_piecetype_t is_occupied(const Position& position, Color color) const;
-        bool is_occupied(shared_bit board, const Position& position) const;
-        //bool is_occupied(Position position);
+        bool is_occupied(bit& board, const Position& position) const;
 
         /* Fait le move fait le move */
         void do_move(Move& move, Color color);
@@ -52,57 +52,40 @@ namespace board {
         vector<Position> get_black_rook();
         vector<Position> get_black_pawn();
 
-        shared_bit white_occupied_board_get();
-        shared_bit black_occupied_board_get();
-        shared_bit occupied_board_get();
+        bit& white_occupied_board_get();
+        bit& black_occupied_board_get();
+        bit& occupied_board_get();
         // DEBUG TIER
         void print();
 
         // Bitboards needed for the white side
-        shared_bit king_wb;
-        shared_bit queen_wb;
-        shared_bit knight_wb;
-        shared_bit bishop_wb;
-        shared_bit rook_wb;
-        shared_bit pawn_wb;
+        bit king_wb;
+        bit queen_wb;
+        bit knight_wb;
+        bit bishop_wb;
+        bit rook_wb;
+        bit pawn_wb;
 
         // Bitboards needed for the black side
-        shared_bit king_bb;
-        shared_bit queen_bb;
-        shared_bit knight_bb;
-        shared_bit bishop_bb;
-        shared_bit rook_bb;
-        shared_bit pawn_bb;
+        bit king_bb;
+        bit queen_bb;
+        bit knight_bb;
+        bit bishop_bb;
+        bit rook_bb;
+        bit pawn_bb;
 
         // Occupied Bitboard
-        shared_bit white_occupied_board;
-        shared_bit black_occupied_board;
-        shared_bit occupied_board;
+        bit white_occupied_board;
+        bit black_occupied_board;
+        bit occupied_board;
 
         // Danger cases Bitboard
-        shared_bit white_danger;
-        shared_bit black_danger;
+        bit white_danger;
+        bit black_danger;
 
     private:
-        // Methods needed to compute the danger grids
-        void compute_king_danger(shared_bit board, int power);
-        void compute_queen_danger(shared_bit board, shared_bit ally,
-                                  shared_bit enemy, shared_bit queens);
-        void compute_bishop_danger(shared_bit board, shared_bit ally,
-                                   shared_bit enemy, shared_bit bishops);
-        void compute_rook_danger(shared_bit board, shared_bit ally,
-                                 shared_bit enemy, shared_bit rooks);
-        void compute_knight_danger(shared_bit board, shared_bit ally,
-                                   shared_bit knights);
-        void compute_pawn_danger(shared_bit board, shared_bit ally,
-                                 shared_bit pawns, bool white);
-
-        void compute_lines(shared_bit board, shared_bit ally,
-                                  shared_bit enemy, int power);
-        void compute_diagonals(shared_bit board, shared_bit ally,
-                                  shared_bit enemy, int power);
-
         void put_piece(Color color, PieceType piece, Position pos);
+
+        #include "board.hxx"
     };
-    #include "board.hxx"
 }

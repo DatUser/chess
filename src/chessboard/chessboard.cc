@@ -162,7 +162,6 @@ namespace board {
             }
             else
             {
-                // Need update, not accurate at all
                 for (auto listener : listeners)
                     listener->on_player_check(!white_turn_ ? Color::WHITE
                                                            : Color::BLACK);
@@ -181,6 +180,8 @@ namespace board {
                 }
             }
         }
+        en_passant_ = optional<Position>();
+        en_passant_bitboard_ = 0;
         white_turn_ = not white_turn_;
     }
 
@@ -198,7 +199,8 @@ namespace board {
         auto cpt = moves.begin();
         for (Move m : moves)
         {
-            if (not is_check(isWhiteTurn()) and m.piece_get() == PieceType::KING and
+            if (not is_check(isWhiteTurn())
+                and m.piece_get() == PieceType::KING and
                 not m.king_castling_get() and not m.queen_castling_get())
             {
                 moves.erase(cpt);
@@ -215,35 +217,18 @@ namespace board {
         Rule rules = Rule();
         std::vector<Move> all_moves;
 
-        /*std::vector<Move> pawns = */rules.generate_pawn_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, pawns);
-        //std::cout << "pawns moves: " << all_moves.size() << "\n";
-
-        /*std::vector<Move> king = */rules.generate_king_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, king);
-        //std::cout << "king moves: " << all_moves.size() << "\n";
-
-        /*std::vector<Move> bishops = */rules.generate_bishop_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, bishops);
-        //std::cout << "bishops moves: " << all_moves.size() << "\n";
-
-        /*std::vector<Move> rooks = */rules.generate_rook_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, rooks);
-        //std::cout << "rooks moves: " << all_moves.size() << "\n";
-
-        /*std::vector<Move> queen = */rules.generate_queen_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, queen);
-        //std::cout << "queen moves: " << all_moves.size() << "\n";
-
-        /*std::vector<Move> knights = */rules.generate_knight_moves(*this, all_moves);
-        //all_moves = add_in_vector(all_moves, knights);
-        //std::cout << "knights moves: " << all_moves.size() << "\n";
+        rules.generate_pawn_moves(*this, all_moves);
+        rules.generate_king_moves(*this, all_moves);
+        rules.generate_bishop_moves(*this, all_moves);
+        rules.generate_rook_moves(*this, all_moves);
+        rules.generate_queen_moves(*this, all_moves);
+        rules.generate_knight_moves(*this, all_moves);
 
         std::vector<Move> res;
+        auto save = board_;
         // Put yourself in check part
         for (long unsigned int i = 0; i < all_moves.size(); i++)
         {
-            auto save = board_;
             auto temp = Board(board_);
             setBoard(temp);
             board_.do_move(all_moves[i], white_turn_ ? Color::WHITE
@@ -279,10 +264,10 @@ namespace board {
         white_turn_ = !white_turn_;
         auto moves = generate_legal_moves();
         bool checkmate = true;
-        auto save = getBoard();
+        auto save = board_;
         for (auto move : moves)
         {
-            auto temp = Board(getBoard());
+            auto temp = Board(board_);
             board_ = temp;
             board_.do_move(move, (color ? Color::WHITE : Color::BLACK));
             if (!board_.is_check(color))
@@ -350,7 +335,7 @@ namespace board {
         auto bitend = utils::two_pow(utils::to_int(end));
         if (isWhiteTurn())
         {
-            if (getBoard().king_wb->board_get() & bitboard)
+            if (board_.king_wb & bitboard)
             {
                 res.piece_set(PieceType::KING);
                 if (bitboard << 2 == bitend)
@@ -362,34 +347,34 @@ namespace board {
                     res.king_castling_set(true);
                 }
             }
-            else if (getBoard().queen_wb->board_get() & bitboard)
+            else if (board_.queen_wb & bitboard)
                 res.piece_set(PieceType::QUEEN);
-            else if (getBoard().knight_wb->board_get() & bitboard)
+            else if (board_.knight_wb & bitboard)
                 res.piece_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_wb->board_get() & bitboard)
+            else if (board_.bishop_wb & bitboard)
                 res.piece_set(PieceType::BISHOP);
-            else if (getBoard().rook_wb->board_get() & bitboard)
+            else if (board_.rook_wb & bitboard)
                 res.piece_set(PieceType::ROOK);
-            else if (getBoard().pawn_wb->board_get() & bitboard)
+            else if (board_.pawn_wb & bitboard)
                 res.piece_set(PieceType::PAWN);
 
-            if (getBoard().king_bb->board_get() & bitend)
+            if (board_.king_bb & bitend)
                 res.capture_set(PieceType::KING);
-            else if (getBoard().queen_bb->board_get() & bitend)
+            else if (board_.queen_bb & bitend)
                 res.capture_set(PieceType::QUEEN);
-            else if (getBoard().knight_bb->board_get() & bitend)
+            else if (board_.knight_bb & bitend)
                 res.capture_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_bb->board_get() & bitend)
+            else if (board_.bishop_bb & bitend)
                 res.capture_set(PieceType::BISHOP);
-            else if (getBoard().rook_bb->board_get() & bitend)
+            else if (board_.rook_bb & bitend)
                 res.capture_set(PieceType::ROOK);
-            else if (getBoard().pawn_bb->board_get() & bitend)
+            else if (board_.pawn_bb & bitend)
                 res.capture_set(PieceType::PAWN);
 
         }
         else
         {
-            if (getBoard().king_bb->board_get() & bitboard)
+            if (board_.king_bb & bitboard)
             {
                 res.piece_set(PieceType::KING);
                 res.piece_set(PieceType::KING);
@@ -402,28 +387,28 @@ namespace board {
                     res.king_castling_set(true);
                 }
             }
-            else if (getBoard().queen_bb->board_get() & bitboard)
+            else if (board_.queen_bb & bitboard)
                 res.piece_set(PieceType::QUEEN);
-            else if (getBoard().knight_bb->board_get() & bitboard)
+            else if (board_.knight_bb & bitboard)
                 res.piece_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_bb->board_get() & bitboard)
+            else if (board_.bishop_bb & bitboard)
                 res.piece_set(PieceType::BISHOP);
-            else if (getBoard().rook_bb->board_get() & bitboard)
+            else if (board_.rook_bb & bitboard)
                 res.piece_set(PieceType::ROOK);
-            else if (getBoard().pawn_bb->board_get() & bitboard)
+            else if (board_.pawn_bb & bitboard)
                 res.piece_set(PieceType::PAWN);
 
-            if (getBoard().king_wb->board_get() & bitend)
+            if (board_.king_wb & bitend)
                 res.capture_set(PieceType::KING);
-            else if (getBoard().queen_wb->board_get() & bitend)
+            else if (board_.queen_wb & bitend)
                 res.capture_set(PieceType::QUEEN);
-            else if (getBoard().knight_wb->board_get() & bitend)
+            else if (board_.knight_wb & bitend)
                 res.capture_set(PieceType::KNIGHT);
-            else if (getBoard().bishop_wb->board_get() & bitend)
+            else if (board_.bishop_wb & bitend)
                 res.capture_set(PieceType::BISHOP);
-            else if (getBoard().rook_wb->board_get() & bitend)
+            else if (board_.rook_wb & bitend)
                 res.capture_set(PieceType::ROOK);
-            else if (getBoard().pawn_wb->board_get() & bitend)
+            else if (board_.pawn_wb & bitend)
                 res.capture_set(PieceType::PAWN);
         }
 
@@ -438,28 +423,28 @@ namespace board {
             auto pow = utils::two_pow(utils::to_int(move.move_get().second));
             if (white_turn_)
             {
-                if (board_.pawn_bb->board_get() & pow)
+                if (board_.pawn_bb & pow)
                     move.capture_set(PieceType::PAWN);
-                else if (board_.knight_bb->board_get() & pow)
+                else if (board_.knight_bb & pow)
                     move.capture_set(PieceType::KNIGHT);
-                else if (board_.bishop_bb->board_get() & pow)
+                else if (board_.bishop_bb & pow)
                     move.capture_set(PieceType::BISHOP);
-                else if (board_.rook_bb->board_get() & pow)
+                else if (board_.rook_bb & pow)
                     move.capture_set(PieceType::ROOK);
-                else if (board_.queen_bb->board_get() & pow)
+                else if (board_.queen_bb & pow)
                     move.capture_set(PieceType::QUEEN);
             }
             else
             {
-                if (board_.pawn_wb->board_get() & pow)
+                if (board_.pawn_wb & pow)
                     move.capture_set(PieceType::PAWN);
-                else if (board_.knight_wb->board_get() & pow)
+                else if (board_.knight_wb & pow)
                     move.capture_set(PieceType::KNIGHT);
-                else if (board_.bishop_wb->board_get() & pow)
+                else if (board_.bishop_wb & pow)
                     move.capture_set(PieceType::BISHOP);
-                else if (board_.rook_wb->board_get() & pow)
+                else if (board_.rook_wb & pow)
                     move.capture_set(PieceType::ROOK);
-                else if (board_.queen_wb->board_get() & pow)
+                else if (board_.queen_wb & pow)
                     move.capture_set(PieceType::QUEEN);
             }
         }

@@ -2,22 +2,6 @@
 #include <iostream>
 
 namespace utils {
-    unsigned long long int two_pow(int power) {
-        unsigned long long int res = 1;
-        return res << power;
-    }
-
-    int pow_two(unsigned long long int number) {
-        if (number == 0) {
-            return -1;
-        }
-        int res = 0;
-        while (number > 1) {
-            number /= 2;
-            res++;
-        } return res;
-    }
-
     board::Position to_position(int power) {
         return to_position(power % 8, power / 8);
     }
@@ -25,7 +9,6 @@ namespace utils {
     board::Position to_position(int x, int y) {
         board::File file;
         board::Rank rank;
-        // std::cout << "x: " << x << " y: " << y << "\n"; // Debug purpose
         bool fail = false;
         switch (x) {
             case 0:
@@ -95,14 +78,6 @@ namespace utils {
         return file + (rank * 8);
     }
 
-    unsigned long long int floor_two(unsigned long long int number) {
-        unsigned long long int power = 1;
-        while (number >>= 1)
-            power <<= 1;
-        return power;
-    }
-
-
     Position get_position(unsigned long long int board)
     {
         Rank r;
@@ -141,7 +116,7 @@ namespace utils {
 
         int file = log2(board);
 
-        //Since File::A == 0
+        // Since File::A == 0
         file = file % 8;
         File f;
         f = static_cast<File>(7 - file);

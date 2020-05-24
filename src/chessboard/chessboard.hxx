@@ -46,7 +46,7 @@ inline std::optional<Position> Chessboard::getEnPassant()
     return en_passant_;
 }
 
-inline unsigned long long int Chessboard::getEnPassantBitboard()
+inline bit Chessboard::getEnPassantBitboard()
 {
     return en_passant_bitboard_;
 }

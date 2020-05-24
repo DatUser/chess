@@ -26,8 +26,8 @@ namespace board
                                     Board& board, bool white_turn,
                                     std::pair<int, int>& direction,
                                     PieceType piece) {
-        shared_bit ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
+        bit& ally = (white_turn) ? board.white_occupied_board
+                            : board.black_occupied_board;
         int abs_factor = direction.first;
         int ord_factor = direction.second;
         File posX = pos.file_get();
@@ -157,21 +157,15 @@ namespace board
     void add_moves(unsigned long long int posbit, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     int direction,
-                                    //std::pair<int, int>& direction,
                                     PieceType piece) {
         unsigned long long int ally =
-                            ((white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get())->board_get();
+                            ((white_turn) ? board.white_occupied_board
+                            : board.black_occupied_board);
 
-        //int abs_factor = 0;
-        //int ord_factor = 0;
-        //set_direction(abs_factor, ord_factor, direction);
+
         Position pos(utils::get_position(posbit));
         Position newPos(File::A, Rank::ONE);
-        //File posX = pos.file_get();
-        //Rank posY = pos.rank_get();
-        //int x = static_cast<int>(posX);
-        //int y = static_cast<int>(posY);
+
         bool overload = false;
         newPos = utils::get_position(posbit);
         while (not (overload = is_max_pos(newPos, direction))
@@ -193,24 +187,17 @@ namespace board
         }
     }
 
-    void add_diags(/*Position*/unsigned long long int pos, std::vector<Move>& moves,
+    void add_diags(unsigned long long int pos, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     PieceType piece) {
-        /*std::pair<int, int> direction(-1, -1);
-        add_diag(pos, moves, board, white_turn, direction, piece);
-        add_diag(pos, moves, board, white_turn,
-                            (direction = std::pair<int, int>(1, -1)), piece);
-        add_diag(pos, moves, board, white_turn,
-                            (direction = std::pair<int, int>(-1, 1)), piece);
-        add_diag(pos, moves, board, white_turn,
-                            (direction = std::pair<int, int>(1, 1)), piece);*/
+
         add_moves(pos, moves, board, white_turn, 9, piece);
         add_moves(pos, moves, board, white_turn, 7, piece);
         add_moves(pos, moves, board, white_turn, -7, piece);
         add_moves(pos, moves, board, white_turn, -9, piece);
     }
 
-    void add_xys(/*Position*/unsigned long long int pos, std::vector<Move>& moves,
+    void add_xys(unsigned long long int pos, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     PieceType piece) {
         add_moves(pos, moves, board, white_turn, 8, piece);
@@ -231,8 +218,8 @@ namespace board
     void add_forward(Position& pos, std::vector<Move>& moves,
                         Board& board, bool white_turn, PieceType piece)
     {
-        auto ally = (white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get();
+        auto ally = (white_turn) ? board.white_occupied_board
+                            : board.black_occupied_board;
         File file = pos.file_get();
         int f = static_cast<int>(pos.file_get());
         int r = static_cast<int>(pos.rank_get());
@@ -268,19 +255,6 @@ namespace board
     }
 
 
-    /*void pawn_step(std::vector<Move>& moves, Position pos, Board board,
-            bool white_turn) {
-        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
-        Position newpos(pos.file_get(), static_cast<Rank>(y));
-
-        if (in_board(newpos, 0, 0) and
-            not board.is_occupied(board.occupied_board_get(), newpos)) {
-            Move mv(pos, newpos);
-            mv.piece_set(PieceType::PAWN);
-            moves.push_back(mv);
-        }
-    }*/
-
     void add_promotion(std::vector<Move>& moves, Position& pos, Position& newpos,
                 int capture) {
 
@@ -294,113 +268,14 @@ namespace board
         }
     }
 
-    //Since it is at the sames place we deal with it in the same funcs
-    /*void pawn_double_step_promotion(std::vector<Move>& moves, Position pos,
-            Board board, bool doubl, bool white_turn) {
-        int y = static_cast<int>(pos.rank_get()) +
-                ((doubl) ? 2  * ((white_turn) ? 1 : -1)
-                : 1 * ((white_turn) ? 1 : -1));
-        Position newpos(pos.file_get(), static_cast<Rank>(y));
-        if (in_board(newpos, 0, 0) and
-            not board.is_occupied(board.occupied_board_get(), newpos)) {
-            Move mv(pos, newpos);
-            mv.piece_set(PieceType::PAWN);
-            //GERER LE EN PASSANT
-            if (doubl) {
-                mv.double_pawn_push_set(true);
-                moves.push_back(mv);
-            }
-             else
-                add_promotion(moves, pos, newpos, -1);
-        }
-    }
-
-    bool pos_equal(Position posA, Position posB) {
-        return posA.rank_get() == posB.rank_get() and
-                posA.file_get() == posB.file_get();
-    }*/
-
-    /*void pawn_eat(std::vector<Move>& moves, Position pos,
-            Chessboard chessboard, bool white_turn) {
-        int x_r = static_cast<int>(pos.file_get()) + 1;
-        int x_l = static_cast<int>(pos.file_get()) - 1;
-        int y = static_cast<int>(pos.rank_get()) + 1 * ((white_turn) ? 1 : -1);
-
-        Position right(static_cast<File>(x_r), static_cast<Rank>(y));
-        Position left(static_cast<File>(x_l), static_cast<Rank>(y));
-
-        Position en_passant_right(static_cast<File>(x_r), pos.rank_get());
-        Position en_passant_left(static_cast<File>(x_l), pos.rank_get());
-
-        Board board = chessboard.getBoard();
-
-        auto en_passant_ = chessboard.getEnPassant();
-        opt_piecetype_t opt_r = board.is_occupied(right,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-        opt_piecetype_t opt_l = board.is_occupied(left,
-                            (white_turn) ? Color::BLACK : Color::WHITE);
-
-        if (in_board(pos, -1, 1 * ((white_turn) ? 1 : -1))
-                and opt_l.has_value()) {
-            if (left.rank_get() != Rank::EIGHT
-                and left.rank_get() != Rank::ONE) {
-                Move mv(pos, left);
-                mv.piece_set(PieceType::PAWN);
-                mv.capture_set(opt_l.value());
-                moves.push_back(mv);
-            } else {
-                add_promotion(moves, pos, left,
-                            static_cast<int>(opt_l.value()));
-            }
-        }
-
-        if (in_board(pos, 1, 1 * ((white_turn) ? 1 : -1))
-                        and opt_r.has_value()) {
-            if (right.rank_get() != Rank::EIGHT
-                and right.rank_get() != Rank::ONE) {
-                Move mv(pos, right);
-                mv.piece_set(PieceType::PAWN);
-                mv.capture_set(opt_r.value());
-                moves.push_back(mv);
-            } else {
-                add_promotion(moves, pos, right,
-                        static_cast<int>(opt_r.value()));
-            }
-        }
-
-        if (en_passant_.has_value()) {
-            if (in_board(pos, -1, 0)
-                and pos_equal(en_passant_.value(), en_passant_left)) {
-                Move mv(pos, left);
-                mv.piece_set(PieceType::PAWN);
-                //mv.capture_set(en_passant_.value());
-                mv.en_passant_set(true);
-                moves.push_back(mv);
-            }
-
-            else if (in_board(pos, 1, 0)
-                and pos_equal(en_passant_.value(), en_passant_right)) {
-                Move mv(pos, right);
-                mv.piece_set(PieceType::PAWN);
-                //mv.capture_set(en_passant_.value());
-                mv.en_passant_set(true);
-                moves.push_back(mv);
-
-            }
-        }
-    }*/
-
-
-
-    void add_move_bis(unsigned long long int posbit, std::vector<Move>& moves,
+      void add_move_bis(unsigned long long int posbit, std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     int direction,
-                                    //std::pair<int, int>& direction,
                                     PieceType piece)
     {
         unsigned long long int ally =
-                            ((white_turn) ? board.white_occupied_board_get()
-                            : board.black_occupied_board_get())->board_get();
+                            ((white_turn) ? board.white_occupied_board
+                            : board.black_occupied_board);
 
         Position pos(utils::get_position(posbit));
         Position newPos(File::A, Rank::ONE);
@@ -442,7 +317,7 @@ namespace board
     {
         int color = (white_turn) ? 0 : 1;
         unsigned long long int new_pos = (pawn << 8) >> (color << 4);
-        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        unsigned long long int occupied = board.occupied_board;
         if (not (new_pos & occupied))
         {
             Position begin = utils::get_position(pawn);
@@ -479,7 +354,7 @@ namespace board
         unsigned long long int new_pos = (white_turn) ? (pawn << 16)
                                                     : (pawn >> 16);
         unsigned long long int new_pos2 = (pawn << 8) >> (color << 4);
-        unsigned long long int occupied = board.occupied_board.get()->board_get();
+        unsigned long long int occupied = board.occupied_board;
         if (not (new_pos & occupied) and not (new_pos2 & occupied))
         {
             Position begin = utils::get_position(pawn);
@@ -501,8 +376,8 @@ namespace board
     {
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int pawns = (white_turn) ? board.pawn_wb.get()->board_get()
-                                                    : board.pawn_bb.get()->board_get();
+        unsigned long long int pawns = (white_turn) ? board.pawn_wb
+                                                    : board.pawn_bb;
 
 
         unsigned long long int acc = 0;
@@ -517,7 +392,6 @@ namespace board
             {
                 Position begin = utils::get_position(pawn);
                 int color = (white_turn) ? 0 : 1;
-                //unsigned long long int en_passant = chessboard.getEnPassantBitboard().value()->board_get();
                 unsigned long long int left_pos = pawn << 1;
                 if (left_pos == en_passant or (left_pos = pawn >> 1) == en_passant)
                 {
@@ -533,7 +407,7 @@ namespace board
         }
     }
 
-    bool occupied(Board& board, int x, int y, shared_bit& bitboard) {
+    bool occupied(Board& board, int x, int y, bit&& bitboard) {
         Position pos(static_cast<File>(x), static_cast<Rank>(y));
         return in_board(x, y) and board.is_occupied(bitboard, pos);
     }
@@ -543,7 +417,7 @@ namespace board
                         unsigned long long int pos, bool white_turn,
                         Board& board)
     {
-        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int occupied = board.occupied_board;
         unsigned long long int tmp = (white_turn) ? 6 : pow(2, 58) + pow(2, 57);
         if (pos == ((white_turn) ? 8 : pow(2, 59)) and not(tmp & occupied))
         {
@@ -560,7 +434,7 @@ namespace board
                         unsigned long long int pos, bool white_turn,
                         Board& board)
     {
-        unsigned long long int occupied = board.occupied_board_get().get()->board_get();
+        unsigned long long int occupied = board.occupied_board;
         unsigned long long int block = (white_turn) ? WHITE_QUEEN_CAST
                                     : BLACK_QUEEN_CAST;
         if (pos == ((white_turn) ? 8 : pow(2, 59)) and not (block & occupied))
@@ -597,8 +471,8 @@ namespace board
     {
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
-        unsigned long long int kings = (white_turn) ? board.king_wb.get()->board_get()
-                                                    : board.king_bb.get()->board_get();
+        unsigned long long int kings = (white_turn) ? board.king_wb
+                                                    : board.king_bb;
 
 
         unsigned long long int king = kings ^ (kings & (kings - 1));
@@ -627,7 +501,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int rook = ((white_turn)
-                            ? board.rook_wb : board.rook_bb)->board_get();
+                            ? board.rook_wb : board.rook_bb);
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
        while (acc < rook) {
@@ -643,7 +517,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int queen = ((white_turn)
-                            ? board.queen_wb : board.queen_bb)->board_get();
+                            ? board.queen_wb : board.queen_bb);
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 
@@ -661,7 +535,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int bishop = ((white_turn)
-                            ? board.bishop_wb : board.bishop_bb)->board_get();
+                            ? board.bishop_wb : board.bishop_bb);
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 
@@ -678,7 +552,7 @@ namespace board
         Board board = chessboard.getBoard();
         bool white_turn = chessboard.isWhiteTurn();
         unsigned long long int knight = ((white_turn)
-                            ? board.knight_wb : board.knight_bb)->board_get();
+                            ? board.knight_wb : board.knight_bb);
         unsigned long long int acc = 0;
         unsigned long long int pos = 0;
 

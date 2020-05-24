@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
                         board.do_move(to_play);
                     } while (begin_moves != items.end());
                 }
-                auto bestmove = chess_engine::search(board, 3);
+                auto bestmove = chess_engine::search(board, 4);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
                     + pos_to_string(bestmove.move_get().second);
