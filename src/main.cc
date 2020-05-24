@@ -58,14 +58,6 @@ int generate_perft_moves(Chessboard chessboard, int depth)
 {
     int res = 0;
     auto moves = chessboard.generate_legal_moves();
-        /*for (long unsigned int i = 0; i < moves.size(); i++) {
-            auto move = moves[i];
-            auto brank = utils::utype(move.move_get().first.rank_get()) + 1;
-            char bfile = utils::utype(move.move_get().first.file_get()) + 'a';
-            auto erank = utils::utype(move.move_get().second.rank_get()) + 1;
-            char efile = utils::utype(move.move_get().second.file_get()) + 'a';
-            std::cout << bfile <<  brank << " " << efile << erank << "\n";
-        }*/
     if (depth == 1)
         return moves.size();
 
@@ -145,8 +137,9 @@ int main(int argc, char** argv) {
                 {
                     do {
                         begin_moves++;
-                        if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
-                                    and (*begin_moves)[0] > 'f'))
+                        if (begin_moves->size() == 0
+                                or ((*begin_moves)[0] < 'a'
+                                and (*begin_moves)[0] > 'f'))
                             break;
                         move = *begin_moves;
                         auto to_play = board.to_move(move);
@@ -168,7 +161,8 @@ int main(int argc, char** argv) {
                 {
                     do {
                         begin_moves++;
-                        if (begin_moves->size() == 0 or ((*begin_moves)[0] < 'a'
+                        if (begin_moves->size() == 0
+                                or ((*begin_moves)[0] < 'a'
                                 and (*begin_moves)[0] > 'f'))
                             break;
                         move = *begin_moves;
@@ -176,7 +170,7 @@ int main(int argc, char** argv) {
                         board.do_move(to_play);
                     } while (begin_moves != items.end());
                 }
-                auto bestmove = chess_engine::search(board, 4);
+                auto bestmove = chess_engine::search(board, 3);
 
                 auto best_str = pos_to_string(bestmove.move_get().first)
                     + pos_to_string(bestmove.move_get().second);

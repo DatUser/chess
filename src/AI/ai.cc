@@ -187,7 +187,7 @@ namespace chess_engine {
         find_capture(board, moves, capture);
         if (capture.size() != 0)
         {
-            srand(time(NULL));
+            srand(time(nullptr));
             return moves[capture[(rand() % capture.size())]];
         }
         auto res = vector<int>();
@@ -201,10 +201,8 @@ namespace chess_engine {
                                     min);
             auto piece = board::value_piece(moves[i].piece_get());
             auto piece_capture = board::value_piece(moves[i].capture_get());
-                int worth = piece_capture - piece;
-            /*temp += (piece_capture > piece) ? piece_capture * 2 :
-                        piece_capture / 2;*/
-                temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
+            int worth = piece_capture - piece;
+            temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
 
 
             if (temp > act)
@@ -217,7 +215,7 @@ namespace chess_engine {
                 res.push_back(i);
             }
         }
-        srand(time(NULL));
+        srand(time(nullptr));
         return moves[res[(rand() % res.size())]];
     }
 
@@ -253,17 +251,8 @@ namespace chess_engine {
                         min) * (maxmin ? 1 : -1);
             auto piece = board::value_piece(moves[i].piece_get());
             auto piece_capture = board::value_piece(moves[i].capture_get());
-                int worth = piece_capture - piece;
-            //if (maxmin)//(piece_capture != PieceType::NONE)
-            //{
-                temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
-                        //(piece_capture > piece) ? piece_capture * 5 :
-                        //piece_capture ;
-                          //  / board::value_piece(piece);
-            /*} else {
-                temp += (piece_capture > piece) ? piece_capture * 5 :
-                        piece_capture;
-            }*/
+            int worth = piece_capture - piece;
+            temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
             act = (maxmin and act < temp) ? temp : act;
             act = (!maxmin and act > temp) ? temp : act;
             max = (maxmin and act > max) ? act : max;

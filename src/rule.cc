@@ -170,7 +170,8 @@ namespace board
         newPos = utils::get_position(posbit);
         while (not (overload = is_max_pos(newPos, direction))
             and not (((direction < 0) ? posbit = posbit >> -direction
-                                      : posbit = posbit << direction) & ally)) {
+                                      : posbit = posbit << direction) & ally))
+        {
             newPos = utils::get_position(posbit);
             Move mv = Move(pos, newPos);
             opt_piecetype_t opt = board.is_occupied(newPos,
@@ -255,8 +256,8 @@ namespace board
     }
 
 
-    void add_promotion(std::vector<Move>& moves, Position& pos, Position& newpos,
-                int capture) {
+    void add_promotion(std::vector<Move>& moves, Position& pos,
+                Position& newpos, int capture) {
 
         for (int i = 0; i < 4; i++) {
             Move mv(pos, newpos);
@@ -268,7 +269,8 @@ namespace board
         }
     }
 
-      void add_move_bis(unsigned long long int posbit, std::vector<Move>& moves,
+      void add_move_bis(unsigned long long int posbit,
+                                    std::vector<Move>& moves,
                                     Board& board, bool white_turn,
                                     int direction,
                                     PieceType piece)
@@ -291,10 +293,12 @@ namespace board
                         (white_turn) ? Color::BLACK : Color::WHITE);
             if (opt.has_value())
             {
-                if (piece == PieceType::PAWN and ((white_turn and pos.rank_get() == Rank::SEVEN) or
+                if (piece == PieceType::PAWN and ((white_turn
+                    and pos.rank_get() == Rank::SEVEN) or
                     (not white_turn and pos.rank_get() == Rank::TWO)))
                 {
-                    add_promotion(moves, pos, newPos, static_cast<int>(opt.value()));
+                    add_promotion(moves, pos, newPos,
+                                    static_cast<int>(opt.value()));
                 }
                 else
                 {
@@ -422,7 +426,8 @@ namespace board
                         Board& board)
     {
         unsigned long long int occupied = board.occupied_board;
-        unsigned long long int tmp = (white_turn) ? 6 : pow(2, 58) + pow(2, 57);
+        unsigned long long int tmp = (white_turn) ? 6
+                                        : pow(2, 58) + pow(2, 57);
         if (pos == ((white_turn) ? 8 : pow(2, 59)) and not(tmp & occupied))
         {
             Position begin = utils::get_position(pos);
@@ -567,9 +572,12 @@ namespace board
             add_move_bis(pos, moves, board, white_turn, 10, PieceType::KNIGHT);
             add_move_bis(pos, moves, board, white_turn, 6, PieceType::KNIGHT);
             add_move_bis(pos, moves, board, white_turn, -6, PieceType::KNIGHT);
-            add_move_bis(pos, moves, board, white_turn, -10, PieceType::KNIGHT);
-            add_move_bis(pos, moves, board, white_turn, -15, PieceType::KNIGHT);
-            add_move_bis(pos, moves, board, white_turn, -17, PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -10,
+                                                    PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -15,
+                                                    PieceType::KNIGHT);
+            add_move_bis(pos, moves, board, white_turn, -17,
+                                                    PieceType::KNIGHT);
             acc |= pos;
         }
     }

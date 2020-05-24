@@ -399,10 +399,12 @@ namespace board {
                         (color == Color::WHITE ? rook_bb : rook_wb) ^= e_bit;
                         break;
                     case PieceType::BISHOP:
-                         (color == Color::WHITE ? bishop_bb : bishop_wb) ^= e_bit;
+                         (color == Color::WHITE ? bishop_bb : bishop_wb)
+                                        ^= e_bit;
                         break;
                     case PieceType::KNIGHT:
-                        (color == Color::WHITE ? knight_bb : knight_wb) ^= e_bit;
+                        (color == Color::WHITE ? knight_bb : knight_wb)
+                                        ^= e_bit;
                         break;
                     case PieceType::PAWN:
                         (color == Color::WHITE ? pawn_bb : pawn_wb) ^= e_bit;
@@ -430,12 +432,12 @@ namespace board {
                             , e_bit);
                         break;
                     case PieceType::BISHOP:
-                        case_set((color == Color::WHITE ? bishop_wb : bishop_bb)
-                            , e_bit);
+                        case_set((color == Color::WHITE ? bishop_wb
+                            : bishop_bb) , e_bit);
                         break;
                     case PieceType::KNIGHT:
-                        case_set((color == Color::WHITE ? knight_wb : knight_bb)
-                            , e_bit);
+                        case_set((color == Color::WHITE ? knight_wb
+                            : knight_bb) , e_bit);
                         break;
                     default:
                         break;
