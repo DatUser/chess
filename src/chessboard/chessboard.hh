@@ -60,7 +60,6 @@ namespace board {
         bool black_queen_castling_ = false;
         optional<Position> en_passant_;
         unsigned long long int en_passant_bitboard_;
-        //Bitboard b;
         unsigned int turn_;
         unsigned int last_fifty_turn;
     };
