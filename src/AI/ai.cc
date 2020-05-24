@@ -8,12 +8,32 @@
 #define BISHOP_WT 200
 #define PAWN_WT 10
 
+#define RFC_BOARD_1 35538699412471296
+#define RFC_BOARD_2 66125924401152
+#define RFC_BOARD_3 103481868288
+
+#define BABEL_WHITE 996029693952
+#define BABEL_BLACK 281371478065152
+
 namespace chess_engine {
 
     int evaluate_white(Chessboard& board);
     int evaluate_black(Chessboard& board);
     int rec_search(Chessboard& board, int depth, Move move,
                                                 bool maxmin, int max, int min);
+
+    //piece is board state after mask
+    int worth_pos(unsigned long long int piece, int weight, int num, int den) {
+        int total = 0;
+        unsigned long long int acc = 0;
+        while (acc != piece) {
+            total += weight * num / den;
+            acc |= piece ^ (piece & (piece - acc - 1));
+        }
+
+        return total;
+    }
+
     int evaluate(Chessboard& chessboard)
     {
         if (chessboard.is_checkmate(chessboard.isWhiteTurn()))
@@ -37,25 +57,35 @@ namespace chess_engine {
 
         // Calculating queens impact
         auto pieces = board.get_white_queen();
-        res += (pieces.size() - black_q.size()) * QUEEN_WT;
+        res += (pieces.size() - black_q.size()) * QUEEN_WT
+                + worth_pos(RFC_BOARD_1 & board.queen_wb->board_get(), QUEEN_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.queen_wb->board_get(), QUEEN_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.queen_wb->board_get(), QUEEN_WT, 1, 2);
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_white_rook();
         res += (pieces.size() - black_r.size())
-                * (ROOK_WT - 5 * black_p.size());
+                * (ROOK_WT - 5 * black_p.size())
+                + worth_pos(BABEL_WHITE & board.rook_wb->board_get(), ROOK_WT, 1, 2);
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_white_pawn();
         res += (board.get_white_knight().size() - black_k.size())
-            * (KNIGHT_WT - 2 * (black_p.size() + pieces.size()));
+            * (KNIGHT_WT - 2 * (black_p.size() + pieces.size()))
+                + worth_pos(RFC_BOARD_1 & board.knight_wb->board_get(), KNIGHT_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.knight_wb->board_get(), KNIGHT_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.knight_wb->board_get(), KNIGHT_WT, 1, 2);
 
         // Calculating pawn impact
         res += (pieces.size() - black_p.size()) * PAWN_WT;
 
         // Calculating bishop impact
         pieces = board.get_white_bishop();
-        res += (pieces.size() - black_b.size()) * BISHOP_WT;
-        res += chessboard.generate_legal_moves().size();
+        res += (pieces.size() - black_b.size()) * BISHOP_WT
+                + worth_pos(RFC_BOARD_1 & board.bishop_wb->board_get(), BISHOP_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.bishop_wb->board_get(), BISHOP_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.bishop_wb->board_get(), BISHOP_WT, 1, 2);
+        //res += chessboard.generate_legal_moves().size();
         return res;
     }
 
@@ -71,24 +101,34 @@ namespace chess_engine {
 
         // Calculating queens impact
         auto pieces = board.get_black_queen();
-        res += (pieces.size() - white_q.size()) * QUEEN_WT;
+        res += (pieces.size() - white_q.size()) * QUEEN_WT
+                + worth_pos(RFC_BOARD_1 & board.queen_bb->board_get(), QUEEN_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.queen_bb->board_get(), QUEEN_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.queen_bb->board_get(), QUEEN_WT, 1, 2);
 
         // Calculating rooks impact, increasing as pawns disappear
         pieces = board.get_black_rook();
         res += (pieces.size() - white_r.size())
-                * (ROOK_WT - 5 * white_p.size());
+                * (ROOK_WT - 5 * white_p.size())
+                + worth_pos(BABEL_BLACK & board.rook_bb->board_get(), ROOK_WT, 1, 2);
 
         // Calculating knights impact, decreasing as pawns disappear
         pieces = board.get_black_pawn();
         res += (board.get_black_knight().size() - white_k.size())
-            * (KNIGHT_WT - 2 * (white_p.size() + pieces.size()));
+            * (KNIGHT_WT - 2 * (white_p.size() + pieces.size()))
+                + worth_pos(RFC_BOARD_1 & board.knight_bb->board_get(), KNIGHT_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.knight_bb->board_get(), KNIGHT_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.knight_bb->board_get(), KNIGHT_WT, 1, 2);
 
         // Calculating pawn impact
         res += (pieces.size() - white_p.size()) * PAWN_WT;
 
         // Calculating bishop impact
         pieces = board.get_black_bishop();
-        res += (pieces.size() - white_b.size()) * BISHOP_WT;
+        res += (pieces.size() - white_b.size()) * BISHOP_WT
+                + worth_pos(RFC_BOARD_1 & board.bishop_bb->board_get(), BISHOP_WT, 1, 4)
+                + worth_pos(RFC_BOARD_2 & board.bishop_bb->board_get(), BISHOP_WT, 1, 3)
+                + worth_pos(RFC_BOARD_3 & board.bishop_bb->board_get(), BISHOP_WT, 1, 2);
 
         res += chessboard.generate_legal_moves().size();
         return res;
@@ -106,26 +146,14 @@ namespace chess_engine {
         {
             auto temp = rec_search(board, depth - 1, moves[i], false, max,
                                     min);
-            auto piece_capture = moves[i].capture_get();
-            if (piece_capture != PieceType::NONE)
-            {
-                switch (piece_capture)
-                {
-                    case PieceType::QUEEN:
-                        temp += 500;
-                        break;
-                    case PieceType::ROOK:
-                        temp += 150;
-                        break;
-                    case PieceType::BISHOP:
-                    case PieceType::KNIGHT:
-                        temp += 100;
-                        break;
-                    default:
-                        temp += 10;
-                        break;
-                }
-            }
+            auto piece = board::value_piece(moves[i].piece_get());
+            auto piece_capture = board::value_piece(moves[i].capture_get());
+                int worth = piece_capture - piece;
+            /*temp += (piece_capture > piece) ? piece_capture * 2 :
+                        piece_capture / 2;*/
+                temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
+
+
             if (temp > act)
             {
                 res.clear();
@@ -171,31 +199,20 @@ namespace chess_engine {
         for (long unsigned int i = 1; i < moves.size(); i++)
         {
             int temp = rec_search(board, depth - 1, moves[i], !maxmin, max,
-                        min);
-            auto piece_capture = moves[i].capture_get();
-            if (piece_capture != PieceType::NONE)
-            {
-                switch (piece_capture)
-                {
-                    case PieceType::QUEEN:
-                        temp += 100;
-                        break;
-                    case PieceType::ROOK:
-                        temp += 50;
-                        break;
-                    case PieceType::BISHOP:
-                    case PieceType::KNIGHT:
-                        temp += 30;
-                        break;
-                    default:
-                        temp += 10;
-                        break;
-                }
-            }
-            /*if (maxmin and act < temp)
-                act = temp;
-            else if (!maxmin and act > temp)
-                act = temp;*/
+                        min) * (maxmin ? 1 : -1);
+            auto piece = board::value_piece(moves[i].piece_get());
+            auto piece_capture = board::value_piece(moves[i].capture_get());
+                int worth = piece_capture - piece;
+            //if (maxmin)//(piece_capture != PieceType::NONE)
+            //{
+                temp += (worth > 0) ? worth * 5 : (worth + 10) * 2;
+                        //(piece_capture > piece) ? piece_capture * 5 :
+                        //piece_capture ;
+                          //  / board::value_piece(piece);
+            /*} else {
+                temp += (piece_capture > piece) ? piece_capture * 5 :
+                        piece_capture;
+            }*/
             act = (maxmin and act < temp) ? temp : act;
             act = (!maxmin and act > temp) ? temp : act;
             max = (maxmin and act > max) ? act : max;
