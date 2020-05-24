@@ -134,11 +134,62 @@ namespace chess_engine {
         return res;
     }
 
+    void find_capture(Chessboard& board, vector<Move>& moves,
+                                         vector<int>& capture)
+    {
+        long unsigned int i = 0;
+        int act = 0;
+        board.getBoard().compute_danger();
+        for (auto m = moves.begin(); i < moves.size(); m++)
+        {
+            if (m->capture_get() == PieceType::NONE)
+            {
+                i++;
+                continue;
+            }
+
+            bit e_bit = utils::two_pow(utils::to_int(m->move_get().second));
+            int temp;
+            if ((board.isWhiteTurn() ? board.getBoard().white_danger & e_bit :
+                              board.getBoard().black_danger & e_bit))
+            {
+                temp = utils::utype(m->piece_get())
+                            - utils::utype(m->capture_get());
+            }
+
+            else
+                temp = utils::utype(m->capture_get()) + 2;
+
+            if (temp > act)
+            {
+                capture.clear();
+                act = temp;
+            }
+            if (temp == act)
+            {
+                capture.push_back(i);
+            }
+            if (temp < 0)
+            {
+                moves.erase(m);
+                i--;
+            }
+            i++;
+        }
+    }
+
     Move search(Chessboard& board, int depth)
     {
         auto moves = board.generate_legal_moves();
         if (moves.size() == 1)
             return moves[0];
+        auto capture = vector<int>();
+        find_capture(board, moves, capture);
+        if (capture.size() != 0)
+        {
+            srand(time(NULL));
+            return moves[capture[(rand() % capture.size())]];
+        }
         auto res = vector<int>();
         int max = INT_MIN;
         int min = INT_MAX;
