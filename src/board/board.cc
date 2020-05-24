@@ -297,24 +297,6 @@ namespace board {
         return std::optional<PieceType>();
     }
 
-    /*void Board::move(bit& board, bit s_bit, bit e_bit)
-    {
-        if ((board & s_bit && !(board & e_bit)))
-        {
-            board ^= s_bit;
-            board |= e_bit;
-        }
-    }
-
-    void Board::case_set(bit& board, bit b)
-    {
-        board |= b;
-    }
-
-    void Board::remove(bit& board, bit b)
-    {
-        board ^= b;
-    }*/
 
     bool Board::is_occupied(bit& board, const Position& position) const {
         auto power = utils::to_int(position);
